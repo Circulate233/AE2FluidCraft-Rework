@@ -1,5 +1,6 @@
 package com.glodblock.github;
 
+import com.glodblock.github.ae2fc.Tags;
 import com.glodblock.github.proxy.CommonProxy;
 import com.glodblock.github.util.ModAndClassUtil;
 import net.minecraft.util.ResourceLocation;
@@ -13,8 +14,8 @@ import org.apache.logging.log4j.Logger;
 @Mod(modid = FluidCraft.MODID, version = FluidCraft.VERSION, useMetadata = true, dependencies = "required:appliedenergistics2@[v0.56.5,)")
 public class FluidCraft {
 
-    public static final String MODID = "ae2fc";
-    public static final String VERSION = "2.6.6-r";
+    public static final String MODID = Tags.MOD_ID;
+    public static final String VERSION = Tags.VERSION;
     public static final boolean beta = false;
 
     @Mod.Instance(MODID)

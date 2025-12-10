@@ -26,14 +26,13 @@ public class AEBaseTilePartTransformer extends FCClassTransformer.ClassMapper {
 
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-            switch (name) {
-                case "uploadSettings":
-                    return new TransformUploadSettings(api, super.visitMethod(access, name, desc, signature, exceptions));
-                case "downloadSettings":
-                    return new TransformDownloadSettings(api, super.visitMethod(access, name, desc, signature, exceptions));
-                default:
-                    return super.visitMethod(access, name, desc, signature, exceptions);
-            }
+            return switch (name) {
+                case "uploadSettings" ->
+                    new TransformUploadSettings(api, super.visitMethod(access, name, desc, signature, exceptions));
+                case "downloadSettings" ->
+                    new TransformDownloadSettings(api, super.visitMethod(access, name, desc, signature, exceptions));
+                default -> super.visitMethod(access, name, desc, signature, exceptions);
+            };
         }
     }
 
