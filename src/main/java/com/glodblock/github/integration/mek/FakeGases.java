@@ -100,7 +100,7 @@ public class FakeGases {
                         if (gas == null || gas.getStackSize() <= 0) {
                             return null;
                         }
-                        IAEItemStack stack = AEItemStack.fromItemStack(packStack(new GasStack((Gas) gas.getGas(), 1)));
+                        IAEItemStack stack = AEItemStack.fromItemStack(packStack(new GasStack(gas.getGas(), 1)));
                         if (stack == null) {
                             return null;
                         }
@@ -181,7 +181,7 @@ public class FakeGases {
 
                     @Override
                     public IAEItemStack packAEStackLong(IAEGasStack target) {
-                        return AEItemStack.fromItemStack(packStack((GasStack) target.getGasStack()));
+                        return AEItemStack.fromItemStack(packStack(target.getGasStack()));
                     }
                 }
         );

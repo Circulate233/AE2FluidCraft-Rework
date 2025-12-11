@@ -13,7 +13,10 @@
     "ae2.MixinCraftingCPUCluster",
     "ae2.MixinCraftingTreeNode",
     "ae2.MixinDualityInterface",
+    "ae2.MixinGridStorageCache",
     "ae2.MixinGuiBridge",
+    "ae2.MixinNetworkInventoryHandler",
+    "ae2.MixinNetworkMonitor",
     "ae2.MixinPartType"
   ],
   "server": [],

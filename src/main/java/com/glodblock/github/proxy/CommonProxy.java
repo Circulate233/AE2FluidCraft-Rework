@@ -8,7 +8,16 @@ import appeng.core.features.ItemDefinition;
 import appeng.recipes.game.DisassembleRecipe;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.item.fake.FakeFluids;
-import com.glodblock.github.common.tile.*;
+import com.glodblock.github.common.tile.TileBurette;
+import com.glodblock.github.common.tile.TileDualInterface;
+import com.glodblock.github.common.tile.TileFluidAssembler;
+import com.glodblock.github.common.tile.TileFluidLevelMaintainer;
+import com.glodblock.github.common.tile.TileFluidPacketDecoder;
+import com.glodblock.github.common.tile.TileFluidPatternEncoder;
+import com.glodblock.github.common.tile.TileIngredientBuffer;
+import com.glodblock.github.common.tile.TileLargeIngredientBuffer;
+import com.glodblock.github.common.tile.TileTrioInterface;
+import com.glodblock.github.common.tile.TileUltimateEncoder;
 import com.glodblock.github.handler.RegistryHandler;
 import com.glodblock.github.integration.mek.FCGasBlocks;
 import com.glodblock.github.integration.mek.FCGasItems;
@@ -57,7 +66,6 @@ public class CommonProxy {
             FCGasBlocks.init(regHandler);
             FakeGases.init();
         }
-        GameRegistry.registerTileEntity(TileFluidDiscretizer.class, FluidCraft.resource(NameConst.BLOCK_FLUID_DISCRETIZER));
         GameRegistry.registerTileEntity(TileFluidPatternEncoder.class, FluidCraft.resource(NameConst.BLOCK_FLUID_PATTERN_ENCODER));
         GameRegistry.registerTileEntity(TileFluidPacketDecoder.class, FluidCraft.resource(NameConst.BLOCK_FLUID_PACKET_DECODER));
         GameRegistry.registerTileEntity(TileIngredientBuffer.class, FluidCraft.resource(NameConst.BLOCK_INGREDIENT_BUFFER));
@@ -68,7 +76,6 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileFluidAssembler.class, FluidCraft.resource(NameConst.BLOCK_FLUID_ASSEMBLER));
         GameRegistry.registerTileEntity(TileUltimateEncoder.class, FluidCraft.resource(NameConst.BLOCK_ULTIMATE_ENCODER));
         if (ModAndClassUtil.GAS) {
-            GameRegistry.registerTileEntity(TileGasDiscretizer.class, FluidCraft.resource(NameConst.BLOCK_GAS_DISCRETIZER));
             GameRegistry.registerTileEntity(TileTrioInterface.class, FluidCraft.resource(NameConst.BLOCK_TRIO_INTERFACE));
         }
         (new ChannelLoader()).run();

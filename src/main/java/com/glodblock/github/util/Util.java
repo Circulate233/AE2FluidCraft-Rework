@@ -22,6 +22,8 @@ import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.inventory.GuiType;
 import com.glodblock.github.inventory.InventoryHandler;
+import com.mekeng.github.common.me.data.IAEGasStack;
+import com.mekeng.github.common.me.storage.IGasStorageChannel;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.EncoderException;
 import mekanism.api.gas.GasStack;
@@ -39,6 +41,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -56,6 +59,20 @@ public final class Util {
 
     public static IStorageChannel<IAEItemStack> getItemChannel() {
         return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
+    }
+
+    @Optional.Method(modid = "mekeng")
+    public static IStorageChannel<IAEGasStack> getGasChannel() {
+        return AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class);
+    }
+
+    public static <T> IAEItemStack packAEStackToDrop(T s) {
+        if (s instanceof IAEFluidStack f) {
+            return FakeFluids.packFluid2AEDrops(f);
+        } else if (ModAndClassUtil.GAS && s instanceof IAEGasStack g) {
+            return FakeGases.packGas2AEDrops(g);
+        }
+        return null;
     }
 
     public static FluidStack getFluidFromItem(ItemStack stack) {
@@ -156,7 +173,7 @@ public final class Util {
     }
 
     public static void clearItemInventory(IItemHandlerModifiable inv) {
-        for (int i = 0; i < inv.getSlots(); i ++) {
+        for (int i = 0; i < inv.getSlots(); i++) {
             inv.setStackInSlot(i, ItemStack.EMPTY);
         }
     }
@@ -199,8 +216,7 @@ public final class Util {
         }
     }
 
-    public static NBTTagCompound readNBTFromBytes(ByteBuf from)
-    {
+    public static NBTTagCompound readNBTFromBytes(ByteBuf from) {
         PacketBuffer pb = new PacketBuffer(from);
         try {
             return pb.readCompoundTag();
