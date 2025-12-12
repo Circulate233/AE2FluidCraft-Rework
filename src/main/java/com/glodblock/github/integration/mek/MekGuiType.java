@@ -15,7 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class MekGuiType {
 
     public static GuiType.PartOrTileGuiFactory<IInterfaceHost> TRIO_ITEM_GUI() {
-        return new GuiType.PartOrTileGuiFactory<IInterfaceHost>(IInterfaceHost.class) {
+        return new GuiType.PartOrTileGuiFactory<>(IInterfaceHost.class) {
 
             @Override
             protected Object createServerGui(EntityPlayer player, IInterfaceHost inv) {
@@ -30,7 +30,7 @@ public class MekGuiType {
     }
 
     public static GuiType.PartOrTileGuiFactory<IFluidInterfaceHost> TRIO_FLUID_GUI() {
-        return new GuiType.PartOrTileGuiFactory<IFluidInterfaceHost>(IFluidInterfaceHost.class) {
+        return new GuiType.PartOrTileGuiFactory<>(IFluidInterfaceHost.class) {
 
             @Override
             protected Object createServerGui(EntityPlayer player, IFluidInterfaceHost inv) {
@@ -45,7 +45,7 @@ public class MekGuiType {
     }
 
     public static GuiType.PartOrTileGuiFactory<IGasInterfaceHost> TRIO_GAS_GUI() {
-        return new GuiType.PartOrTileGuiFactory<IGasInterfaceHost>(IGasInterfaceHost.class) {
+        return new GuiType.PartOrTileGuiFactory<>(IGasInterfaceHost.class) {
 
             @Override
             protected Object createServerGui(EntityPlayer player, IGasInterfaceHost inv) {

@@ -205,7 +205,7 @@ dependencies {
     compileOnly(rfg.deobf('curse.maven:dynamistics-383632:3056455')) // dy
     compileOnly(rfg.deobf('curse.maven:baubles-227083:2518667')) //baubles
     implementation(rfg.deobf("curse.maven:mekanism-ce-399904:4804509")) //mek-ce
-    compileOnly(rfg.deobf("curse.maven:mekanism-energistics-1027681:5389347")) //mekeng
+    implementation(rfg.deobf("curse.maven:mekanism-energistics-1027681:5389347")) //mekeng
     compileOnly(rfg.deobf('curse.maven:opencomputers-223008:4630537')) //oc
     compileOnly(rfg.deobf("curse.maven:p455w0rdslib-255232:2830265"))
     compileOnly(rfg.deobf("curse.maven:ae2wtlib-304024:2830114"))

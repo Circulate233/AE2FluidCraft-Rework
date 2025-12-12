@@ -28,7 +28,6 @@ import net.minecraftforge.common.model.TRSRTransformation;
 
 import java.lang.invoke.MethodHandle;
 
-@SuppressWarnings("unchecked")
 public class Ae2ReflectClient {
 
     private static final MethodHandle mGuiCraftAmount_addQty;

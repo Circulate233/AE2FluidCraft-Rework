@@ -24,6 +24,7 @@ import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.inventory.GuiType;
 import com.glodblock.github.inventory.InventoryHandler;
+import com.mekeng.github.client.render.GasStackSizeRenderer;
 import com.mekeng.github.common.me.data.IAEGasStack;
 import com.mekeng.github.common.me.storage.IGasStorageChannel;
 import io.netty.buffer.ByteBuf;
@@ -68,6 +69,11 @@ public final class Util {
     @Optional.Method(modid = "mekeng")
     public static IStorageChannel<IAEGasStack> getGasChannel() {
         return AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class);
+    }
+
+    @Optional.Method(modid = "mekeng")
+    public static GasStackSizeRenderer getNewGasStackSizeRenderer() {
+        return new GasStackSizeRenderer();
     }
 
     public static <T> IAEItemStack packAEStackToDrop(T s) {
