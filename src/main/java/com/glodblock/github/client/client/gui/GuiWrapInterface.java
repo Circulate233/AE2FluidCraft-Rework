@@ -47,7 +47,7 @@ public class GuiWrapInterface extends GuiInterface {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("WrapDualInterface.AllowSplitting", this.splittingBtn.getCurrentValue().equals("ALLOW") ? "0" : "1"));
         } else if (btn == blockingBtn) {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("WrapDualInterface.ExtendedBlockMode", this.blockingBtn.getCurrentValue().equals("ALL") ? "1" : this.blockingBtn.getCurrentValue().equals("ITEM") ? "2" : "0"));
-        }  else {
+        } else {
             super.actionPerformed(btn);
         }
     }

@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mezz.jei.input.ClickedIngredient;
 import mezz.jei.input.GuiContainerWrapper;
-import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -15,7 +14,7 @@ import java.awt.Rectangle;
 public class MixinGuiContainerWrapper {
 
     @WrapOperation(method = "getIngredientUnderMouse", at = @At(value = "INVOKE", target = "Lmezz/jei/input/ClickedIngredient;create(Ljava/lang/Object;Ljava/awt/Rectangle;)Lmezz/jei/input/ClickedIngredient;"))
-    private ClickedIngredient<Object> getIngredientUnderMouse(Object stack, Rectangle area, Operation<ClickedIngredient<Object>> original) {
-        return original.call(CoreModHooks.wrapFluidPacket((ItemStack) stack), area);
+    private ClickedIngredient<Object> wrapFluidPacket(Object stack, Rectangle area, Operation<ClickedIngredient<Object>> original) {
+        return original.call(CoreModHooks.wrapFluidPacket(stack), area);
     }
 }

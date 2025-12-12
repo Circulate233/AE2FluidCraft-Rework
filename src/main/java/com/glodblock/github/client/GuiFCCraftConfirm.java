@@ -52,7 +52,7 @@ public class GuiFCCraftConfirm extends GuiCraftConfirm {
 
     @Override
     protected void actionPerformed(GuiButton btn) throws IOException {
-        if (btn == this.cancel) {
+        if (btn == this.cancel && this.originGui != null) {
             InventoryHandler.switchGui(this.originGui);
             return;
         }

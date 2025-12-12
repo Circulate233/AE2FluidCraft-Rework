@@ -191,14 +191,16 @@ public class CoreModHooks {
         return grid.getMachines(c);
     }
 
-    public static Object wrapFluidPacket(ItemStack stack) {
-        if (FakeFluids.isFluidFakeItem(stack)) {
-            return FakeItemRegister.getStack(stack);
+    public static Object wrapFluidPacket(Object obj) {
+        if (obj instanceof ItemStack stack) {
+            if (FakeFluids.isFluidFakeItem(stack)) {
+                return FakeItemRegister.getStack(stack);
+            }
+            if (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(stack)) {
+                return FakeItemRegister.getStack(stack);
+            }
         }
-        if (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(stack)) {
-            return FakeItemRegister.getStack(stack);
-        }
-        return stack;
+        return obj;
     }
 
     private static IMachineSet unionMachineSets(IMachineSet... sets) {

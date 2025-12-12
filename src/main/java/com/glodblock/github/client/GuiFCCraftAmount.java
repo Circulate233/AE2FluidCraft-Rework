@@ -60,7 +60,7 @@ public class GuiFCCraftAmount extends GuiCraftAmount {
 
     @Override
     protected void actionPerformed(GuiButton btn) throws IOException {
-        if (btn == this.originalGuiBtn) {
+        if (btn == this.originalGuiBtn && this.originGui != null) {
             InventoryHandler.switchGui(this.originGui);
         } else if (btn == this.next) {
             String text = Ae2ReflectClient.getGuiCraftAmountTextBox(this).getText();

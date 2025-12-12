@@ -4,6 +4,8 @@ import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.implementations.GuiCraftingStatus;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.helpers.WirelessTerminalGuiObject;
+import appeng.parts.reporting.PartExpandedProcessingPatternTerminal;
+import appeng.parts.reporting.PartPatternTerminal;
 import com.glodblock.github.common.part.PartExtendedFluidPatternTerminal;
 import com.glodblock.github.common.part.PartFluidPatternTerminal;
 import com.glodblock.github.inventory.GuiType;
@@ -51,11 +53,14 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
                 ItemStack tool = ((WirelessTerminalGuiObject) part).getItemStack();
                 if (tool.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                     InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
-                }
+                } else super.actionPerformed(btn);
             } else if (part instanceof PartFluidPatternTerminal)
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL);
             else if (part instanceof PartExtendedFluidPatternTerminal)
                 InventoryHandler.switchGui(GuiType.FLUID_EXTENDED_PATTERN_TERMINAL);
+            else if (part instanceof PartPatternTerminal || part instanceof PartExpandedProcessingPatternTerminal) {
+                super.actionPerformed(btn);
+            }
         } else {
             super.actionPerformed(btn);
         }
