@@ -1,4 +1,4 @@
-package com.glodblock.github.client;
+package com.glodblock.github.client.client.gui;
 
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;

@@ -23,6 +23,11 @@ public class ItemFluidDrop extends Item {
 
     }
 
+    @Override
+    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+        return false;
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     @Nonnull

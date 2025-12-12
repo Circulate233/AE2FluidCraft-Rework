@@ -66,7 +66,7 @@ public class CPacketLoadPattern implements IMessage {
             for (ItemStack item : itemList) {
                 if (item != null) {
                     dict.setTag(cnt + "#", ItemStackHelper.stackToNBT(item));
-                    cnt ++;
+                    ++cnt;
                 }
             }
             dict.setShort("l", (short) cnt);
@@ -81,7 +81,7 @@ public class CPacketLoadPattern implements IMessage {
             return new ItemStack[0];
         } else {
             ItemStack[] itemList = new ItemStack[len];
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; ++i) {
                 itemList[i] = ItemStackHelper.stackFromNBT(dict.getCompoundTag(i + "#"));
             }
             return itemList;

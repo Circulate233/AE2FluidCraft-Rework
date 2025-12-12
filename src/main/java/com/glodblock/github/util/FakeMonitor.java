@@ -15,6 +15,7 @@ import appeng.me.cache.NetworkMonitor;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<IAEItemStack> {
 
+    protected static final Map<IStorageChannel<?>, IAEItemStack> drop = new Reference2ObjectOpenHashMap<>();
     protected final Map<T, IAEItemStack> cacheMap = new Object2ObjectOpenHashMap<>();
     protected final NetworkMonitor<T> monitor;
     private final GridStorageCache storage;

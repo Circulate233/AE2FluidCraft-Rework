@@ -30,6 +30,11 @@ public class ItemGasPacket extends Item implements HasCustomModel {
     }
 
     @Override
+    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+        return false;
+    }
+
+    @Override
     @Nonnull
     public String getItemStackDisplayName(@Nonnull ItemStack stack) {
         GasStack gas = FakeItemRegister.getStack(stack);

@@ -54,7 +54,7 @@ public class MixinNetworkMonitor<T extends IAEStack<T>> implements FCNetworkMoni
                 @Override
                 public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> list) {
                     list.findFuzzy(
-                        AEItemStack.fromItemStack(new ItemStack(FCItems.FLUID_DROP,1)),
+                        drop.computeIfAbsent(Util.getFluidChannel(), s -> AEItemStack.fromItemStack(new ItemStack(FCItems.FLUID_DROP, 1))),
                         FuzzyMode.IGNORE_ALL
                     ).forEach(IAEItemStack::reset);
 
@@ -75,7 +75,7 @@ public class MixinNetworkMonitor<T extends IAEStack<T>> implements FCNetworkMoni
                     @Override
                     public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> list) {
                         list.findFuzzy(
-                            AEItemStack.fromItemStack(new ItemStack(FCGasItems.GAS_DROP,1)),
+                            drop.computeIfAbsent(Util.getGasChannel(), s -> AEItemStack.fromItemStack(new ItemStack(FCGasItems.GAS_DROP, 1))),
                             FuzzyMode.IGNORE_ALL
                         ).forEach(IAEItemStack::reset);
 

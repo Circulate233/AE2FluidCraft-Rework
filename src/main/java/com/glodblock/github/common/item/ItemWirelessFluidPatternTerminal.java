@@ -4,12 +4,16 @@ import appeng.items.tools.powered.ToolWirelessTerminal;
 import com.glodblock.github.inventory.GuiType;
 import com.glodblock.github.loader.FCItems;
 import com.glodblock.github.util.Util;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class ItemWirelessFluidPatternTerminal extends ToolWirelessTerminal {
 
@@ -26,4 +30,13 @@ public class ItemWirelessFluidPatternTerminal extends ToolWirelessTerminal {
         return is.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL;
     }
 
+    @Override
+    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+        return false;
+    }
+
+    @Override
+    public void getCheckedSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
+
+    }
 }

@@ -30,6 +30,11 @@ public class ItemFluidPacket extends Item implements HasCustomModel {
     }
 
     @Override
+    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+        return false;
+    }
+
+    @Override
     @Nonnull
     public String getItemStackDisplayName(@Nonnull ItemStack stack) {
         FluidStack fluid = FakeItemRegister.getStack(stack);

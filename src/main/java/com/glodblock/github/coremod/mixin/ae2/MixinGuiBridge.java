@@ -1,7 +1,13 @@
 package com.glodblock.github.coremod.mixin.ae2;
 
+import appeng.container.implementations.ContainerExpandedProcessingPatternTerm;
 import appeng.container.implementations.ContainerInterface;
+import appeng.container.implementations.ContainerPatternTerm;
+import appeng.container.implementations.ContainerWirelessPatternTerminal;
 import appeng.core.sync.GuiBridge;
+import com.glodblock.github.client.container.ContainerExtendedFluidPatternTerminal;
+import com.glodblock.github.client.container.ContainerFluidPatternTerminal;
+import com.glodblock.github.client.container.ContainerWirelessFluidPatternTerminal;
 import com.glodblock.github.client.container.ContainerWrapInterface;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -24,6 +30,15 @@ public class MixinGuiBridge {
     private void containerInterfaceR(GuiBridge instance, Operation<Void> original, @Local(name = "containerClass") Class<?> containerClass) {
         if (containerClass == ContainerInterface.class) {
             this.containerClass = ContainerWrapInterface.class;
+        }
+        if (containerClass == ContainerPatternTerm.class) {
+            this.containerClass = ContainerFluidPatternTerminal.class;
+        }
+        if (containerClass == ContainerWirelessPatternTerminal.class) {
+            this.containerClass = ContainerWirelessFluidPatternTerminal.class;
+        }
+        if (containerClass == ContainerExpandedProcessingPatternTerm.class) {
+            this.containerClass = ContainerExtendedFluidPatternTerminal.class;
         }
         original.call(instance);
     }
