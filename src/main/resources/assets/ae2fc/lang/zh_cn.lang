@@ -79,6 +79,7 @@ ae2fc.tooltip.block_item.hint=阻挡模式只会检查物品。
 ae2fc.tooltip.block_fluid=阻挡流体
 ae2fc.tooltip.block_fluid.hint=阻挡模式只会检查流体。
 ae2fc.tooltip.pattern_encoder.name=由 %s 编码
+ae2fc.tooltip.fluid_pattern.tooltip=§9%s§r 标记 §6%s§r
 
 ae2fc.pauto.fluid_processing.name=流体处理
 ae2fc.pauto.fluid_processing.name_short=流体

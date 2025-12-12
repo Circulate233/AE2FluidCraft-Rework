@@ -5,6 +5,7 @@ import appeng.container.slot.SlotFake;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
+import appeng.util.item.AEItemStack;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -14,9 +15,10 @@ import mezz.jei.api.gui.IGhostIngredientHandler;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
+import java.awt.Rectangle;
 import java.io.IOException;
 
 public class FluidPacketTarget implements IGhostIngredientHandler.Target<Object> {
@@ -39,23 +41,26 @@ public class FluidPacketTarget implements IGhostIngredientHandler.Target<Object>
 
     @Override
     public void accept(@Nonnull Object ingredient) {
-        FluidStack fluid = covertFluid(ingredient);
-        Object gas = covertGas(ingredient);
-        if (fluid == null && gas == null) {
-            return;
-        }
-        IAEItemStack packet;
-        if (fluid != null) {
-            packet = FakeFluids.packFluid2AEPacket(fluid);
+        final IAEItemStack packet;
+        if (!(ingredient instanceof ItemStack stack) || Mouse.getEventButton() == 0) {
+            FluidStack fluid = covertFluid(ingredient);
+            Object gas = covertGas(ingredient);
+            if (fluid != null || gas != null) {
+                if (fluid != null) {
+                    packet = FakeFluids.packFluid2AEPacket(fluid);
+                } else {
+                    packet = FakeGases.packGas2AEPacket((GasStack) gas);
+                }
+            } else return;
         } else {
-            packet = FakeGases.packGas2AEPacket((GasStack) gas);
+            packet = AEItemStack.fromItemStack(stack);
         }
-        final PacketInventoryAction p;
+
         try {
-            p = new PacketInventoryAction(InventoryAction.PLACE_JEI_GHOST_ITEM, (SlotFake) slot, packet);
+            PacketInventoryAction p = new PacketInventoryAction(InventoryAction.PLACE_JEI_GHOST_ITEM, (SlotFake) this.slot, packet);
             NetworkHandler.instance().sendToServer(p);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
+
         }
     }
 

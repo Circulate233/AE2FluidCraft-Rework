@@ -10,6 +10,7 @@ import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.integration.mek.FCGasItems;
 import com.glodblock.github.loader.FCItems;
 import com.glodblock.github.util.ModAndClassUtil;
+import com.glodblock.github.util.UtilClient;
 import com.mekeng.github.common.me.data.IAEGasStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.resources.I18n;
@@ -36,7 +37,7 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
     @Intrinsic
     protected void renderHoveredToolTip(int mouseX, int mouseY) {
         Slot slot = this.hoveredSlot;
-        if (slot instanceof SlotME s && s.isEnabled()) {
+        if (UtilClient.getMouseItem().isEmpty() && slot instanceof SlotME s && s.isEnabled()) {
             var item = s.getAEStack();
             if (item != null) {
                 if (item.getItem() == FCItems.FLUID_DROP) {
@@ -47,7 +48,9 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
                         List<String> list = new ObjectArrayList<>();
                         list.add(fluidStack.getFluidStack().getLocalizedName());
                         list.add(modName);
-                        list.add(TextFormatting.DARK_GRAY + I18n.format("gui.appliedenergistics2.StoredFluids") + "：" + formattedAmount);
+                        list.add(TextFormatting.DARK_GRAY + I18n.format("gui.appliedenergistics2.StoredFluids") + " ： " + formattedAmount);
+                        if (item.isCraftable())
+                            list.add(TextFormatting.GRAY + I18n.format("gui.tooltips.appliedenergistics2.ItemsCraftable"));
                         this.drawHoveringText(list, mouseX, mouseY);
                         return;
                     }
@@ -71,7 +74,9 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
             List<String> list = new ObjectArrayList<>();
             list.add(gs.getGas().getLocalizedName());
             list.add(modName);
-            list.add(TextFormatting.DARK_GRAY + I18n.format("tooltip.stored") + "：" + formattedAmount);
+            list.add(TextFormatting.DARK_GRAY + I18n.format("tooltip.stored") + " ： " + formattedAmount);
+            if (item.isCraftable())
+                list.add(TextFormatting.GRAY + I18n.format("gui.tooltips.appliedenergistics2.ItemsCraftable"));
             this.drawHoveringText(list, mouseX, mouseY);
             return true;
         }

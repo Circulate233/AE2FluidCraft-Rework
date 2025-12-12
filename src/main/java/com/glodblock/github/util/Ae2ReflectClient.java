@@ -19,12 +19,15 @@ import appeng.fluids.client.gui.GuiFluidInterface;
 import com.glodblock.github.client.container.ContainerExtendedFluidPatternTerminal;
 import com.google.common.collect.ImmutableMap;
 import com.mekeng.github.client.gui.GuiGasInterface;
+import mezz.jei.Internal;
+import mezz.jei.input.InputHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.fml.common.Optional;
 
 import java.lang.invoke.MethodHandle;
 
@@ -51,6 +54,7 @@ public class Ae2ReflectClient {
     private static final MethodHandle fSetGuiCraftConfirm_ccc;
     private static final MethodHandle fGetGuiCraftConfirm_cancel;
     private static final MethodHandle fGetGuiGasInterface_priority;
+    private static final MethodHandle fGetInternal_inputHandler;
 
     static {
         try {
@@ -70,7 +74,7 @@ public class Ae2ReflectClient {
             fGetGuiCraftAmount_next = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "next");
             fGetGuiCraftAmount_amountToCraft = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "amountToCraft");
             fGetGuiCraftAmount_originalGuiBtn = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "originalGuiBtn");
-            for (int i = 1, j = 0; i <= 1000; i *= 10, j ++) {
+            for (int i = 1, j = 0; i <= 1000; i *= 10, j++) {
                 fGetGuiCraftAmount_minus[j] = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "minus" + i);
                 fGetGuiCraftAmount_plus[j] = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "plus" + i);
             }
@@ -80,6 +84,11 @@ public class Ae2ReflectClient {
                 fGetGuiGasInterface_priority = Ae2Reflect.reflectFieldGetter(GuiGasInterface.class, "priority");
             } else {
                 fGetGuiGasInterface_priority = null;
+            }
+            if (ModAndClassUtil.JEI) {
+                fGetInternal_inputHandler = Ae2Reflect.reflectFieldGetter(Internal.class, "inputHandler");
+            } else {
+                fGetInternal_inputHandler = null;
             }
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
@@ -152,8 +161,8 @@ public class Ae2ReflectClient {
 
     public static GuiButton getGuiCraftAmountAddButton(GuiCraftAmount gui, int index) {
         return index < 0 ?
-                Ae2Reflect.readField(gui, fGetGuiCraftAmount_minus[-index - 1]) :
-                Ae2Reflect.readField(gui, fGetGuiCraftAmount_plus[index - 1]);
+            Ae2Reflect.readField(gui, fGetGuiCraftAmount_minus[-index - 1]) :
+            Ae2Reflect.readField(gui, fGetGuiCraftAmount_plus[index - 1]);
     }
 
     public static void setGuiCraftAmountAddQty(GuiCraftAmount gui, int amount) {
@@ -176,4 +185,8 @@ public class Ae2ReflectClient {
         return Ae2Reflect.readField(gui, fGetGuiCraftConfirm_cancel);
     }
 
+    @Optional.Method(modid = "jei")
+    public static InputHandler getInputHandler() {
+        return Ae2Reflect.readField(null, fGetInternal_inputHandler);
+    }
 }

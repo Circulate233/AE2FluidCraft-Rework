@@ -99,7 +99,23 @@ public final class Util {
         return null;
     }
 
-    public static Object getGasFromItem(ItemStack stack) {
+    @Optional.Method(modid = "mekeng")
+    public static String getGasNameFromItem(ItemStack stack) {
+        if (!stack.isEmpty() && stack.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, null)) {
+            if (stack.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, null) != null) {
+                GasTankInfo[] tanks = Objects.requireNonNull(stack.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, null)).getTankInfo();
+                for (GasTankInfo tank : tanks) {
+                    if (tank != null && tank.getGas() != null && tank.getGas().amount > 0) {
+                        return tank.getGas().getGas().getLocalizedName();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Optional.Method(modid = "mekeng")
+    public static GasStack getGasFromItem(ItemStack stack) {
         if (!stack.isEmpty() && stack.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, null)) {
             if (stack.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, null) != null) {
                 GasTankInfo[] tanks = Objects.requireNonNull(stack.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, null)).getTankInfo();

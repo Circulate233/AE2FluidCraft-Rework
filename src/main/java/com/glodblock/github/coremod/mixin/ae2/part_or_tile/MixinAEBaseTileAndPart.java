@@ -1,9 +1,10 @@
 package com.glodblock.github.coremod.mixin.ae2.part_or_tile;
 
+import appeng.helpers.IInterfaceHost;
 import appeng.parts.AEBasePart;
 import appeng.tile.AEBaseTile;
 import appeng.util.SettingsFrom;
-import com.glodblock.github.coremod.CoreModHooks;
+import com.glodblock.github.interfaces.FCDualityInterface;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,12 +19,25 @@ public class MixinAEBaseTileAndPart {
 
     @Inject(method = "uploadSettings", at = @At("HEAD"))
     public void onUploadSettings(SettingsFrom from, NBTTagCompound compound, EntityPlayer player, CallbackInfo ci) {
-        CoreModHooks.uploadExtraNBT(this, compound);
+        if (this instanceof IInterfaceHost && compound != null && compound.hasKey("extraNBTData")) {
+            FCDualityInterface dual = (FCDualityInterface) ((IInterfaceHost) this).getInterfaceDuality();
+            NBTTagCompound extra = compound.getCompoundTag("extraNBTData");
+            dual.setAllowSplitting(extra.getBoolean("allowSplitting"));
+            dual.setBlockModeEx(extra.getInteger("blockModeEx"));
+            dual.setFluidPacket(extra.getBoolean("fluidPacket"));
+        }
     }
 
     @Inject(method = "downloadSettings", at = @At(value = "RETURN"))
     public void onDownloadSettings(SettingsFrom from, CallbackInfoReturnable<NBTTagCompound> cir, @Local(name = "output") NBTTagCompound output) {
-        CoreModHooks.downloadExtraNBT(this, output);
+        if (this instanceof IInterfaceHost) {
+            FCDualityInterface dual = (FCDualityInterface) ((IInterfaceHost) this).getInterfaceDuality();
+            NBTTagCompound extra = new NBTTagCompound();
+            extra.setBoolean("fluidPacket", dual.isFluidPacket());
+            extra.setBoolean("allowSplitting", dual.isAllowSplitting());
+            extra.setInteger("blockModeEx", dual.getBlockModeEx());
+            output.setTag("extraNBTData", extra);
+        }
     }
 
 }

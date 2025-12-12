@@ -4,6 +4,7 @@ import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.implementations.GuiExpandedProcessingPatternTerm;
 import appeng.client.gui.widgets.GuiTabButton;
+import appeng.client.me.SlotME;
 import appeng.client.render.StackSizeRenderer;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.OptionalSlotFake;
@@ -59,21 +60,21 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
     public void initGui() {
         super.initGui();
         craftingStatusBtn = Ae2ReflectClient.getCraftingStatusButton(this);
-        this.combineEnableBtn = new GuiFCImgButton( this.guiLeft + 74, this.guiTop + this.ySize - 153, "FORCE_COMBINE", "DO_COMBINE" );
-        this.combineEnableBtn.setHalfSize( true );
-        this.buttonList.add( this.combineEnableBtn );
+        this.combineEnableBtn = new GuiFCImgButton(this.guiLeft + 74, this.guiTop + this.ySize - 153, "FORCE_COMBINE", "DO_COMBINE");
+        this.combineEnableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineEnableBtn);
 
-        this.combineDisableBtn = new GuiFCImgButton( this.guiLeft + 74, this.guiTop + this.ySize - 153, "NOT_COMBINE", "DONT_COMBINE" );
-        this.combineDisableBtn.setHalfSize( true );
-        this.buttonList.add( this.combineDisableBtn );
+        this.combineDisableBtn = new GuiFCImgButton(this.guiLeft + 74, this.guiTop + this.ySize - 153, "NOT_COMBINE", "DONT_COMBINE");
+        this.combineDisableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineDisableBtn);
 
-        this.fluidEnableBtn = new GuiFCImgButton( this.guiLeft + 74, this.guiTop + this.ySize - 143, "FLUID_FIRST", "FLUID" );
-        this.fluidEnableBtn.setHalfSize( true );
-        this.buttonList.add( this.fluidEnableBtn );
+        this.fluidEnableBtn = new GuiFCImgButton(this.guiLeft + 74, this.guiTop + this.ySize - 143, "FLUID_FIRST", "FLUID");
+        this.fluidEnableBtn.setHalfSize(true);
+        this.buttonList.add(this.fluidEnableBtn);
 
-        this.fluidDisableBtn = new GuiFCImgButton( this.guiLeft + 74, this.guiTop + this.ySize - 143, "ORIGIN_ORDER", "ITEM" );
-        this.fluidDisableBtn.setHalfSize( true );
-        this.buttonList.add( this.fluidDisableBtn );
+        this.fluidDisableBtn = new GuiFCImgButton(this.guiLeft + 74, this.guiTop + this.ySize - 143, "ORIGIN_ORDER", "ITEM");
+        this.fluidDisableBtn.setHalfSize(true);
+        this.buttonList.add(this.fluidDisableBtn);
     }
 
     @Override
@@ -103,24 +104,18 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
 
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
-        if ( this.container.combine )
-        {
+        if (this.container.combine) {
             this.combineEnableBtn.visible = true;
             this.combineDisableBtn.visible = false;
-        }
-        else
-        {
+        } else {
             this.combineEnableBtn.visible = false;
             this.combineDisableBtn.visible = true;
         }
 
-        if (this.container.fluidFirst)
-        {
+        if (this.container.fluidFirst) {
             this.fluidEnableBtn.visible = true;
             this.fluidDisableBtn.visible = false;
-        }
-        else
-        {
+        } else {
             this.fluidEnableBtn.visible = false;
             this.fluidDisableBtn.visible = true;
         }
@@ -132,9 +127,9 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
         if (btn == craftingStatusBtn) {
             InventoryHandler.switchGui(GuiType.FLUID_PAT_TERM_CRAFTING_STATUS);
         } else if (this.combineDisableBtn == btn || this.combineEnableBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns( "PatternTerminal.Combine", this.combineDisableBtn == btn ? "1" : "0" ));
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.Combine", this.combineDisableBtn == btn ? "1" : "0"));
         } else if (this.fluidDisableBtn == btn || this.fluidEnableBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns( "PatternTerminal.Fluid", this.fluidDisableBtn == btn ? "1" : "0" ));
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.Fluid", this.fluidDisableBtn == btn ? "1" : "0"));
         } else {
             super.actionPerformed(btn);
         }
@@ -142,12 +137,12 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
 
     @Override
     protected void handleMouseClick(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
-        if (mouseButton == 2 ) {
+        if (mouseButton == 2) {
             if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
                 if (slot.getHasStack()) {
                     IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
                     ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                    for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i ++) {
+                    for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
                         if (this.inventorySlots.inventorySlots.get(i).equals(slot)) {
                             FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(CPacketInventoryAction.Action.CHANGE_AMOUNT, i, 0, stack));
                             break;
@@ -181,6 +176,18 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
         } else {
             return super.getPhantomTargets(ingredient);
         }
+    }
+
+    @Override
+    protected void renderHoveredToolTip(int mouseX, int mouseY) {
+        var slot = this.hoveredSlot;
+        if (slot instanceof SlotFake) {
+            if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
+        }
+        if (slot instanceof SlotME) {
+            if (UtilClient.renderContainerToolTip(this, mouseX, mouseY)) return;
+        }
+        super.renderHoveredToolTip(mouseX, mouseY);
     }
 
 }

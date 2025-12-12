@@ -1,7 +1,6 @@
 package com.glodblock.github.coremod;
 
 import appeng.api.AEApi;
-import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
@@ -10,23 +9,15 @@ import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingJob;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.channels.IFluidStorageChannel;
-import appeng.api.storage.channels.IItemStorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.container.implementations.ContainerPatternEncoder;
 import appeng.container.implementations.CraftingCPURecord;
-import appeng.crafting.MECraftingInventory;
 import appeng.fluids.parts.PartFluidInterface;
 import appeng.fluids.tile.TileFluidInterface;
 import appeng.helpers.DualityInterface;
-import appeng.helpers.IInterfaceHost;
 import appeng.helpers.WirelessTerminalGuiObject;
-import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.parts.misc.PartInterface;
 import appeng.tile.misc.TileInterface;
 import appeng.util.InventoryAdaptor;
@@ -47,6 +38,7 @@ import com.glodblock.github.handler.FluidConvertingItemHandler;
 import com.glodblock.github.integration.mek.FCGasItems;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.integration.mek.GasInterfaceUtil;
+import com.glodblock.github.interfaces.FCDualityInterface;
 import com.glodblock.github.inventory.BlockingFluidInventoryAdaptor;
 import com.glodblock.github.inventory.FluidConvertingInventoryAdaptor;
 import com.glodblock.github.inventory.FluidConvertingInventoryCrafting;
@@ -56,9 +48,6 @@ import com.glodblock.github.loader.FCItems;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.SetBackedMachineSet;
-import com.google.common.base.Preconditions;
-import com.mekeng.github.common.me.data.IAEGasStack;
-import com.mekeng.github.common.me.storage.IGasStorageChannel;
 import mekanism.api.gas.GasStack;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -117,15 +106,18 @@ public class CoreModHooks {
     }
 
     public static void writeExtraNBTInterface(DualityInterface dual, NBTTagCompound nbt) {
-        nbt.setBoolean("fluidPacket", Ae2Reflect.getFluidPacketMode(dual));
-        nbt.setBoolean("allowSplitting", Ae2Reflect.getSplittingMode(dual));
-        nbt.setInteger("blockModeEx", Ae2Reflect.getExtendedBlockMode(dual));
+        nbt.setBoolean("fluidPacket", ((FCDualityInterface) dual).isFluidPacket());
+        nbt.setBoolean("allowSplitting", ((FCDualityInterface) dual).isAllowSplitting());
+        nbt.setInteger("blockModeEx", ((FCDualityInterface) dual).getBlockModeEx());
     }
 
     public static void readExtraNBTInterface(DualityInterface dual, NBTTagCompound nbt) {
-        Ae2Reflect.setFluidPacketMode(dual, nbt.getBoolean("fluidPacket"));
-        Ae2Reflect.setSplittingMode(dual, !nbt.hasKey("allowSplitting") || nbt.getBoolean("allowSplitting"));
-        Ae2Reflect.setExtendedBlockMode(dual, nbt.getInteger("blockModeEx"));
+        boolean value = nbt.getBoolean("fluidPacket");
+        ((FCDualityInterface) dual).setFluidPacket(value);
+        boolean value1 = !nbt.hasKey("allowSplitting") || nbt.getBoolean("allowSplitting");
+        ((FCDualityInterface) dual).setAllowSplitting(value1);
+        int value2 = nbt.getInteger("blockModeEx");
+        ((FCDualityInterface) dual).setBlockModeEx(value2);
     }
 
     public static ItemStack removeFluidPackets(InventoryCrafting inv, int index) {
@@ -247,94 +239,6 @@ public class CoreModHooks {
             }
         }
         return drop;
-    }
-
-    public static long getFluidSize(IAEItemStack aeStack) {
-        if (aeStack.getDefinition() != null && !aeStack.getDefinition().isEmpty()) {
-            if (aeStack.getDefinition().getItem() == FCItems.FLUID_DROP) {
-                return (long) Math.max(aeStack.getStackSize() / 1000D, 1);
-            } else if (ModAndClassUtil.GAS && aeStack.getDefinition().getItem() == FCGasItems.GAS_DROP) {
-                return (long) Math.max(aeStack.getStackSize() / 4000D, 1);
-            }
-        }
-        return aeStack.getStackSize();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void storeFluidItem(CraftingCPUCluster instance) {
-        Preconditions.checkState(Ae2Reflect.getCPUComplete(instance), "CPU should be complete to prevent re-insertion when dumping items");
-        final IGrid g = Ae2Reflect.getGrid(instance);
-
-        if (g == null) {
-            return;
-        }
-
-        final IStorageGrid sg = g.getCache(IStorageGrid.class);
-        final IMEInventory<IAEItemStack> ii = sg.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-        final IMEInventory<IAEFluidStack> jj = sg.getInventory(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class));
-        final IMEInventory kk;
-        final MECraftingInventory inventory = Ae2Reflect.getCPUInventory(instance);
-        if (ModAndClassUtil.GAS) {
-            kk = sg.getInventory(AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class));
-        } else {
-            kk = null;
-        }
-
-        for (IAEItemStack is : inventory.getItemList()) {
-            Ae2Reflect.postCPUChange(instance, is, Ae2Reflect.getCPUSource(instance));
-
-            if (is.getItem() == FCItems.FLUID_DROP) {
-                IAEFluidStack drop = FakeItemRegister.getAEStack(is);
-                IAEFluidStack fluidRemainder = jj.injectItems(drop, Actionable.MODULATE, Ae2Reflect.getCPUSource(instance));
-                if (fluidRemainder != null) {
-                    is.setStackSize(fluidRemainder.getStackSize());
-                } else {
-                    is.reset();
-                }
-            } else if (ModAndClassUtil.GAS && is.getItem() == FCGasItems.GAS_DROP && kk != null) {
-                IAEGasStack drop = FakeItemRegister.getAEStack(is);
-                IAEGasStack gasRemainder = (IAEGasStack) kk.injectItems(drop, Actionable.MODULATE, Ae2Reflect.getCPUSource(instance));
-                if (gasRemainder != null) {
-                    is.setStackSize(gasRemainder.getStackSize());
-                } else {
-                    is.reset();
-                }
-            } else {
-                IAEItemStack remainder = ii.injectItems(is.copy(), Actionable.MODULATE, Ae2Reflect.getCPUSource(instance));
-                if (remainder != null) {
-                    is.setStackSize(remainder.getStackSize());
-                } else {
-                    is.reset();
-                }
-            }
-        }
-
-        if (inventory.getItemList().isEmpty()) {
-            Ae2Reflect.setCPUInventory(instance, new MECraftingInventory());
-        }
-
-        Ae2Reflect.markCPUDirty(instance);
-    }
-
-    public static void downloadExtraNBT(Object host, NBTTagCompound tag) {
-        if (host instanceof IInterfaceHost) {
-            DualityInterface dual = ((IInterfaceHost) host).getInterfaceDuality();
-            NBTTagCompound extra = new NBTTagCompound();
-            extra.setBoolean("fluidPacket", Ae2Reflect.getFluidPacketMode(dual));
-            extra.setBoolean("allowSplitting", Ae2Reflect.getSplittingMode(dual));
-            extra.setInteger("blockModeEx", Ae2Reflect.getExtendedBlockMode(dual));
-            tag.setTag("extraNBTData", extra);
-        }
-    }
-
-    public static void uploadExtraNBT(Object host, NBTTagCompound tag) {
-        if (host instanceof IInterfaceHost && tag != null && tag.hasKey("extraNBTData")) {
-            DualityInterface dual = ((IInterfaceHost) host).getInterfaceDuality();
-            NBTTagCompound extra = tag.getCompoundTag("extraNBTData");
-            Ae2Reflect.setFluidPacketMode(dual, extra.getBoolean("fluidPacket"));
-            Ae2Reflect.setSplittingMode(dual, extra.getBoolean("allowSplitting"));
-            Ae2Reflect.setExtendedBlockMode(dual, extra.getInteger("blockModeEx"));
-        }
     }
 
     public static ItemStack transformPattern(ContainerPatternEncoder container, ItemStack output) {

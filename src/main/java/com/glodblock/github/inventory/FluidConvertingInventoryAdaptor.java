@@ -22,6 +22,7 @@ import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.common.tile.TileDualInterface;
 import com.glodblock.github.integration.mek.FakeGases;
+import com.glodblock.github.interfaces.FCDualityInterface;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
@@ -63,7 +64,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             onmi = ((TileDualInterface) inter).getTargets().size() > 1;
         }
 
-        if (dualInterface == null || !Ae2Reflect.getFluidPacketMode(dualInterface)) {
+        if (dualInterface == null || !((FCDualityInterface) dualInterface).isFluidPacket()) {
             return new FluidConvertingInventoryAdaptor(
                     capProvider,
                     inter,
@@ -118,7 +119,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                     }
                 }
 
-                if (fluid != null && posInterface != null && Ae2Reflect.getSplittingMode(self)) {
+                if (self != null && fluid != null && posInterface != null && ((FCDualityInterface) self).isAllowSplitting()) {
                     for (EnumFacing dir : EnumFacing.values()) {
                         TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                         if (te != null) {
@@ -169,7 +170,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                     }
                 }
 
-                if (gas != null && gas.getGas() != null && posInterface != null && Ae2Reflect.getSplittingMode(self)) {
+                if (self != null && gas != null && gas.getGas() != null && posInterface != null && ((FCDualityInterface) self).isAllowSplitting()) {
                     for (EnumFacing dir : EnumFacing.values()) {
                         TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                         if (te != null) {
@@ -229,7 +230,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 }
 
                 if (fluid != null && posInterface != null) {
-                    if (Ae2Reflect.getSplittingMode(self)) {
+                    if (self != null && ((FCDualityInterface) self).isAllowSplitting()) {
                         for (EnumFacing dir : EnumFacing.values()) {
                             TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                             if (te != null) {
@@ -289,7 +290,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 }
 
                 if (gas != null && posInterface != null) {
-                    if (Ae2Reflect.getSplittingMode(self)) {
+                    if (self != null && ((FCDualityInterface) self).isAllowSplitting()) {
                         for (EnumFacing dir : EnumFacing.values()) {
                             TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                             if (te != null) {
@@ -323,7 +324,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
             if (invGases != null && posInterface != null) {
                 GasStack gas = FakeItemRegister.getStack(toBeSimulated);
-                TileEntity te = (TileEntity) facingTE;;
+                TileEntity te = (TileEntity) facingTE;
                 AENetworkProxy node = getGasInterfaceGrid(te, facing);
                 IGasHandler gasHandler = (IGasHandler) invGases;
                 if (!isSameGrid(node)) {
@@ -368,7 +369,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         }
         int blockMode = 0;
         if (this.self != null) {
-            blockMode = Ae2Reflect.getExtendedBlockMode(this.self);
+            blockMode = ((FCDualityInterface) this.self).getBlockModeEx();
         }
         boolean checkFluid = blockMode != 1;
         boolean checkItem = blockMode != 2;

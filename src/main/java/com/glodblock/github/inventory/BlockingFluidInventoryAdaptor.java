@@ -5,7 +5,7 @@ import appeng.helpers.NonBlockingItems;
 import appeng.util.inv.BlockingInventoryAdaptor;
 import appeng.util.inv.ItemHandlerIterator;
 import appeng.util.inv.ItemSlot;
-import com.glodblock.github.util.Ae2Reflect;
+import com.glodblock.github.interfaces.FCDualityInterface;
 import com.glodblock.github.util.ModAndClassUtil;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -94,7 +94,7 @@ public class BlockingFluidInventoryAdaptor extends BlockingInventoryAdaptor {
         }
 
         if (dualInterface != null) {
-            int mode = Ae2Reflect.getExtendedBlockMode(dualInterface);
+            int mode = ((FCDualityInterface) dualInterface).getBlockModeEx();
             checkFluid = mode != 1;
             checkItem = mode != 2;
         }

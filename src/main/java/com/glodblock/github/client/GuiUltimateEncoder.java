@@ -28,6 +28,7 @@ import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.UtilClient;
 import mezz.jei.api.gui.IGhostIngredientHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -281,4 +282,12 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
         return this.mapTargetSlot;
     }
 
+    @Override
+    protected void renderHoveredToolTip(int mouseX, int mouseY) {
+        var slot = this.hoveredSlot;
+        if (slot instanceof SlotFake) {
+            if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
+        }
+        super.renderHoveredToolTip(mouseX, mouseY);
+    }
 }

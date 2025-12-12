@@ -6,7 +6,7 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
 import appeng.util.Platform;
-import com.glodblock.github.util.Ae2Reflect;
+import com.glodblock.github.interfaces.FCDualityInterface;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.items.IItemHandler;
 
@@ -29,25 +29,25 @@ public class ContainerItemDualInterface extends ContainerInterface {
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         if (Platform.isServer()) {
-            fluidPacket = Ae2Reflect.getFluidPacketMode(dualityInterfaceCopy);
-            allowSplitting = Ae2Reflect.getSplittingMode(dualityInterfaceCopy);
-            blockModeEx = Ae2Reflect.getExtendedBlockMode(dualityInterfaceCopy);
+            fluidPacket = ((FCDualityInterface) dualityInterfaceCopy).isFluidPacket();
+            allowSplitting = ((FCDualityInterface) dualityInterfaceCopy).isAllowSplitting();
+            blockModeEx = ((FCDualityInterface) dualityInterfaceCopy).getBlockModeEx();
         }
     }
 
     public void setFluidPacketInTile(boolean value) {
         this.fluidPacket = value;
-        Ae2Reflect.setFluidPacketMode(dualityInterfaceCopy, value);
+        ((FCDualityInterface) dualityInterfaceCopy).setFluidPacket(value);
     }
 
     public void setAllowSplittingInTile(boolean value) {
         this.allowSplitting = value;
-        Ae2Reflect.setSplittingMode(dualityInterfaceCopy, value);
+        ((FCDualityInterface) dualityInterfaceCopy).setAllowSplitting(value);
     }
 
     public void setExtendedBlockMode(int value) {
         this.blockModeEx = value;
-        Ae2Reflect.setExtendedBlockMode(dualityInterfaceCopy, value);
+        ((FCDualityInterface) dualityInterfaceCopy).setBlockModeEx(value);
     }
 
     @Override

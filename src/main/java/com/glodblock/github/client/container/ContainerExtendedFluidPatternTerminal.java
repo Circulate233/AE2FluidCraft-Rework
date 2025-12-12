@@ -171,7 +171,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
 
     @Override
     public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
-        if (slotId < 0 || slotId >= this.inventorySlots.size()) {
+        if (id != 0 || slotId < 0 || slotId >= this.inventorySlots.size()) {
             super.doAction(player, action, slotId, id);
             return;
         }
@@ -206,11 +206,11 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
             GasStack gas = null;
             switch (action) {
                 case PICKUP_OR_SET_DOWN:
-                    gas = (GasStack) Util.getGasFromItem(stack);
+                    gas = Util.getGasFromItem(stack);
                     slot.putStack(FakeGases.packGas2Packet(gas));
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
-                    gas = (GasStack) Util.getGasFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
+                    gas = Util.getGasFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
                     GasStack origin = FakeItemRegister.getStack(slot.getStack());
                     if (gas != null && gas.equals(origin)) {
                         gas.amount += origin.amount;

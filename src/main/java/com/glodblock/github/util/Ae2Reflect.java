@@ -1,16 +1,11 @@
 package com.glodblock.github.util;
 
 import appeng.api.definitions.IItemDefinition;
-import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingCPU;
-import appeng.api.networking.security.IActionSource;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.CraftingCPURecord;
-import appeng.crafting.MECraftingInventory;
 import appeng.fluids.helper.DualityFluidInterface;
 import appeng.helpers.DualityInterface;
-import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.recipes.game.DisassembleRecipe;
 import appeng.tile.inventory.AppEngInternalInventory;
@@ -29,25 +24,11 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
 public class Ae2Reflect {
 
     private static final MethodHandle mItemSlot_setExtractable;
-    private static final MethodHandle mCPU_getGrid;
-    private static final MethodHandle mCPU_postChange;
-    private static final MethodHandle mCPU_markDirty;
     private static final MethodHandle fGetDisassembleRecipe_nonCellMappings;
     private static final MethodHandle fGetInventory_container;
-    private static final MethodHandle fGetCPU_inventory;
-    private static final MethodHandle fSetCPU_inventory;
-    private static final MethodHandle fGetCPU_machineSrc;
-    private static final MethodHandle fGetCPU_isComplete;
-    private static final MethodHandle fGetDualInterface_fluidPacket;
-    private static final MethodHandle fSetDualInterface_fluidPacket;
-    private static final MethodHandle fGetDualInterface_allowSplitting;
-    private static final MethodHandle fSetDualInterface_allowSplitting;
-    private static final MethodHandle fGetDualInterface_blockModeEx;
-    private static final MethodHandle fSetDualInterface_blockModeEx;
     private static final MethodHandle fGetDualInterface_gridProxy;
     private static final MethodHandle fGetDualityFluidInterface_gridProxy;
     private static final MethodHandle fGetAppEngInternalInventory_filter;
@@ -61,21 +42,8 @@ public class Ae2Reflect {
     static {
         try {
             mItemSlot_setExtractable = reflectMethodHandle(ItemSlot.class, "setExtractable", boolean.class);
-            mCPU_getGrid = reflectMethodHandle(CraftingCPUCluster.class, "getGrid");
-            mCPU_postChange = reflectMethodHandle(CraftingCPUCluster.class, "postChange", IAEItemStack.class, IActionSource.class);
-            mCPU_markDirty = reflectMethodHandle(CraftingCPUCluster.class, "markDirty");
             fGetInventory_container = reflectFieldGetter(InventoryCrafting.class, "eventHandler", "field_70465_c", "c");
             fGetDisassembleRecipe_nonCellMappings = reflectFieldGetter(DisassembleRecipe.class, "nonCellMappings");
-            fGetCPU_inventory = reflectFieldGetter(CraftingCPUCluster.class, "inventory");
-            fSetCPU_inventory = reflectFieldSetter(CraftingCPUCluster.class, "inventory");
-            fGetCPU_machineSrc = reflectFieldGetter(CraftingCPUCluster.class, "machineSrc");
-            fGetCPU_isComplete = reflectFieldGetter(CraftingCPUCluster.class, "isComplete");
-            fGetDualInterface_fluidPacket = reflectFieldGetter(DualityInterface.class, "fluidPacket");
-            fSetDualInterface_fluidPacket = reflectFieldSetter(DualityInterface.class, "fluidPacket");
-            fGetDualInterface_allowSplitting = reflectFieldGetter(DualityInterface.class, "allowSplitting");
-            fSetDualInterface_allowSplitting = reflectFieldSetter(DualityInterface.class, "allowSplitting");
-            fGetDualInterface_blockModeEx = reflectFieldGetter(DualityInterface.class, "blockModeEx");
-            fSetDualInterface_blockModeEx = reflectFieldSetter(DualityInterface.class, "blockModeEx");
             fGetDualInterface_gridProxy = reflectFieldGetter(DualityInterface.class, "gridProxy");
             fGetDualityFluidInterface_gridProxy = reflectFieldGetter(DualityFluidInterface.class, "gridProxy");
             fGetAppEngInternalInventory_filter = reflectFieldGetter(AppEngInternalInventory.class, "filter");
@@ -152,7 +120,6 @@ public class Ae2Reflect {
         return f;
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T readField(Object owner, Field field) {
         try {
             return (T)field.get(owner);
@@ -207,70 +174,6 @@ public class Ae2Reflect {
 
     public static Map<IItemDefinition, IItemDefinition> getDisassemblyNonCellMap(DisassembleRecipe recipe) {
         return readField(recipe, fGetDisassembleRecipe_nonCellMappings);
-    }
-
-    public static IGrid getGrid(CraftingCPUCluster cpu) {
-        try {
-            return (IGrid) mCPU_getGrid.invoke(cpu);
-        } catch (Throwable e) {
-            throw new IllegalStateException("Failed to invoke method: " + mCPU_getGrid, e);
-        }
-    }
-
-    public static MECraftingInventory getCPUInventory(CraftingCPUCluster cpu) {
-        return Ae2Reflect.readField(cpu, fGetCPU_inventory);
-    }
-
-    public static void setCPUInventory(CraftingCPUCluster cpu, MECraftingInventory value) {
-        Ae2Reflect.writeField(cpu, fSetCPU_inventory, value);
-    }
-
-    public static IActionSource getCPUSource(CraftingCPUCluster cpu) {
-        return Ae2Reflect.readField(cpu, fGetCPU_machineSrc);
-    }
-
-    public static boolean getCPUComplete(CraftingCPUCluster cpu) {
-        return Ae2Reflect.readField(cpu, fGetCPU_isComplete);
-    }
-
-    public static void postCPUChange(CraftingCPUCluster cpu, IAEItemStack stack, IActionSource src) {
-        try {
-            mCPU_postChange.invoke(cpu, stack, src);
-        } catch (Throwable e) {
-            throw new IllegalStateException("Failed to invoke method: " + mCPU_postChange, e);
-        }
-    }
-
-    public static void markCPUDirty(CraftingCPUCluster cpu) {
-        try {
-            mCPU_markDirty.invoke(cpu);
-        } catch (Throwable e) {
-            throw new IllegalStateException("Failed to invoke method: " + mCPU_markDirty, e);
-        }
-    }
-
-    public static boolean getFluidPacketMode(DualityInterface owner) {
-        return readField(owner, fGetDualInterface_fluidPacket);
-    }
-
-    public static void setFluidPacketMode(DualityInterface owner, boolean value) {
-        writeField(owner, fSetDualInterface_fluidPacket, value);
-    }
-
-    public static boolean getSplittingMode(DualityInterface owner) {
-        return readField(owner, fGetDualInterface_allowSplitting);
-    }
-
-    public static void setSplittingMode(DualityInterface owner, boolean value) {
-        writeField(owner, fSetDualInterface_allowSplitting, value);
-    }
-
-    public static int getExtendedBlockMode(DualityInterface owner) {
-        return readField(owner, fGetDualInterface_blockModeEx);
-    }
-
-    public static void setExtendedBlockMode(DualityInterface owner, int value) {
-        writeField(owner, fSetDualInterface_blockModeEx, value);
     }
 
     public static AENetworkProxy getInterfaceProxy(DualityInterface owner) {
