@@ -5,6 +5,7 @@ import appeng.client.gui.MathExpressionParser;
 import appeng.client.gui.implementations.GuiCraftAmount;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.AEBaseContainer;
+import appeng.core.sync.GuiBridge;
 import appeng.helpers.WirelessTerminalGuiObject;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.container.ContainerItemAmountChange;
@@ -24,9 +25,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
+import java.io.IOException;
+
 public class GuiItemAmountChange extends GuiCraftAmount {
 
     private GuiType originalGui;
+    private GuiBridge originalGuiB;
     private GuiTabButton originalGuiBtn;
     private GuiButton next;
     private GuiTextField amountToCraft;
@@ -48,8 +52,9 @@ public class GuiItemAmountChange extends GuiCraftAmount {
     public void initGui() {
         super.initGui();
         ItemStack myIcon = null;
-        Object target = ((AEBaseContainer)this.inventorySlots).getTarget();
+        Object target = ((AEBaseContainer) this.inventorySlots).getTarget();
         this.originalGuiBtn = Ae2ReflectClient.getGuiCraftAmountBackButton(this);
+        this.originalGuiB = Ae2ReflectClient.getGuiCraftAmountOriginalGui(this);
         this.buttonList.remove(this.originalGuiBtn);
 
         if (target instanceof WirelessTerminalGuiObject) {
@@ -103,16 +108,16 @@ public class GuiItemAmountChange extends GuiCraftAmount {
     }
 
     @Override
-    protected void actionPerformed( final GuiButton btn ) {
-        try
-        {
-            if( btn == this.originalGuiBtn )
-            {
-                FluidCraft.proxy.netHandler.sendToServer( new CPacketSwitchGuis( this.originalGui ) );
+    protected void actionPerformed(final GuiButton btn) {
+        try {
+            if (btn == this.originalGuiBtn) {
+                if (this.originalGui != null)
+                    FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(this.originalGui));
+                else super.actionPerformed(btn);
+                return;
             }
 
-            if( btn == this.next )
-            {
+            if (btn == this.next) {
                 String text = Ae2ReflectClient.getGuiCraftAmountTextBox(this).getText();
                 double resultD = MathExpressionParser.parse(text);
                 int result;
@@ -121,21 +126,20 @@ public class GuiItemAmountChange extends GuiCraftAmount {
                 } else {
                     result = (int) MathExpressionParser.round(resultD, 0);
                 }
-                FluidCraft.proxy.netHandler.sendToServer( new CPacketPatternValueSet(this.originalGui, result, ((ContainerItemAmountChange) this.inventorySlots).getValueIndex()));
+                FluidCraft.proxy.netHandler.sendToServer(new CPacketPatternValueSet(this.originalGui == null ? originalGuiB : originalGui, result, ((ContainerItemAmountChange) this.inventorySlots).getValueIndex(), this.originalGui != null));
             }
-        }
-        catch( final NumberFormatException e )
-        {
+        } catch (final NumberFormatException e) {
             // nope..
-            this.amountToCraft.setText( "1" );
+            this.amountToCraft.setText("1");
+        } catch (IOException ignored) {
+
         }
 
         final boolean isPlus = btn == this.plus1 || btn == this.plus10 || btn == this.plus100 || btn == this.plus1000;
         final boolean isMinus = btn == this.minus1 || btn == this.minus10 || btn == this.minus100 || btn == this.minus1000;
 
-        if( isPlus || isMinus )
-        {
-            Ae2ReflectClient.setGuiCraftAmountAddQty(this, this.getQty( btn ));
+        if (isPlus || isMinus) {
+            Ae2ReflectClient.setGuiCraftAmountAddQty(this, this.getQty(btn));
         }
     }
 

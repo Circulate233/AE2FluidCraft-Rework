@@ -10,7 +10,7 @@ tile.ae2fc:large_ingredient_buffer.name=ME大型材料バッファ
 tile.ae2fc:burette.name=ME精密ビュレット
 tile.ae2fc:dual_interface.name=ME混合インターフェース
 tile.ae2fc:part_dual_interface.name=ME混合インターフェース
-tile.ae2fc:fluid_level_maintainer.name=ME液体レベルメンテナ
+tile.ae2fc:general_level_maintainer.name=ME通用レベルメンテナ
 tile.ae2fc:fluid_assembler.name=ME液体組立機
 tile.ae2fc:ultimate_encoder.name=ME究極エンコーダー
 
@@ -31,7 +31,7 @@ ae2fc.gui.fluid_packet_decoder=ME液体パケットデコーダー
 ae2fc.gui.ingredient_buffer=ME材料バッファ
 ae2fc.gui.large_ingredient_buffer=ME大型材料バッファ
 ae2fc.gui.burette=ME精密ビュレット
-ae2fc.gui.fluid_level_maintainer=ME液体レベルメンテナ
+ae2fc.gui.general_level_maintainer=ME通用レベルメンテナ
 ae2fc.gui.fluid_assembler=ME液体組立機
 ae2fc.gui.ultimate_encoder=ME究極エンコーダー
 ae2fc.gui.item_amount_set=数を設定

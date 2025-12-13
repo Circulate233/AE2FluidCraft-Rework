@@ -1,8 +1,7 @@
 package com.glodblock.github.common.block;
 
 import appeng.block.AEBaseTileBlock;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.common.tile.TileFluidLevelMaintainer;
+import com.glodblock.github.common.tile.TileGeneralLevelMaintainer;
 import com.glodblock.github.inventory.GuiType;
 import com.glodblock.github.inventory.InventoryHandler;
 import net.minecraft.block.material.Material;
@@ -21,15 +20,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import org.apache.logging.log4j.Level;
 
-public class BlockFluidLevelMaintainer extends AEBaseTileBlock {
+public class BlockGeneralLevelMaintainer extends AEBaseTileBlock {
 
-    public static final PropertyDirection facingProperty = PropertyDirection.create("facing",EnumFacing.Plane.HORIZONTAL);
+    public static final PropertyDirection facingProperty = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
-    public BlockFluidLevelMaintainer() {
+    public BlockGeneralLevelMaintainer() {
         super(Material.IRON);
-        setTileEntity(TileFluidLevelMaintainer.class);
+        setTileEntity(TileGeneralLevelMaintainer.class);
     }
 
     @Override
@@ -38,10 +36,10 @@ public class BlockFluidLevelMaintainer extends AEBaseTileBlock {
         if (player.isSneaking()) {
             return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
         }
-        TileFluidLevelMaintainer tile = getTileEntity(world, pos);
+        TileGeneralLevelMaintainer tile = getTileEntity(world, pos);
         if (tile != null) {
             if (!world.isRemote) {
-                InventoryHandler.openGui(player, world, pos, facing, GuiType.FLUID_LEVEL_MAINTAINER);
+                InventoryHandler.openGui(player, world, pos, facing, GuiType.GENERAL_LEVEL_MAINTAINER);
             }
             return true;
         }
@@ -51,17 +49,15 @@ public class BlockFluidLevelMaintainer extends AEBaseTileBlock {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new ExtendedBlockState(this, new IProperty[]{facingProperty},new IUnlistedProperty[]{});
+        return new ExtendedBlockState(this, new IProperty[]{facingProperty}, new IUnlistedProperty[]{});
     }
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof TileFluidLevelMaintainer)
-        {
-            if (((TileFluidLevelMaintainer) tileEntity).facing != null)
-            {
-                return state.withProperty(facingProperty,((TileFluidLevelMaintainer) tileEntity).facing);
+        if (tileEntity instanceof TileGeneralLevelMaintainer) {
+            if (((TileGeneralLevelMaintainer) tileEntity).facing != null) {
+                return state.withProperty(facingProperty, ((TileGeneralLevelMaintainer) tileEntity).facing);
             }
         }
         return state;
@@ -71,8 +67,8 @@ public class BlockFluidLevelMaintainer extends AEBaseTileBlock {
     public void onBlockPlacedBy(World w, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack is) {
         super.onBlockPlacedBy(w, pos, state, placer, is);
         TileEntity tileEntity = w.getTileEntity(pos);
-        if (tileEntity instanceof TileFluidLevelMaintainer){
-            ((TileFluidLevelMaintainer) tileEntity).facing = placer.getHorizontalFacing().getOpposite();
+        if (tileEntity instanceof TileGeneralLevelMaintainer) {
+            ((TileGeneralLevelMaintainer) tileEntity).facing = placer.getHorizontalFacing().getOpposite();
         }
     }
 
@@ -80,10 +76,10 @@ public class BlockFluidLevelMaintainer extends AEBaseTileBlock {
     public boolean rotateBlock(World w, BlockPos pos, EnumFacing axis) {
 //        FluidCraft.log.log(Level.INFO,axis.getOpposite());
         TileEntity tileEntity = w.getTileEntity(pos);
-        if (tileEntity instanceof TileFluidLevelMaintainer){
-            EnumFacing facing = ((TileFluidLevelMaintainer) tileEntity).facing;
-            ((TileFluidLevelMaintainer) tileEntity).facing = facing.rotateY();
-            w.setBlockState(pos,this.blockState.getBaseState().withProperty(facingProperty,facing.rotateY()));
+        if (tileEntity instanceof TileGeneralLevelMaintainer) {
+            EnumFacing facing = ((TileGeneralLevelMaintainer) tileEntity).facing;
+            ((TileGeneralLevelMaintainer) tileEntity).facing = facing.rotateY();
+            w.setBlockState(pos, this.blockState.getBaseState().withProperty(facingProperty, facing.rotateY()));
             return true;
         }
         return super.rotateBlock(w, pos, axis);

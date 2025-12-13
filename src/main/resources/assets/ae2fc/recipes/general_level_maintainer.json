@@ -1,7 +1,7 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "ae2fc:fluid_level_maintainer",
+    "item": "ae2fc:general_level_maintainer",
     "count": 1
   },
   "pattern": [
@@ -16,7 +16,7 @@
     },
     "l": {
       "type": "appliedenergistics2:part",
-      "part": "part.fluid_level_emitter"
+      "part": "part.general_level_maintainer"
     },
     "e": {
       "type": "appliedenergistics2:part",

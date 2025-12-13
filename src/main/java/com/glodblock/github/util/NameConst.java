@@ -13,7 +13,7 @@ public final class NameConst {
     public static final String BLOCK_LARGE_INGREDIENT_BUFFER = "large_ingredient_buffer";
     public static final String BLOCK_BURETTE = "burette";
     public static final String BLOCK_DUAL_INTERFACE = "dual_interface";
-    public static final String BLOCK_FLUID_LEVEL_MAINTAINER = "fluid_level_maintainer";
+    public static final String BLOCK_GENERAL_LEVEL_MAINTAINER = "general_level_maintainer";
     public static final String BLOCK_FLUID_ASSEMBLER = "fluid_assembler";
     public static final String BLOCK_ULTIMATE_ENCODER = "ultimate_encoder";
     public static final String BLOCK_TRIO_INTERFACE = "trio_interface";
@@ -49,7 +49,7 @@ public final class NameConst {
     public static final String GUI_INGREDIENT_BUFFER = GUI_KEY + BLOCK_INGREDIENT_BUFFER;
     public static final String GUI_LARGE_INGREDIENT_BUFFER = GUI_KEY + BLOCK_LARGE_INGREDIENT_BUFFER;
     public static final String GUI_BURETTE = GUI_KEY + BLOCK_BURETTE;
-    public static final String GUI_FLUID_LEVEL_MAINTAINER = GUI_KEY + BLOCK_FLUID_LEVEL_MAINTAINER;
+    public static final String GUI_FLUID_LEVEL_MAINTAINER = GUI_KEY + BLOCK_GENERAL_LEVEL_MAINTAINER;
     public static final String GUI_FLUID_ASSEMBLER = GUI_KEY + BLOCK_FLUID_ASSEMBLER;
     public static final String GUI_ULTIMATE_ENCODER = GUI_KEY + BLOCK_ULTIMATE_ENCODER;
     public static final String GUI_ITEM_AMOUNT_SET = GUI_KEY + "item_amount_set";

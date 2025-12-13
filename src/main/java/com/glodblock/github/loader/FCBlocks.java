@@ -1,7 +1,16 @@
 package com.glodblock.github.loader;
 
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.common.block.*;
+import com.glodblock.github.common.block.BlockBurette;
+import com.glodblock.github.common.block.BlockDualInterface;
+import com.glodblock.github.common.block.BlockFluidAssembler;
+import com.glodblock.github.common.block.BlockFluidDiscretizer;
+import com.glodblock.github.common.block.BlockFluidPacketDecoder;
+import com.glodblock.github.common.block.BlockFluidPatternEncoder;
+import com.glodblock.github.common.block.BlockGeneralLevelMaintainer;
+import com.glodblock.github.common.block.BlockIngredientBuffer;
+import com.glodblock.github.common.block.BlockLargeIngredientBuffer;
+import com.glodblock.github.common.block.BlockUltimateEncoder;
 import com.glodblock.github.handler.RegistryHandler;
 import com.glodblock.github.util.NameConst;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -22,8 +31,8 @@ public class FCBlocks {
     public static BlockBurette BURETTE;
     @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.BLOCK_DUAL_INTERFACE)
     public static BlockDualInterface DUAL_INTERFACE;
-    @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.BLOCK_FLUID_LEVEL_MAINTAINER)
-    public static BlockFluidLevelMaintainer FLUID_LEVEL_MAINTAINER;
+    @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.BLOCK_GENERAL_LEVEL_MAINTAINER)
+    public static BlockGeneralLevelMaintainer GENERAL_LEVEL_MAINTAINER;
     @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.BLOCK_FLUID_ASSEMBLER)
     public static BlockFluidAssembler FLUID_ASSEMBLER;
     @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.BLOCK_ULTIMATE_ENCODER)
@@ -37,7 +46,7 @@ public class FCBlocks {
         regHandler.block(NameConst.BLOCK_LARGE_INGREDIENT_BUFFER, new BlockLargeIngredientBuffer());
         regHandler.block(NameConst.BLOCK_BURETTE, new BlockBurette());
         regHandler.block(NameConst.BLOCK_DUAL_INTERFACE, new BlockDualInterface());
-        regHandler.block(NameConst.BLOCK_FLUID_LEVEL_MAINTAINER, new BlockFluidLevelMaintainer());
+        regHandler.block(NameConst.BLOCK_GENERAL_LEVEL_MAINTAINER, new BlockGeneralLevelMaintainer());
         regHandler.block(NameConst.BLOCK_FLUID_ASSEMBLER, new BlockFluidAssembler());
         regHandler.block(NameConst.BLOCK_ULTIMATE_ENCODER, new BlockUltimateEncoder());
     }

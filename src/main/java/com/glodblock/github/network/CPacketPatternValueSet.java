@@ -2,6 +2,8 @@ package com.glodblock.github.network;
 
 import appeng.container.ContainerOpenContext;
 import appeng.container.slot.SlotFake;
+import appeng.core.sync.GuiBridge;
+import appeng.util.Platform;
 import com.glodblock.github.client.container.ContainerItemAmountChange;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
@@ -26,22 +28,25 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class CPacketPatternValueSet implements IMessage {
 
-    private GuiType originGui;
+    private Enum<?> originGui;
     private int amount;
     private int valueIndex;
+    private boolean isFC;
 
     public CPacketPatternValueSet() {
         //NO-OP
     }
 
-    public CPacketPatternValueSet( GuiType originalGui, int amount, int valueIndex ){
+    public CPacketPatternValueSet(Enum<?> originalGui, int amount, int valueIndex, boolean isFC) {
         this.originGui = originalGui;
         this.amount = amount;
         this.valueIndex = valueIndex;
+        this.isFC = isFC;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
+        buf.writeBoolean(isFC);
         buf.writeInt(originGui.ordinal());
         buf.writeInt(amount);
         buf.writeInt(valueIndex);
@@ -49,7 +54,8 @@ public class CPacketPatternValueSet implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.originGui = GuiType.getByOrdinal(buf.readInt());
+        this.isFC = buf.readBoolean();
+        this.originGui = isFC ? GuiType.getByOrdinal(buf.readInt()) : GuiBridge.values()[buf.readInt()];
         this.amount = buf.readInt();
         this.valueIndex = buf.readInt();
     }
@@ -63,13 +69,22 @@ public class CPacketPatternValueSet implements IMessage {
                 if (player.openContainer instanceof ContainerItemAmountChange cpv) {
                     final ContainerOpenContext context = cpv.getOpenContext();
                     if (context != null) {
-                        InventoryHandler.openGui(
+                        if (message.isFC) {
+                            InventoryHandler.openGui(
                                 player,
                                 player.world,
                                 new BlockPos(Ae2Reflect.getContextX(context), Ae2Reflect.getContextY(context), Ae2Reflect.getContextZ(context)),
                                 context.getSide().getFacing(),
-                                message.originGui
-                        );
+                                (GuiType) message.originGui
+                            );
+                        } else {
+                            Platform.openGUI(
+                                player,
+                                context.getTile(),
+                                context.getSide(),
+                                (GuiBridge) message.originGui
+                            );
+                        }
                         if (player.openContainer instanceof FCFluidPatternContainer) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);
                             if (slot instanceof SlotFake) {

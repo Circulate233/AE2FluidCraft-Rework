@@ -180,8 +180,11 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
     @Override
     protected void renderHoveredToolTip(int mouseX, int mouseY) {
         var slot = this.hoveredSlot;
-        if (slot instanceof SlotFake) {
+        if (slot instanceof SlotFake s) {
             if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
+            var i = AEItemStack.fromItemStack(s.getStack());
+            if (UtilClient.rendererFluid(this, i, mouseX, mouseY, true)) return;
+            if (ModAndClassUtil.GAS && UtilClient.rendererGas(this, i, mouseX, mouseY, true)) return;
         }
         super.renderHoveredToolTip(mouseX, mouseY);
     }

@@ -16,19 +16,20 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.button.GuiFCImgButton;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
 import com.glodblock.github.client.render.FluidRenderUtils;
+import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.tile.TileUltimateEncoder;
 import com.glodblock.github.integration.jei.FluidPacketTarget;
 import com.glodblock.github.integration.jei.ItemTarget;
-import com.glodblock.github.integration.mek.FCGasItems;
+import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.integration.mek.GasRenderUtil;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
-import com.glodblock.github.loader.FCItems;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.UtilClient;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.gui.IGhostIngredientHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -210,7 +211,7 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     }
 
     private void renderMEStyleSlot(Slot slot, @Nonnull ItemStack stack) {
-        if (slot instanceof SlotFake && !stack.isEmpty() && !(stack.getItem() == FCItems.FLUID_PACKET || (ModAndClassUtil.GAS && stack.getItem() == FCGasItems.GAS_PACKET))) {
+        if (slot instanceof SlotFake && !stack.isEmpty() && !(FakeFluids.isFluidFakeItem(stack) || (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(stack)))) {
             super.drawSlot(new SlotSingleItem(slot));
             if (stack.getCount() > 1) {
                 this.stackSizeRenderer.renderStackSize(fontRenderer, AEItemStack.fromItemStack(stack), slot.xPos, slot.yPos);
@@ -254,7 +255,7 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     @Override
     public List<IGhostIngredientHandler.Target<?>> getPhantomTargets(Object ingredient) {
         if (FluidPacketTarget.covertFluid(ingredient) != null || FluidPacketTarget.covertGas(ingredient) != null) {
-            List<IGhostIngredientHandler.Target<?>> targets = new ArrayList<>();
+            List<IGhostIngredientHandler.Target<?>> targets = new ObjectArrayList<>();
             for (Slot slot : this.container.inventorySlots) {
                 if (slot instanceof SlotFake) {
                     IGhostIngredientHandler.Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
@@ -285,8 +286,11 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     @Override
     protected void renderHoveredToolTip(int mouseX, int mouseY) {
         var slot = this.hoveredSlot;
-        if (slot instanceof SlotFake) {
+        if (slot instanceof SlotFake s) {
             if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
+            var i = AEItemStack.fromItemStack(s.getStack());
+            if (UtilClient.rendererFluid(this, i, mouseX, mouseY, true)) return;
+            if (ModAndClassUtil.GAS && UtilClient.rendererGas(this, i, mouseX, mouseY, true)) return;
         }
         super.renderHoveredToolTip(mouseX, mouseY);
     }

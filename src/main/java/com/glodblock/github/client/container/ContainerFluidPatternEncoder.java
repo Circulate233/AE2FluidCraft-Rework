@@ -12,7 +12,6 @@ import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.common.tile.TileFluidPatternEncoder;
 import com.glodblock.github.handler.AeItemStackHandler;
-import com.glodblock.github.integration.mek.FCGasItems;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.interfaces.AeStackInventory;
 import com.glodblock.github.interfaces.PatternConsumer;
@@ -110,14 +109,14 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
         List<IAEItemStack> acc = new ArrayList<>();
         for (IAEItemStack stack : inv) {
             if (stack != null) {
-                if (stack.getItem() == FCItems.FLUID_PACKET) {
+                if (FakeFluids.isFluidFakeItem(stack.getDefinition())) {
                     IAEItemStack dropStack = FakeFluids.packFluid2AEDrops((FluidStack) FakeItemRegister.getStack(stack));
                     if (dropStack != null) {
                         acc.add(dropStack);
                         continue;
                     }
                 }
-                if (ModAndClassUtil.GAS && stack.getItem() == FCGasItems.GAS_PACKET) {
+                if (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(stack.getDefinition())) {
                     IAEItemStack dropStack = FakeGases.packGas2AEDrops((GasStack) FakeItemRegister.getStack(stack));
                     if (dropStack != null) {
                         acc.add(dropStack);
@@ -214,7 +213,7 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
                         stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
                         .getTankProperties();
                 for (IFluidTankProperties tank : tanks) {
-                    IAEItemStack aeStack = FakeFluids.packFluid2AEPacket(tank.getContents());
+                    IAEItemStack aeStack = FakeFluids.packFluid2AEDrops(tank.getContents());
                     if (aeStack != null) {
                         setAeStack(aeStack, false);
                         return;
@@ -225,7 +224,7 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
                         stack.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, null))
                         .getTankInfo();
                 for (GasTankInfo tank : tanks) {
-                    IAEItemStack aeStack = FakeGases.packGas2AEPacket(tank.getGas());
+                    IAEItemStack aeStack = FakeGases.packGas2AEDrops(tank.getGas());
                     if (aeStack != null) {
                         setAeStack(aeStack, false);
                         return;

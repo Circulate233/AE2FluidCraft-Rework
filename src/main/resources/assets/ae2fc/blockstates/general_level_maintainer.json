@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "ae2fc:general_level_maintainer"
+    },
+    "facing=south": {
+      "model": "ae2fc:general_level_maintainer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "ae2fc:general_level_maintainer",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "ae2fc:general_level_maintainer",
+      "y": 90
+    },
+    "facing=down": {
+      "model": "ae2fc:general_level_maintainer",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "ae2fc:general_level_maintainer",
+      "x": 270
+    }
+  }
+}

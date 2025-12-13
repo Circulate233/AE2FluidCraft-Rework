@@ -1,7 +1,7 @@
 package com.glodblock.github.network;
 
-import com.glodblock.github.client.container.ContainerFluidLevelMaintainer;
-import com.glodblock.github.common.tile.TileFluidLevelMaintainer;
+import com.glodblock.github.client.container.ContainerGeneralLevelMaintainer;
+import com.glodblock.github.common.tile.TileGeneralLevelMaintainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -43,8 +43,8 @@ public class CPacketUpdateFluidLevel implements IMessage {
         public IMessage onMessage(CPacketUpdateFluidLevel message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
-                if (player.openContainer instanceof ContainerFluidLevelMaintainer) {
-                    TileFluidLevelMaintainer te = ((ContainerFluidLevelMaintainer) player.openContainer).getTile();
+                if (player.openContainer instanceof ContainerGeneralLevelMaintainer) {
+                    TileGeneralLevelMaintainer te = ((ContainerGeneralLevelMaintainer) player.openContainer).getTile();
                     if (message.index >= 10) {
                         te.setRequest(message.index - 10, message.size);
                     }

@@ -23,10 +23,10 @@ import com.glodblock.github.client.GuiFCPriority;
 import com.glodblock.github.client.GuiFluidAssembler;
 import com.glodblock.github.client.GuiFluidDualInterface;
 import com.glodblock.github.client.GuiFluidExportBus;
-import com.glodblock.github.client.GuiFluidLevelMaintainer;
 import com.glodblock.github.client.GuiFluidPacketDecoder;
 import com.glodblock.github.client.GuiFluidPatternEncoder;
 import com.glodblock.github.client.GuiFluidPatternTerminalCraftingStatus;
+import com.glodblock.github.client.GuiGeneralLevelMaintainer;
 import com.glodblock.github.client.GuiIngredientBuffer;
 import com.glodblock.github.client.GuiItemAmountChange;
 import com.glodblock.github.client.GuiItemDualInterface;
@@ -41,10 +41,10 @@ import com.glodblock.github.client.container.ContainerFCCraftConfirm;
 import com.glodblock.github.client.container.ContainerFluidAssembler;
 import com.glodblock.github.client.container.ContainerFluidDualInterface;
 import com.glodblock.github.client.container.ContainerFluidExportBus;
-import com.glodblock.github.client.container.ContainerFluidLevelMaintainer;
 import com.glodblock.github.client.container.ContainerFluidPacketDecoder;
 import com.glodblock.github.client.container.ContainerFluidPatternEncoder;
 import com.glodblock.github.client.container.ContainerFluidPatternTerminal;
+import com.glodblock.github.client.container.ContainerGeneralLevelMaintainer;
 import com.glodblock.github.client.container.ContainerIngredientBuffer;
 import com.glodblock.github.client.container.ContainerItemAmountChange;
 import com.glodblock.github.client.container.ContainerItemDualInterface;
@@ -54,9 +54,9 @@ import com.glodblock.github.client.container.ContainerWirelessFluidPatternTermin
 import com.glodblock.github.common.part.PartFluidExportBus;
 import com.glodblock.github.common.tile.TileBurette;
 import com.glodblock.github.common.tile.TileFluidAssembler;
-import com.glodblock.github.common.tile.TileFluidLevelMaintainer;
 import com.glodblock.github.common.tile.TileFluidPacketDecoder;
 import com.glodblock.github.common.tile.TileFluidPatternEncoder;
+import com.glodblock.github.common.tile.TileGeneralLevelMaintainer;
 import com.glodblock.github.common.tile.TileIngredientBuffer;
 import com.glodblock.github.common.tile.TileLargeIngredientBuffer;
 import com.glodblock.github.common.tile.TileUltimateEncoder;
@@ -116,15 +116,15 @@ public enum GuiType {
         }
     }),
 
-    FLUID_LEVEL_MAINTAINER(new PartOrTileGuiFactory<>(TileFluidLevelMaintainer.class) {
+    GENERAL_LEVEL_MAINTAINER(new PartOrTileGuiFactory<>(TileGeneralLevelMaintainer.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileFluidLevelMaintainer inv) {
-            return new ContainerFluidLevelMaintainer(player.inventory, inv);
+        protected Object createServerGui(EntityPlayer player, TileGeneralLevelMaintainer inv) {
+            return new ContainerGeneralLevelMaintainer(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileFluidLevelMaintainer inv) {
-            return new GuiFluidLevelMaintainer(player.inventory, inv);
+        protected Object createClientGui(EntityPlayer player, TileGeneralLevelMaintainer inv) {
+            return new GuiGeneralLevelMaintainer(player.inventory, inv);
         }
     }),
 

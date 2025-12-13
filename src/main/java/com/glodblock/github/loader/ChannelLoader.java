@@ -12,7 +12,7 @@ import com.glodblock.github.network.CPacketTransposeFluid;
 import com.glodblock.github.network.CPacketUpdateFluidLevel;
 import com.glodblock.github.network.CPacketUseKeybind;
 import com.glodblock.github.network.CpacketMEMonitorableAction;
-import com.glodblock.github.network.SPacketSetFluidLevel;
+import com.glodblock.github.network.SPacketSetGeneralLevel;
 import com.glodblock.github.network.SPacketSetItemAmount;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -29,7 +29,7 @@ public class ChannelLoader implements Runnable {
         FluidCraft.proxy.netHandler.registerMessage(new CPacketLoadPattern.Handler(), CPacketLoadPattern.class, id ++, Side.SERVER);
         FluidCraft.proxy.netHandler.registerMessage(new CPacketUpdateFluidLevel.Handler(), CPacketUpdateFluidLevel.class, id ++, Side.SERVER);
         FluidCraft.proxy.netHandler.registerMessage(new CPacketFluidPatternTermBtns.Handler(), CPacketFluidPatternTermBtns.class, id ++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(new SPacketSetFluidLevel.Handler(), SPacketSetFluidLevel.class, id ++, Side.CLIENT);
+        FluidCraft.proxy.netHandler.registerMessage(new SPacketSetGeneralLevel.Handler(), SPacketSetGeneralLevel.class, id++, Side.CLIENT);
         FluidCraft.proxy.netHandler.registerMessage(new CPacketPatternValueSet.Handler(), CPacketPatternValueSet.class, id ++, Side.SERVER);
         FluidCraft.proxy.netHandler.registerMessage(new CPacketInventoryAction.Handler(), CPacketInventoryAction.class, id ++, Side.SERVER);
         FluidCraft.proxy.netHandler.registerMessage(new SPacketSetItemAmount.Handler(), SPacketSetItemAmount.class, id ++, Side.CLIENT);

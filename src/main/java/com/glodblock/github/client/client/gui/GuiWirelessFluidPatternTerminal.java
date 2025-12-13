@@ -206,8 +206,11 @@ public class GuiWirelessFluidPatternTerminal extends GuiPatternTerm {
     @Override
     protected void renderHoveredToolTip(int mouseX, int mouseY) {
         var slot = this.hoveredSlot;
-        if (!this.container.isCraftingMode() && slot instanceof SlotFake) {
+        if (!this.container.isCraftingMode() && slot instanceof SlotFake s) {
             if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
+            var i = AEItemStack.fromItemStack(s.getStack());
+            if (UtilClient.rendererFluid(this, i, mouseX, mouseY, true)) return;
+            if (ModAndClassUtil.GAS && UtilClient.rendererGas(this, i, mouseX, mouseY, true)) return;
         }
         super.renderHoveredToolTip(mouseX, mouseY);
     }

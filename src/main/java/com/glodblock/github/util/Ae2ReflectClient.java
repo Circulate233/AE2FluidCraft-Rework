@@ -15,6 +15,7 @@ import appeng.client.render.StackSizeRenderer;
 import appeng.container.implementations.ContainerCraftConfirm;
 import appeng.container.implementations.ContainerPatternEncoder;
 import appeng.container.implementations.ContainerUpgradeable;
+import appeng.core.sync.GuiBridge;
 import appeng.fluids.client.gui.GuiFluidInterface;
 import com.glodblock.github.client.container.ContainerExtendedFluidPatternTerminal;
 import com.google.common.collect.ImmutableMap;
@@ -49,6 +50,7 @@ public class Ae2ReflectClient {
     private static final MethodHandle fGetGuiCraftAmount_next;
     private static final MethodHandle fGetGuiCraftAmount_amountToCraft;
     private static final MethodHandle fGetGuiCraftAmount_originalGuiBtn;
+    private static final MethodHandle fGetGuiCraftAmount_originalGui;
     private static final MethodHandle[] fGetGuiCraftAmount_minus = new MethodHandle[4];
     private static final MethodHandle[] fGetGuiCraftAmount_plus = new MethodHandle[4];
     private static final MethodHandle fSetGuiCraftConfirm_ccc;
@@ -74,6 +76,7 @@ public class Ae2ReflectClient {
             fGetGuiCraftAmount_next = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "next");
             fGetGuiCraftAmount_amountToCraft = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "amountToCraft");
             fGetGuiCraftAmount_originalGuiBtn = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "originalGuiBtn");
+            fGetGuiCraftAmount_originalGui = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "originalGui");
             for (int i = 1, j = 0; i <= 1000; i *= 10, j++) {
                 fGetGuiCraftAmount_minus[j] = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "minus" + i);
                 fGetGuiCraftAmount_plus[j] = Ae2Reflect.reflectFieldGetter(GuiCraftAmount.class, "plus" + i);
@@ -175,6 +178,10 @@ public class Ae2ReflectClient {
 
     public static GuiTabButton getGuiCraftAmountBackButton(GuiCraftAmount gui) {
         return Ae2Reflect.readField(gui, fGetGuiCraftAmount_originalGuiBtn);
+    }
+
+    public static GuiBridge getGuiCraftAmountOriginalGui(GuiCraftAmount gui) {
+        return Ae2Reflect.readField(gui, fGetGuiCraftAmount_originalGui);
     }
 
     public static void writeCraftConfirmContainer(GuiCraftConfirm gui, ContainerCraftConfirm ccc) {

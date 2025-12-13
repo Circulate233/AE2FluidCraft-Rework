@@ -11,9 +11,9 @@ import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.tile.TileBurette;
 import com.glodblock.github.common.tile.TileDualInterface;
 import com.glodblock.github.common.tile.TileFluidAssembler;
-import com.glodblock.github.common.tile.TileFluidLevelMaintainer;
 import com.glodblock.github.common.tile.TileFluidPacketDecoder;
 import com.glodblock.github.common.tile.TileFluidPatternEncoder;
+import com.glodblock.github.common.tile.TileGeneralLevelMaintainer;
 import com.glodblock.github.common.tile.TileIngredientBuffer;
 import com.glodblock.github.common.tile.TileLargeIngredientBuffer;
 import com.glodblock.github.common.tile.TileTrioInterface;
@@ -72,7 +72,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileLargeIngredientBuffer.class, FluidCraft.resource(NameConst.BLOCK_LARGE_INGREDIENT_BUFFER));
         GameRegistry.registerTileEntity(TileBurette.class, FluidCraft.resource(NameConst.BLOCK_BURETTE));
         GameRegistry.registerTileEntity(TileDualInterface.class, FluidCraft.resource(NameConst.BLOCK_DUAL_INTERFACE));
-        GameRegistry.registerTileEntity(TileFluidLevelMaintainer.class, FluidCraft.resource(NameConst.BLOCK_FLUID_LEVEL_MAINTAINER));
+        GameRegistry.registerTileEntity(TileGeneralLevelMaintainer.class, FluidCraft.resource(NameConst.BLOCK_GENERAL_LEVEL_MAINTAINER));
         GameRegistry.registerTileEntity(TileFluidAssembler.class, FluidCraft.resource(NameConst.BLOCK_FLUID_ASSEMBLER));
         GameRegistry.registerTileEntity(TileUltimateEncoder.class, FluidCraft.resource(NameConst.BLOCK_ULTIMATE_ENCODER));
         if (ModAndClassUtil.GAS) {

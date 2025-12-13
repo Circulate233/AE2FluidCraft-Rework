@@ -16,11 +16,9 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
-import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.common.tile.TileUltimateEncoder;
-import com.glodblock.github.integration.mek.FCGasItems;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.interfaces.FCFluidPatternContainer;
 import com.glodblock.github.loader.FCItems;
@@ -136,78 +134,35 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
         }
     }
 
-    @Override
-    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
-        if (id != 0 || slotId < 0 || slotId >= this.inventorySlots.size()) {
-            super.doAction(player, action, slotId, id);
-            return;
-        }
-        Slot slot = getSlot(slotId);
-        ItemStack stack = player.inventory.getItemStack();
-        if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && !stack.isEmpty()
-                && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && Util.getFluidFromItem(stack) != null) {
-            FluidStack fluid = null;
-            switch (action) {
-                case PICKUP_OR_SET_DOWN:
-                    fluid = Util.getFluidFromItem(stack);
-                    slot.putStack(FakeFluids.packFluid2Packet(fluid));
-                    break;
-                case SPLIT_OR_PLACE_SINGLE:
-                    fluid = Util.getFluidFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    FluidStack origin = FakeItemRegister.getStack(slot.getStack());
-                    if (fluid != null && fluid.equals(origin)) {
-                        fluid.amount += origin.amount;
-                        if (fluid.amount <= 0) fluid = null;
-                    }
-                    slot.putStack(FakeFluids.packFluid2Packet(fluid));
-                    break;
+    private static IAEItemStack[] collectInventory(Slot[] slots) {
+        // see note at top of DensePatternDetails
+        List<IAEItemStack> acc = new ArrayList<>();
+        for (Slot slot : slots) {
+            ItemStack stack = slot.getStack();
+            if (stack.isEmpty()) {
+                continue;
             }
-            if (fluid == null) {
-                super.doAction(player, action, slotId, id);
-                return;
-            }
-            return;
-        }
-        if (ModAndClassUtil.GAS && (slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && !stack.isEmpty()
-                && stack.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, null) && Util.getGasFromItem(stack) != null) {
-            GasStack gas = null;
-            switch (action) {
-                case PICKUP_OR_SET_DOWN:
-                    gas = Util.getGasFromItem(stack);
-                    slot.putStack(FakeGases.packGas2Packet(gas));
-                    break;
-                case SPLIT_OR_PLACE_SINGLE:
-                    gas = Util.getGasFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    GasStack origin = FakeItemRegister.getStack(slot.getStack());
-                    if (gas != null && gas.equals(origin)) {
-                        gas.amount += origin.amount;
-                        if (gas.amount <= 0) gas = null;
-                    }
-                    slot.putStack(FakeGases.packGas2Packet(gas));
-                    break;
-            }
-            if (gas == null) {
-                super.doAction(player, action, slotId, id);
-                return;
-            }
-            return;
-        }
-        if (action == InventoryAction.SPLIT_OR_PLACE_SINGLE) {
-            if (stack.isEmpty() && !slot.getStack().isEmpty() && slot.getStack().getItem() instanceof ItemFluidPacket) {
-                FluidStack fluid = FakeItemRegister.getStack(slot.getStack());
-                if (fluid != null && fluid.amount - 1000 >= 1) {
-                    fluid.amount -= 1000;
-                    slot.putStack(FakeFluids.packFluid2Packet(fluid));
-                }
-            } else if (ModAndClassUtil.GAS && stack.isEmpty() && !slot.getStack().isEmpty() && slot.getStack().getItem() == FCGasItems.GAS_PACKET) {
-                GasStack gas = FakeItemRegister.getStack(slot.getStack());
-                if (gas != null && gas.amount - 1000 >= 1) {
-                    gas.amount -= 1000;
-                    slot.putStack(FakeGases.packGas2Packet(gas));
+            if (FakeFluids.isFluidFakeItem(stack)) {
+                IAEItemStack dropStack = FakeFluids.packFluid2AEDrops((FluidStack) FakeItemRegister.getStack(stack));
+                if (dropStack != null) {
+                    acc.add(dropStack);
+                    continue;
                 }
             }
+            if (ModAndClassUtil.GAS && FakeFluids.isFluidFakeItem(stack)) {
+                IAEItemStack dropStack = FakeGases.packGas2AEDrops((GasStack) FakeItemRegister.getStack(stack));
+                if (dropStack != null) {
+                    acc.add(dropStack);
+                    continue;
+                }
+            }
+            IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
+            if (aeStack == null) {
+                continue;
+            }
+            acc.add(aeStack);
         }
-        super.doAction(player, action, slotId, id);
+        return acc.toArray(new IAEItemStack[0]);
     }
 
     public void encodeAndMoveToInventory() {
@@ -269,6 +224,89 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
         patternSlotOUT.putStack(pattern.writeToStack());
     }
 
+    @Override
+    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
+        if (id != 0 || slotId < 0 || slotId >= this.inventorySlots.size()) {
+            super.doAction(player, action, slotId, id);
+            return;
+        }
+        Slot slot = getSlot(slotId);
+        ItemStack stack = player.inventory.getItemStack();
+        if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && !stack.isEmpty()
+            && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && Util.getFluidFromItem(stack) != null) {
+            FluidStack fluid = null;
+            switch (action) {
+                case PICKUP_OR_SET_DOWN:
+                    fluid = Util.getFluidFromItem(stack);
+                    slot.putStack(FakeFluids.packFluid2Drops(fluid));
+                    break;
+                case SPLIT_OR_PLACE_SINGLE:
+                    fluid = Util.getFluidFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
+                    FluidStack origin = FakeItemRegister.getStack(slot.getStack());
+                    if (fluid != null && fluid.equals(origin)) {
+                        fluid.amount += origin.amount;
+                        if (fluid.amount <= 0) fluid = null;
+                    }
+                    slot.putStack(FakeFluids.packFluid2Drops(fluid));
+                    break;
+            }
+            if (fluid == null) {
+                super.doAction(player, action, slotId, id);
+                return;
+            }
+            return;
+        }
+        if (ModAndClassUtil.GAS && (slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && !stack.isEmpty()
+            && stack.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, null) && Util.getGasFromItem(stack) != null) {
+            GasStack gas = null;
+            switch (action) {
+                case PICKUP_OR_SET_DOWN:
+                    gas = Util.getGasFromItem(stack);
+                    slot.putStack(FakeGases.packGas2Drops(gas));
+                    break;
+                case SPLIT_OR_PLACE_SINGLE:
+                    gas = Util.getGasFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
+                    GasStack origin = FakeItemRegister.getStack(slot.getStack());
+                    if (gas != null && gas.equals(origin)) {
+                        gas.amount += origin.amount;
+                        if (gas.amount <= 0) gas = null;
+                    }
+                    slot.putStack(FakeGases.packGas2Drops(gas));
+                    break;
+            }
+            if (gas == null) {
+                super.doAction(player, action, slotId, id);
+                return;
+            }
+            return;
+        }
+        if (action == InventoryAction.SPLIT_OR_PLACE_SINGLE) {
+            if (stack.isEmpty() && !slot.getStack().isEmpty() && FakeFluids.isFluidFakeItem(slot.getStack())) {
+                FluidStack fluid = FakeItemRegister.getStack(slot.getStack());
+                if (fluid != null && fluid.amount - 1000 >= 1) {
+                    fluid.amount -= 1000;
+                    slot.putStack(FakeFluids.packFluid2Drops(fluid));
+                }
+            } else if (ModAndClassUtil.GAS && stack.isEmpty() && !slot.getStack().isEmpty() && FakeGases.isGasFakeItem(slot.getStack())) {
+                GasStack gas = FakeItemRegister.getStack(slot.getStack());
+                if (gas != null && gas.amount - 1000 >= 1) {
+                    gas.amount -= 1000;
+                    slot.putStack(FakeGases.packGas2Drops(gas));
+                }
+            }
+        }
+        super.doAction(player, action, slotId, id);
+    }
+
+    private void encodeFluidPattern() {
+        ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
+        FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
+        pattern.setInputs(collectInventory(craftingSlots));
+        pattern.setOutputs(collectInventory(outputSlots));
+        pattern.setEncoder(this.getInventoryPlayer().player.getGameProfile());
+        patternSlotOUT.putStack(pattern.writeToStack());
+    }
+
     private boolean checkHasFluidPattern() {
         boolean hasFluid = false, search = false;
         for (Slot craftingSlot : this.craftingSlots) {
@@ -277,11 +315,11 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
                 continue;
             }
             search = true;
-            if (crafting.getItem() == FCItems.FLUID_PACKET) {
+            if (FakeFluids.isFluidFakeItem(crafting)) {
                 hasFluid = true;
                 break;
             }
-            if (ModAndClassUtil.GAS && crafting.getItem() == FCGasItems.GAS_PACKET) {
+            if (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(crafting)) {
                 hasFluid = true;
                 break;
             }
@@ -298,10 +336,10 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
             search = false;
             if (hasFluid) {
                 break;
-            } else if (out.getItem() == FCItems.FLUID_PACKET) {
+            } else if (FakeFluids.isFluidFakeItem(out)) {
                 hasFluid = true;
                 break;
-            } else if (ModAndClassUtil.GAS && out.getItem() == FCGasItems.GAS_PACKET) {
+            } else if (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(out)) {
                 hasFluid = true;
                 break;
             }
@@ -309,52 +347,12 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
         return hasFluid && !search; // search=true -> outputs were empty
     }
 
-    private void encodeFluidPattern() {
-        ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
-        FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
-        pattern.setInputs(collectInventory(craftingSlots));
-        pattern.setOutputs(collectInventory(outputSlots));
-        pattern.setEncoder(this.getInventoryPlayer().player.getGameProfile());
-        patternSlotOUT.putStack(pattern.writeToStack());
-    }
-
-    private static IAEItemStack[] collectInventory(Slot[] slots) {
-        // see note at top of DensePatternDetails
-        List<IAEItemStack> acc = new ArrayList<>();
-        for (Slot slot : slots) {
-            ItemStack stack = slot.getStack();
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (stack.getItem() == FCItems.FLUID_PACKET) {
-                IAEItemStack dropStack = FakeFluids.packFluid2AEDrops((FluidStack) FakeItemRegister.getStack(stack));
-                if (dropStack != null) {
-                    acc.add(dropStack);
-                    continue;
-                }
-            }
-            if (ModAndClassUtil.GAS && stack.getItem() == FCGasItems.GAS_PACKET) {
-                IAEItemStack dropStack = FakeGases.packGas2AEDrops((GasStack) FakeItemRegister.getStack(stack));
-                if (dropStack != null) {
-                    acc.add(dropStack);
-                    continue;
-                }
-            }
-            IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
-            if (aeStack == null) {
-                continue;
-            }
-            acc.add(aeStack);
-        }
-        return acc.toArray(new IAEItemStack[0]);
-    }
-
     private boolean notPattern(final ItemStack output) {
         if (output.isEmpty()) {
             return true;
         }
         if (output.getItem() == FCItems.DENSE_ENCODED_PATTERN ||
-                output.getItem() == FCItems.LARGE_ITEM_ENCODED_PATTERN) {
+            output.getItem() == FCItems.LARGE_ITEM_ENCODED_PATTERN) {
             return false;
         }
         final IDefinitions defs = AEApi.instance().definitions();
