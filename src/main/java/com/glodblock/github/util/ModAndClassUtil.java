@@ -11,6 +11,7 @@ public final class ModAndClassUtil {
     public static boolean OC = false;
     public static boolean GAS = false;
     public static boolean JEI = false;
+    public static boolean TCE = false;
 
     public static void init() {
         if (Loader.isModLoaded("packagedauto")) {
@@ -39,6 +40,10 @@ public final class ModAndClassUtil {
 
         if (Loader.isModLoaded("jei")) {
             JEI = true;
+        }
+
+        if (Loader.isModLoaded("thaumicenergistics")) {
+            TCE = true;
         }
     }
 

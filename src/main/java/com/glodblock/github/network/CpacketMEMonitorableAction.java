@@ -2,7 +2,9 @@ package com.glodblock.github.network;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.container.implementations.ContainerMEMonitorable;
 import appeng.core.AELog;
 import appeng.core.sync.network.NetworkHandler;
@@ -12,6 +14,7 @@ import appeng.helpers.InventoryAction;
 import appeng.me.helpers.PlayerSource;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
 import com.mekeng.github.common.me.data.impl.AEGasStack;
@@ -19,6 +22,7 @@ import io.netty.buffer.ByteBuf;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasItem;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,13 +32,16 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import thaumicenergistics.container.ContainerBaseTerminal;
 
 import java.io.IOException;
 
 public class CpacketMEMonitorableAction implements IMessage {
 
+    public static final byte FLUID_OPERATE = 2;
     public static final byte FLUID = 0;
     public static final byte GAS = 1;
+    private static IAEItemStack bucket;
 
     private byte type;
     private NBTTagCompound obj;
@@ -63,17 +70,27 @@ public class CpacketMEMonitorableAction implements IMessage {
 
         @Override
         public IMessage onMessage(CpacketMEMonitorableAction message, MessageContext ctx) {
+            if (bucket == null) {
+                bucket = AEItemStack.fromItemStack(new ItemStack(Items.BUCKET));
+            }
             final var player = ctx.getServerHandler().player;
             final var c = player.openContainer;
+            final IStorageGrid grid;
+            final IActionSource source;
             if (c instanceof ContainerMEMonitorable cme) {
-                boolean drain = false;
-                final IStorageGrid grid = cme.getNetworkNode().getGrid().getCache(IStorageGrid.class);
-                final var source = new PlayerSource(player, (IActionHost) cme.getTarget());
-                var h = player.inventory.getItemStack();
-                if (h.isEmpty()) return null;
+                grid = cme.getNetworkNode().getGrid().getCache(IStorageGrid.class);
+                source = new PlayerSource(player, (IActionHost) cme.getTarget());
+            } else if (ModAndClassUtil.TCE && c instanceof ContainerBaseTerminal cbt) {
+                grid = cbt.getPart().getGridNode().getGrid().getCache(IStorageGrid.class);
+                source = new PlayerSource(player, cbt.getPart());
+            } else return null;
+
+            boolean drain = false;
+            var h = player.inventory.getItemStack();
+            if (!h.isEmpty()) {
+                ItemStack ch = h.copy();
+                ch.setCount(1);
                 if (message.type == FLUID) {
-                    var ch = h.copy();
-                    ch.setCount(1);
                     final IFluidHandlerItem fh = FluidUtil.getFluidHandler(ch);
                     if (fh == null) return null;
                     final var allFluid = fh.drain(Integer.MAX_VALUE, false);
@@ -109,10 +126,9 @@ public class CpacketMEMonitorableAction implements IMessage {
                         player.inventory.placeItemBackInInventory(player.world, cc);
                     } else player.inventory.setItemStack(fh.getContainer());
                     updateHeld(player);
+                    return null;
                 } else if (ModAndClassUtil.GAS && message.type == GAS && h.getItem() instanceof IGasItem ig) {
-                    final ItemStack gi = h.copy();
-                    gi.setCount(1);
-                    final var allGas = ig.getGas(gi);
+                    final var allGas = ig.getGas(ch);
                     final var allAmount = allGas == null ? 0 : allGas.amount;
                     GasStack gas = null;
                     if (!message.obj.isEmpty()) {
@@ -132,22 +148,52 @@ public class CpacketMEMonitorableAction implements IMessage {
                         final var size = allAEGas.getStackSize() - (a == null ? 0 : a.getStackSize());
                         gasStorage.injectItems(allAEGas.setStackSize(size), Actionable.MODULATE, source);
                         allGas.amount -= (int) size;
-                        ig.setGas(gi, allGas);
+                        ig.setGas(ch, allGas);
                     } else {
                         allAEGas = AEGasStack.of(gas);
                         if (allAEGas == null) return null;
                         final var a = gasStorage.extractItems(allAEGas, Actionable.SIMULATE, source);
-                        final var size = Math.min(ig.getMaxGas(gi) - allAmount, (int) a.getStackSize());
+                        final var size = Math.min(ig.getMaxGas(ch) - allAmount, (int) a.getStackSize());
                         gasStorage.extractItems(allAEGas.setStackSize(size), Actionable.MODULATE, source);
                         gas.amount = size + allAmount;
-                        ig.setGas(gi, gas);
+                        ig.setGas(ch, gas);
                     }
                     if (h.getCount() > 1) {
                         h.shrink(1);
-                        player.inventory.placeItemBackInInventory(player.world, gi);
-                    } else player.inventory.setItemStack(gi);
+                        player.inventory.placeItemBackInInventory(player.world, ch);
+                    } else player.inventory.setItemStack(ch);
+                    updateHeld(player);
+                    return null;
+                }
+            } else if (message.type == FLUID_OPERATE) {
+                final FluidStack fluid;
+                if (!message.obj.isEmpty()) {
+                    var i = new ItemStack(message.obj);
+                    fluid = FakeItemRegister.getStack(i);
+                    if (fluid == null) return null;
+                    fluid.amount = 1000;
+                } else return null;
+                boolean shift = message.obj.getBoolean("shift");
+                final var itemStorage = grid.getInventory(Util.getItemChannel());
+                var b = itemStorage.extractItems(bucket, Actionable.MODULATE, source);
+                if (b == null) return null;
+                final var fluidStorage = grid.getInventory(Util.getFluidChannel());
+                final var aeFluid = fluidStorage.extractItems(AEFluidStack.fromFluidStack(fluid), Actionable.SIMULATE, source);
+                if (aeFluid.getStackSize() < 1000) return null;
+                final IFluidHandlerItem fh = FluidUtil.getFluidHandler(b.createItemStack());
+                if (fh == null) return null;
+                var s = fh.fill(aeFluid.getFluidStack(), true);
+                if (s != 1000) return null;
+                var out = fh.getContainer();
+                if (shift) {
+                    var slot = player.inventory.getFirstEmptyStack();
+                    if (slot == -1) return null;
+                    player.inventory.setInventorySlotContents(slot, out);
+                } else {
+                    player.inventory.setItemStack(out);
                     updateHeld(player);
                 }
+                fluidStorage.extractItems(aeFluid, Actionable.MODULATE, source);
             }
             return null;
         }

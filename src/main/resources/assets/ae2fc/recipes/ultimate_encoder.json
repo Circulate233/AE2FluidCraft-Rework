@@ -18,7 +18,8 @@
       "item": "appliedenergistics2:fluix_block"
     },
     "e": {
-      "item": "ae2fc:part_fluid_pattern_ex_terminal"
+      "type": "appliedenergistics2:part",
+      "part": "part.expanded_processing_pattern_terminal"
     },
     "c": {
       "item": "ae2fc:fluid_pattern_encoder"

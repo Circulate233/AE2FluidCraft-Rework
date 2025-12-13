@@ -74,7 +74,6 @@ public final class FakeItemRegister {
         return HANDLERS.containsKey(stack.getItem().getClass());
     }
 
-    @SuppressWarnings("unchecked")
     private static <V, A> FakeItemHandler<V, A> checkItem(Item host) {
         if (HANDLERS.containsKey(host.getClass())) {
             return (FakeItemHandler<V, A>) HANDLERS.get(host.getClass());

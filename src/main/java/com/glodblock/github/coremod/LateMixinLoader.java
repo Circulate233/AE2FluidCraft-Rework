@@ -20,6 +20,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         addMixinCFG("mixins.ae2fc.packagedauto.json", () -> Loader.isModLoaded("packagedauto"));
         addMixinCFG("mixins.ae2fc.jei.json", () -> Loader.isModLoaded("jei"));
         addMixinCFG("mixins.ae2fc.wct.json", () -> Loader.isModLoaded("wct"));
+        addMixinCFG("mixins.ae2fc.thaumicenergistics.json", () -> isClassPresent("thaumicenergistics.client.gui.part.GuiArcaneTerminal"));
     }
 
     private static void addMixinCFG(final String mixinConfig) {
@@ -40,4 +41,9 @@ public class LateMixinLoader implements ILateMixinLoader {
         return MIXIN_CONFIGS.get(mixinConfig).getAsBoolean();
     }
 
+    private static boolean isClassPresent(String className) {
+        String classFilePath = className.replace('.', '/') + ".class";
+        ClassLoader classLoader = LateMixinLoader.class.getClassLoader();
+        return classLoader.getResource(classFilePath) != null;
+    }
 }
