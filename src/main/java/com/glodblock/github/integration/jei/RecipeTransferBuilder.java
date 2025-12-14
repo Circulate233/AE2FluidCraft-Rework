@@ -118,12 +118,12 @@ public class RecipeTransferBuilder {
             int i = index - offset;
             if (i < this.fluidIn.size()) {
                 if (this.fluidIn.get(i) != null) {
-                    this.in.put(index, new ItemStack[] {FakeFluids.packFluid2Packet(this.fluidIn.get(i))});
+                    this.in.put(index, new ItemStack[] {FakeFluids.packFluid2Drops(this.fluidIn.get(i))});
                 }
             } else {
                 i -= this.fluidIn.size();
                 if (this.gasIn.get(i) != null) {
-                    this.in.put(index, new ItemStack[] {FakeGases.packGas2Packet((GasStack) this.gasIn.get(i))});
+                    this.in.put(index, new ItemStack[] {FakeGases.packGas2Drops((GasStack) this.gasIn.get(i))});
                 }
             }
         }
@@ -134,9 +134,9 @@ public class RecipeTransferBuilder {
             if (index < this.itemOut.size()) {
                 this.out.add(this.itemOut.get(index));
             } else if (index - this.itemOut.size() < this.fluidOut.size()) {
-                this.out.add(FakeFluids.packFluid2Packet(this.fluidOut.get(index - this.itemOut.size())));
+                this.out.add(FakeFluids.packFluid2Drops(this.fluidOut.get(index - this.itemOut.size())));
             } else if (index - this.itemOut.size() - this.fluidOut.size() < this.gasOut.size()) {
-                this.out.add(FakeGases.packGas2Packet((GasStack) this.gasOut.get(index - this.itemOut.size() - this.fluidOut.size())));
+                this.out.add(FakeGases.packGas2Drops((GasStack) this.gasOut.get(index - this.itemOut.size() - this.fluidOut.size())));
             }
         }
     }

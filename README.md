@@ -32,9 +32,10 @@ Official AE2 isn't supported, you can use origin [AE2FC](https://github.com/phan
 ## Credited Works
 
 E. Geng(@phantamanta44) and KilaBash (@Yefancy) - Their amazing origin work in 1.12.
+
 @GlodBlock - Improvements to this mod and support for MEK projects
 
-## Some Content Display
+## Some Content
 
 ![](gallery/20251214-170804.png)
 ![](gallery/20251214-171441.png)
