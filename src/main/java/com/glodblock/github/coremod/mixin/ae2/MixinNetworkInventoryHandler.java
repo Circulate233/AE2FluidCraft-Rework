@@ -17,6 +17,8 @@ import com.glodblock.github.loader.FCItems;
 import com.glodblock.github.util.FakeMonitor;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,24 +52,7 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
         monitor = security.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getInventory(Util.getItemChannel());
     }
 
-    @Inject(method = "injectItems", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", ordinal = 2), cancellable = true)
-    private void injectItems(T input, Actionable mode, IActionSource src, CallbackInfoReturnable<T> cir) {
-        if (input == null) return;
-        if (input instanceof IAEItemStack i) {
-            if (i.getItem() == FCItems.FLUID_DROP) {
-                cir.setReturnValue((T) fluidMonitor.injectItems(i, mode, src));
-            } else if (ModAndClassUtil.GAS && i.getItem() == FCGasItems.GAS_DROP) {
-                cir.setReturnValue((T) gasMonitor.injectItems(i, mode, src));
-            } else {
-                return;
-            }
-        } else {
-            return;
-        }
-        this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
-    }
-
-    @Inject(method = "injectItems", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", ordinal = 1), cancellable = true)
+    @Inject(method = "injectItems", at = @At(value = "INVOKE", target = "Ljava/util/NavigableMap;values()Ljava/util/Collection;", ordinal = 1), cancellable = true)
     private void notItemInject(T input, Actionable mode, IActionSource src, CallbackInfoReturnable<T> cir) {
         if (input == null || input instanceof IAEItemStack) return;
         if (src instanceof FakeMonitor.FakeMonitorSource || mode == Actionable.SIMULATE) return;
@@ -76,7 +61,24 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
             this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
             cir.setReturnValue(FakeItemRegister.getAEStack(monitor.injectItems(drop, mode, src)));
             this.diveList((NetworkInventoryHandler<T>) (Object) this, mode);
+        } else return;
+        this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
+    }
+
+    @Inject(method = "injectItems", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", ordinal = 2), cancellable = true)
+    private void injectItems(T input, Actionable mode, IActionSource src, CallbackInfoReturnable<T> cir, @Share("fc$fakeInput") LocalBooleanRef fakeInput) {
+        if (input == null || fakeInput.get()) return;
+        if (input instanceof IAEItemStack i) {
+            if (i.getItem() == FCItems.FLUID_DROP) {
+                cir.setReturnValue((T) fluidMonitor.injectItems(i, mode, src));
+            } else if (ModAndClassUtil.GAS && i.getItem() == FCGasItems.GAS_DROP) {
+                cir.setReturnValue((T) gasMonitor.injectItems(i, mode, src));
+            } else {
+                fakeInput.set(true);
+                return;
+            }
         } else {
+            fakeInput.set(true);
             return;
         }
         this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
