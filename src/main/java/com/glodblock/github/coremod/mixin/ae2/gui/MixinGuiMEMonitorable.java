@@ -78,13 +78,18 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
             if (s.getAEStack() != null) {
                 if (s.getAEStack().getItem() == FCItems.FLUID_DROP
                     || (ModAndClassUtil.GAS && s.getAEStack().getItem() == FCGasItems.GAS_DROP)) {
-                    if (s.getAEStack().getItem() == FCItems.FLUID_DROP) {
-                        var shift = s.getAEStack().getDefinition().writeToNBT(new NBTTagCompound());
-                        shift.setBoolean("shift", isShiftKeyDown());
-                        FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
-                            (CpacketMEMonitorableAction.FLUID_OPERATE, shift));
+                    if (mouseButton != 2
+                        && !(mouseButton == 0
+                        && (s.getAEStack().getStackSize() == 0 || isAltKeyDown()))
+                    ) {
+                        if (s.getAEStack().getItem() == FCItems.FLUID_DROP) {
+                            var shift = s.getAEStack().getDefinition().writeToNBT(new NBTTagCompound());
+                            shift.setBoolean("shift", isShiftKeyDown());
+                            FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
+                                (CpacketMEMonitorableAction.FLUID_OPERATE, shift));
+                        }
+                        return;
                     }
-                    return;
                 }
             }
         }

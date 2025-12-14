@@ -14,7 +14,7 @@ public class MixinAEBaseGui {
 
     @WrapOperation(method = "handleMouseClick", at = @At(value = "NEW", target = "(Lappeng/helpers/InventoryAction;IJ)Lappeng/core/sync/packets/PacketInventoryAction;", ordinal = 0, remap = false))
     protected PacketInventoryAction handleMouseClick(InventoryAction action, int slot, long id, Operation<PacketInventoryAction> original) {
-        var newid = (long) Mouse.getEventButton();
+        long newid = Mouse.getEventButton();
         if (newid == -1) {
             newid = Mouse.isButtonDown(0) ? 0 : 1;
         }
@@ -23,7 +23,7 @@ public class MixinAEBaseGui {
 
     @WrapOperation(method = "mouseClickMove", at = @At(value = "NEW", target = "(Lappeng/helpers/InventoryAction;IJ)Lappeng/core/sync/packets/PacketInventoryAction;", ordinal = 0, remap = false))
     protected PacketInventoryAction mouseClickMove(InventoryAction action, int slot, long id, Operation<PacketInventoryAction> original) {
-        var newid = (long) Mouse.getEventButton();
+        long newid = Mouse.getEventButton();
         if (newid == -1) {
             newid = Mouse.isButtonDown(0) ? 0 : 1;
         }
