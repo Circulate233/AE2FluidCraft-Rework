@@ -10,16 +10,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import javax.annotation.Nullable;
 
-public class CPacketUpdateFluidLevel implements IMessage {
+public class CPacketUpdateGeneralLevel implements IMessage {
 
     private int index;
     private int size;
 
-    public CPacketUpdateFluidLevel() {
+    public CPacketUpdateGeneralLevel() {
         //NO-OP
     }
 
-    public CPacketUpdateFluidLevel(int id, int value) {
+    public CPacketUpdateGeneralLevel(int id, int value) {
         this.index = id;
         this.size = value;
     }
@@ -36,11 +36,11 @@ public class CPacketUpdateFluidLevel implements IMessage {
         buf.writeInt(size);
     }
 
-    public static class Handler implements IMessageHandler<CPacketUpdateFluidLevel, IMessage> {
+    public static class Handler implements IMessageHandler<CPacketUpdateGeneralLevel, IMessage> {
 
         @Nullable
         @Override
-        public IMessage onMessage(CPacketUpdateFluidLevel message, MessageContext ctx) {
+        public IMessage onMessage(CPacketUpdateGeneralLevel message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 if (player.openContainer instanceof ContainerGeneralLevelMaintainer) {

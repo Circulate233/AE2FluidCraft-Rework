@@ -72,9 +72,6 @@ public class CpacketMEMonitorableAction implements IMessage {
 
         @Override
         public IMessage onMessage(CpacketMEMonitorableAction message, MessageContext ctx) {
-            if (bucket == null) {
-                bucket = AEItemStack.fromItemStack(new ItemStack(Items.BUCKET));
-            }
             final var player = ctx.getServerHandler().player;
             final var c = player.openContainer;
             final IStorageGrid grid;
@@ -133,6 +130,9 @@ public class CpacketMEMonitorableAction implements IMessage {
                     mek$Work(message, ig, ch, grid, source, h, player);
                 }
             } else if (message.type == FLUID_OPERATE) {
+                if (bucket == null) {
+                    bucket = AEItemStack.fromItemStack(new ItemStack(Items.BUCKET));
+                }
                 final FluidStack fluid;
                 if (!message.obj.isEmpty()) {
                     var i = new ItemStack(message.obj);
@@ -142,9 +142,9 @@ public class CpacketMEMonitorableAction implements IMessage {
                 } else return null;
                 boolean shift = message.obj.getBoolean("shift");
                 final var itemStorage = grid.getInventory(Util.getItemChannel());
-                var b = itemStorage.extractItems(bucket, Actionable.MODULATE, source);
-                if (b == null) return null;
                 final var fluidStorage = grid.getInventory(Util.getFluidChannel());
+                var b = itemStorage.extractItems(bucket, Actionable.SIMULATE, source);
+                if (b == null) return null;
                 final var aeFluid = fluidStorage.extractItems(AEFluidStack.fromFluidStack(fluid), Actionable.SIMULATE, source);
                 if (aeFluid == null || aeFluid.getStackSize() < 1000) return null;
                 final IFluidHandlerItem fh = FluidUtil.getFluidHandler(b.createItemStack());
@@ -160,6 +160,7 @@ public class CpacketMEMonitorableAction implements IMessage {
                     player.inventory.setItemStack(out);
                     updateHeld(player);
                 }
+                itemStorage.extractItems(bucket, Actionable.MODULATE, source);
                 fluidStorage.extractItems(aeFluid, Actionable.MODULATE, source);
             }
             return null;

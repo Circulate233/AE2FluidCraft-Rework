@@ -16,7 +16,7 @@ import com.glodblock.github.common.tile.TileGeneralLevelMaintainer;
 import com.glodblock.github.integration.jei.FluidPacketTarget;
 import com.glodblock.github.integration.mek.FCGasItems;
 import com.glodblock.github.loader.FCItems;
-import com.glodblock.github.network.CPacketUpdateFluidLevel;
+import com.glodblock.github.network.CPacketUpdateGeneralLevel;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.UtilClient;
@@ -126,7 +126,7 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
                         }
 
                         if (id >= 10 || result != 0)
-                            FluidCraft.proxy.netHandler.sendToServer(new CPacketUpdateFluidLevel(id, (int) result));
+                            FluidCraft.proxy.netHandler.sendToServer(new CPacketUpdateGeneralLevel(id, (int) result));
 
                     } catch (NumberFormatException ignored) {
                     }
