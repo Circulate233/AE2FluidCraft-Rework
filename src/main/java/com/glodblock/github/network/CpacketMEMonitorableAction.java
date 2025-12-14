@@ -117,6 +117,7 @@ public class CpacketMEMonitorableAction implements IMessage {
                     } else {
                         allAEFluid = AEFluidStack.fromFluidStack(fluid);
                         final var a = fluidStorage.extractItems(allAEFluid, Actionable.SIMULATE, source);
+                        if (a == null) return null;
                         final var size = fh.fill(a.getFluidStack(), false);
                         fluidStorage.extractItems(allAEFluid.setStackSize(size), Actionable.MODULATE, source);
                         fh.fill(a.getFluidStack(), true);
@@ -145,7 +146,7 @@ public class CpacketMEMonitorableAction implements IMessage {
                 if (b == null) return null;
                 final var fluidStorage = grid.getInventory(Util.getFluidChannel());
                 final var aeFluid = fluidStorage.extractItems(AEFluidStack.fromFluidStack(fluid), Actionable.SIMULATE, source);
-                if (aeFluid.getStackSize() < 1000) return null;
+                if (aeFluid == null || aeFluid.getStackSize() < 1000) return null;
                 final IFluidHandlerItem fh = FluidUtil.getFluidHandler(b.createItemStack());
                 if (fh == null) return null;
                 var s = fh.fill(aeFluid.getFluidStack(), true);
@@ -193,6 +194,7 @@ public class CpacketMEMonitorableAction implements IMessage {
                 allAEGas = AEGasStack.of(gas);
                 if (allAEGas == null) return;
                 final var a = gasStorage.extractItems(allAEGas, Actionable.SIMULATE, source);
+                if (a == null) return;
                 final var size = Math.min(ig.getMaxGas(ch) - allAmount, (int) a.getStackSize());
                 gasStorage.extractItems(allAEGas.setStackSize(size), Actionable.MODULATE, source);
                 gas.amount = size + allAmount;
