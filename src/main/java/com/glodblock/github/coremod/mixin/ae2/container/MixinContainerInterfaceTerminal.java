@@ -23,7 +23,7 @@ public class MixinContainerInterfaceTerminal {
 
     @SuppressWarnings("MixinAnnotationTarget")
     @Redirect(method = "*", at = @At(value = "INVOKE", target = "Lappeng/api/networking/IGrid;getMachines(Ljava/lang/Class;)Lappeng/api/networking/IMachineSet;"))
-    public IMachineSet packGetMachines(IGrid instance, Class<? extends IGridHost> aClass) {
+    public IMachineSet packGetMachines(final IGrid instance, final Class<? extends IGridHost> aClass) {
         return CoreModHooks.getMachines(instance, aClass);
     }
 }

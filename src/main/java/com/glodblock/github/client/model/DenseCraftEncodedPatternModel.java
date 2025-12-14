@@ -32,11 +32,11 @@ public class DenseCraftEncodedPatternModel implements IModel {
     // adapted from ae2's ItemEncodedPatternModel#bake
     @Override
     @Nonnull
-    public IBakedModel bake(@Nonnull IModelState state, @Nonnull VertexFormat format, @Nonnull Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-        IBakedModel baseModel;
+    public IBakedModel bake(@Nonnull final IModelState state, @Nonnull final VertexFormat format, @Nonnull final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+        final IBakedModel baseModel;
         try {
             baseModel = ModelLoaderRegistry.getModel(BASE_MODEL).bake(state, format, bakedTextureGetter);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
         return Ae2ReflectClient.bakeEncodedPatternModel(baseModel, PerspectiveMapWrapper.getTransforms(state));
@@ -45,12 +45,12 @@ public class DenseCraftEncodedPatternModel implements IModel {
     public static class Loader implements ICustomModelLoader {
 
         @Override
-        public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
+        public void onResourceManagerReload(@Nonnull final IResourceManager resourceManager) {
             // NO-OP
         }
 
         @Override
-        public boolean accepts(ResourceLocation modelLocation) {
+        public boolean accepts(final ResourceLocation modelLocation) {
             // modelLocation will probably be a ModelResourceLocation, so using compareTo lets us bypass the
             // ModelResourceLocation equality behaviour and fall back to that of ResourceLocation
             return modelLocation.compareTo(NameConst.MODEL_DENSE_CRAFT_ENCODED_PATTERN) == 0;
@@ -58,7 +58,7 @@ public class DenseCraftEncodedPatternModel implements IModel {
 
         @Override
         @Nonnull
-        public IModel loadModel(@Nonnull ResourceLocation modelLocation) {
+        public IModel loadModel(@Nonnull final ResourceLocation modelLocation) {
             return new DenseCraftEncodedPatternModel();
         }
 

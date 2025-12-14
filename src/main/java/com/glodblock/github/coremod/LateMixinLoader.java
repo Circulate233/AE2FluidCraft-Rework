@@ -43,9 +43,9 @@ public class LateMixinLoader implements ILateMixinLoader {
         return MIXIN_CONFIGS.get(mixinConfig).getAsBoolean();
     }
 
-    private static boolean isClassPresent(String className) {
-        String classFilePath = className.replace('.', '/') + ".class";
-        ClassLoader classLoader = LateMixinLoader.class.getClassLoader();
+    private static boolean isClassPresent(final String className) {
+        final String classFilePath = className.replace('.', '/') + ".class";
+        final ClassLoader classLoader = LateMixinLoader.class.getClassLoader();
         return classLoader.getResource(classFilePath) != null;
     }
 }

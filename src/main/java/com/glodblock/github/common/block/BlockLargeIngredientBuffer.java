@@ -27,12 +27,12 @@ public class BlockLargeIngredientBuffer extends AEBaseTileBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-                                    EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state, final EntityPlayer player, final EnumHand hand,
+                                    final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
         if (player.isSneaking()) {
             return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
         }
-        TileLargeIngredientBuffer tile = getTileEntity(world, pos);
+        final TileLargeIngredientBuffer tile = getTileEntity(world, pos);
         if (tile != null) {
             if (!world.isRemote) {
                 InventoryHandler.openGui(player, world, pos, facing, GuiType.LARGE_INGREDIENT_BUFFER);
@@ -51,7 +51,7 @@ public class BlockLargeIngredientBuffer extends AEBaseTileBlock {
 
     @SuppressWarnings("deprecation")
     @Override
-    public boolean isFullCube(@Nonnull IBlockState state) {
+    public boolean isFullCube(@Nonnull final IBlockState state) {
         return false;
     }
 

@@ -19,17 +19,17 @@ public class GuiGasTrioInterface extends GuiGasInterface {
     private GuiTabButton switchFluidInterface;
     private GuiTabButton priorityBtn;
 
-    public GuiGasTrioInterface(InventoryPlayer ip, IGasInterfaceHost te) {
+    public GuiGasTrioInterface(final InventoryPlayer ip, final IGasInterfaceHost te) {
         super(ip, te);
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        ItemStack iconItem = AEApi.instance().definitions().blocks().iface().maybeStack(1).orElse(ItemStack.EMPTY);
+        final ItemStack iconItem = AEApi.instance().definitions().blocks().iface().maybeStack(1).orElse(ItemStack.EMPTY);
         switchItemInterface = new GuiTabButton(guiLeft + 133, guiTop, iconItem, iconItem.getDisplayName(), itemRender);
         buttonList.add(switchItemInterface);
-        ItemStack iconFluid = AEApi.instance().definitions().blocks().fluidIface().maybeStack(1).orElse(ItemStack.EMPTY);
+        final ItemStack iconFluid = AEApi.instance().definitions().blocks().fluidIface().maybeStack(1).orElse(ItemStack.EMPTY);
         switchFluidInterface = new GuiTabButton(guiLeft + 112, guiTop, iconFluid, iconFluid.getDisplayName(), itemRender);
         buttonList.add(switchFluidInterface);
         priorityBtn = Ae2ReflectClient.getPriorityButtonGas(this);

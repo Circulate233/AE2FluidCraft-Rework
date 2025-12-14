@@ -14,7 +14,7 @@ import java.awt.Rectangle;
 public class MixinGuiContainerWrapper {
 
     @WrapOperation(method = "getIngredientUnderMouse", at = @At(value = "INVOKE", target = "Lmezz/jei/input/ClickedIngredient;create(Ljava/lang/Object;Ljava/awt/Rectangle;)Lmezz/jei/input/ClickedIngredient;"))
-    private ClickedIngredient<Object> wrapFluidPacket(Object stack, Rectangle area, Operation<ClickedIngredient<Object>> original) {
+    private ClickedIngredient<Object> wrapFluidPacket(final Object stack, final Rectangle area, final Operation<ClickedIngredient<Object>> original) {
         return original.call(CoreModHooks.wrapFluidPacket(stack), area);
     }
 }

@@ -31,12 +31,12 @@ public class BlockGeneralLevelMaintainer extends AEBaseTileBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-                                    EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state, final EntityPlayer player, final EnumHand hand,
+                                    final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
         if (player.isSneaking()) {
             return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
         }
-        TileGeneralLevelMaintainer tile = getTileEntity(world, pos);
+        final TileGeneralLevelMaintainer tile = getTileEntity(world, pos);
         if (tile != null) {
             if (!world.isRemote) {
                 InventoryHandler.openGui(player, world, pos, facing, GuiType.GENERAL_LEVEL_MAINTAINER);
@@ -53,8 +53,8 @@ public class BlockGeneralLevelMaintainer extends AEBaseTileBlock {
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public IBlockState getActualState(final IBlockState state, final IBlockAccess worldIn, final BlockPos pos) {
+        final TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof TileGeneralLevelMaintainer) {
             if (((TileGeneralLevelMaintainer) tileEntity).facing != null) {
                 return state.withProperty(facingProperty, ((TileGeneralLevelMaintainer) tileEntity).facing);
@@ -64,20 +64,20 @@ public class BlockGeneralLevelMaintainer extends AEBaseTileBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World w, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack is) {
+    public void onBlockPlacedBy(final World w, final BlockPos pos, final IBlockState state, final EntityLivingBase placer, final ItemStack is) {
         super.onBlockPlacedBy(w, pos, state, placer, is);
-        TileEntity tileEntity = w.getTileEntity(pos);
+        final TileEntity tileEntity = w.getTileEntity(pos);
         if (tileEntity instanceof TileGeneralLevelMaintainer) {
             ((TileGeneralLevelMaintainer) tileEntity).facing = placer.getHorizontalFacing().getOpposite();
         }
     }
 
     @Override
-    public boolean rotateBlock(World w, BlockPos pos, EnumFacing axis) {
+    public boolean rotateBlock(final World w, final BlockPos pos, final EnumFacing axis) {
 //        FluidCraft.log.log(Level.INFO,axis.getOpposite());
-        TileEntity tileEntity = w.getTileEntity(pos);
+        final TileEntity tileEntity = w.getTileEntity(pos);
         if (tileEntity instanceof TileGeneralLevelMaintainer) {
-            EnumFacing facing = ((TileGeneralLevelMaintainer) tileEntity).facing;
+            final EnumFacing facing = ((TileGeneralLevelMaintainer) tileEntity).facing;
             ((TileGeneralLevelMaintainer) tileEntity).facing = facing.rotateY();
             w.setBlockState(pos, this.blockState.getBaseState().withProperty(facingProperty, facing.rotateY()));
             return true;

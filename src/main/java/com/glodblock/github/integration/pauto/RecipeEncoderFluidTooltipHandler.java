@@ -1,6 +1,5 @@
 package com.glodblock.github.integration.pauto;
 
-import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
 import com.glodblock.github.loader.FCItems;
 import net.minecraft.client.Minecraft;
@@ -17,13 +16,13 @@ import java.util.List;
 public class RecipeEncoderFluidTooltipHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onItemTooltip(ItemTooltipEvent event) {
+    public void onItemTooltip(final ItemTooltipEvent event) {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiEncoder) {
-            ItemStack stack = event.getItemStack();
+            final ItemStack stack = event.getItemStack();
             if (stack.getItem() == FCItems.FLUID_PACKET) {
-                FluidStack fluid = FakeItemRegister.getStack(stack);
+                final FluidStack fluid = FakeItemRegister.getStack(stack);
                 if (fluid != null) {
-                    List<String> tooltip = event.getToolTip();
+                    final List<String> tooltip = event.getToolTip();
                     tooltip.clear();
                     tooltip.add(fluid.getLocalizedName());
                     tooltip.add(String.format(TextFormatting.GRAY + "%,d mB", fluid.amount));

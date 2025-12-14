@@ -42,12 +42,12 @@ public class RecipeTransferBuilder {
     static {
         try {
             fRecipeLayout_recipeWrapper = Ae2Reflect.reflectField(RecipeLayout.class, "recipeWrapper");
-        } catch (NoSuchFieldException ignore) {
+        } catch (final NoSuchFieldException ignore) {
             // NO-OP
         }
     }
 
-    public RecipeTransferBuilder(IRecipeLayout recipe) {
+    public RecipeTransferBuilder(final IRecipeLayout recipe) {
         this.in = new Int2ObjectArrayMap<>();
         this.out = new ArrayList<>();
         this.recipe = recipe;
@@ -61,15 +61,15 @@ public class RecipeTransferBuilder {
     }
 
     private void split() {
-        for (int index : this.recipe.getItemStacks().getGuiIngredients().keySet()) {
-            IGuiIngredient<ItemStack> ing = this.recipe.getItemStacks().getGuiIngredients().get(index);
+        for (final int index : this.recipe.getItemStacks().getGuiIngredients().keySet()) {
+            final IGuiIngredient<ItemStack> ing = this.recipe.getItemStacks().getGuiIngredients().get(index);
             if (ing.isInput()) {
                 if (ModAndClassUtil.GT) {
                     if (GregUtil.isNotConsume(this.getWrapper(this.recipe), index)) {
                         continue;
                     }
                 }
-                List<ItemStack> holder;
+                final List<ItemStack> holder;
                 if (ing.getAllIngredients().size() < MAX_ITEMS - 1) {
                     holder = ing.getAllIngredients();
                 } else {
@@ -84,7 +84,7 @@ public class RecipeTransferBuilder {
                 this.itemOut.add(ing.getDisplayedIngredient());
             }
         }
-        for (IGuiIngredient<FluidStack> ing : this.recipe.getFluidStacks().getGuiIngredients().values()) {
+        for (final IGuiIngredient<FluidStack> ing : this.recipe.getFluidStacks().getGuiIngredients().values()) {
             if (ing.isInput()) {
                 this.fluidIn.add(ing.getDisplayedIngredient());
             } else {
@@ -92,7 +92,7 @@ public class RecipeTransferBuilder {
             }
         }
         if (ModAndClassUtil.GAS) {
-            for (IGuiIngredient<GasStack> ing : this.recipe.getIngredientsGroup(MekanismJEI.TYPE_GAS).getGuiIngredients().values()) {
+            for (final IGuiIngredient<GasStack> ing : this.recipe.getIngredientsGroup(MekanismJEI.TYPE_GAS).getGuiIngredients().values()) {
                 if (ing.isInput()) {
                     this.gasIn.add(ing.getDisplayedIngredient());
                 } else {
@@ -102,18 +102,18 @@ public class RecipeTransferBuilder {
         }
     }
 
-    private void setItemIn(int offset) {
-        int bound = this.itemsIn.size() + offset;
+    private void setItemIn(final int offset) {
+        final int bound = this.itemsIn.size() + offset;
         for (int index = offset; index < bound; index ++) {
-            int i = index - offset;
+            final int i = index - offset;
             if (this.itemsIn.get(i) != null && this.itemsIn.get(i).length > 0) {
                 this.in.put(index, this.itemsIn.get(i));
             }
         }
     }
 
-    private void setFluidIn(int offset) {
-        int bound = this.fluidIn.size() + this.gasIn.size() + offset;
+    private void setFluidIn(final int offset) {
+        final int bound = this.fluidIn.size() + this.gasIn.size() + offset;
         for (int index = offset; index < bound; index ++) {
             int i = index - offset;
             if (i < this.fluidIn.size()) {
@@ -141,12 +141,12 @@ public class RecipeTransferBuilder {
         }
     }
 
-    public RecipeTransferBuilder clearEmptySlot(boolean val) {
+    public RecipeTransferBuilder clearEmptySlot(final boolean val) {
         this.noNull = val;
         return this;
     }
 
-    public RecipeTransferBuilder putFluidFirst(boolean val) {
+    public RecipeTransferBuilder putFluidFirst(final boolean val) {
         this.fluidFirst = val;
         return this;
     }
@@ -179,7 +179,7 @@ public class RecipeTransferBuilder {
         return this.in;
     }
 
-    private IRecipeWrapper getWrapper(IRecipeLayout recipe) {
+    private IRecipeWrapper getWrapper(final IRecipeLayout recipe) {
         if (fRecipeLayout_recipeWrapper != null) {
             return Ae2Reflect.readField(recipe, fRecipeLayout_recipeWrapper);
         }

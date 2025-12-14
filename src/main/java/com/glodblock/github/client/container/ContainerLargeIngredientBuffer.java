@@ -11,10 +11,10 @@ public class ContainerLargeIngredientBuffer extends AEBaseContainer implements T
 
     private final TileLargeIngredientBuffer tile;
 
-    public ContainerLargeIngredientBuffer(InventoryPlayer ipl, TileLargeIngredientBuffer tile) {
+    public ContainerLargeIngredientBuffer(final InventoryPlayer ipl, final TileLargeIngredientBuffer tile) {
         super(ipl, tile);
         this.tile = tile;
-        IItemHandler inv = tile.getInternalInventory();
+        final IItemHandler inv = tile.getInternalInventory();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 addSlotToContainer(new SlotNormal(inv, i * 9 + j, 8 + 18 * j, 72 + 18 * i));
@@ -28,12 +28,12 @@ public class ContainerLargeIngredientBuffer extends AEBaseContainer implements T
     }
 
     @Override
-    public boolean canDumpTank(int index) {
+    public boolean canDumpTank(final int index) {
         return tile.getFluidInventory().getFluidInSlot(index) != null;
     }
 
     @Override
-    public void dumpTank(int index) {
+    public void dumpTank(final int index) {
         if (index >= 0 && index < tile.getFluidInventory().getSlots()) {
             tile.getFluidInventory().setFluidInSlot(index, null);
         }

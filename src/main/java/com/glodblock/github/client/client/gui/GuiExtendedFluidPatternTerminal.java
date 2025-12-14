@@ -37,7 +37,7 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
     private GuiFCImgButton fluidEnableBtn;
     private GuiFCImgButton fluidDisableBtn;
 
-    public GuiExtendedFluidPatternTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
+    public GuiExtendedFluidPatternTerminal(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te);
         container = new ContainerExtendedFluidPatternTerminal(inventoryPlayer, te);
         container.setGui(this);
@@ -67,7 +67,7 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         if (this.container.combine) {
             this.combineEnableBtn.visible = true;
             this.combineDisableBtn.visible = false;
@@ -100,11 +100,11 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
     }
 
     @Override
-    protected void handleMouseClick(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
+    protected void handleMouseClick(final Slot slot, final int slotIdx, final int mouseButton, final ClickType clickType) {
         if (mouseButton == 2) {
             if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
                 if (slot.getHasStack()) {
-                    IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
+                    final IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
                     ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
                     for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
                         if (this.inventorySlots.inventorySlots.get(i).equals(slot)) {
@@ -117,7 +117,7 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
             }
         }
         if (UtilClient.shouldAutoCraft(slot, mouseButton, clickType)) {
-            IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
+            final IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
             ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
             FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(CPacketInventoryAction.Action.AUTO_CRAFT, 0, 0, stack));
             return;
@@ -126,11 +126,11 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
     }
 
     @Override
-    public List<Target<?>> getPhantomTargets(Object ingredient) {
-        List<Target<?>> targets = new ObjectArrayList<>();
-        for (Slot slot : this.inventorySlots.inventorySlots) {
+    public List<Target<?>> getPhantomTargets(final Object ingredient) {
+        final List<Target<?>> targets = new ObjectArrayList<>();
+        for (final Slot slot : this.inventorySlots.inventorySlots) {
             if (slot instanceof SlotFake) {
-                Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
+                final Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
                 targets.add(target);
                 mapTargetSlot.putIfAbsent(target, slot);
             }
@@ -139,11 +139,11 @@ public class GuiExtendedFluidPatternTerminal extends GuiExpandedProcessingPatter
     }
 
     @Override
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        var slot = this.getSlotUnderMouse();
-        if (slot instanceof SlotFake s) {
+    protected void renderHoveredToolTip(final int mouseX, final int mouseY) {
+        final var slot = this.getSlotUnderMouse();
+        if (slot instanceof final SlotFake s) {
             if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
-            var i = AEItemStack.fromItemStack(s.getStack());
+            final var i = AEItemStack.fromItemStack(s.getStack());
             if (UtilClient.rendererFluid(this, i, mouseX, mouseY, true)) return;
             if (ModAndClassUtil.GAS && UtilClient.rendererGas(this, i, mouseX, mouseY, true)) return;
         }

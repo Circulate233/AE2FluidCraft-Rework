@@ -72,20 +72,20 @@ public final class Util {
         return new GasStackSizeRenderer();
     }
 
-    public static IAEItemStack packAEStackToDrop(Object s) {
-        if (s instanceof IAEFluidStack f) {
+    public static IAEItemStack packAEStackToDrop(final Object s) {
+        if (s instanceof final IAEFluidStack f) {
             return FakeFluids.packFluid2AEDrops(f);
-        } else if (ModAndClassUtil.GAS && s instanceof IAEGasStack g) {
+        } else if (ModAndClassUtil.GAS && s instanceof final IAEGasStack g) {
             return FakeGases.packGas2AEDrops(g);
         }
         return null;
     }
 
-    public static FluidStack getFluidFromItem(ItemStack stack) {
+    public static FluidStack getFluidFromItem(final ItemStack stack) {
         if (!stack.isEmpty() && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             if (stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) != null) {
-                IFluidTankProperties[] tanks = Objects.requireNonNull(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)).getTankProperties();
-                for (IFluidTankProperties tank : tanks) {
+                final IFluidTankProperties[] tanks = Objects.requireNonNull(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)).getTankProperties();
+                for (final IFluidTankProperties tank : tanks) {
                     if (tank != null && tank.getContents() != null) {
                         return tank.getContents().copy();
                     }
@@ -96,9 +96,9 @@ public final class Util {
     }
 
     @Optional.Method(modid = "mekeng")
-    public static String getGasNameFromItem(ItemStack stack) {
-        if (!stack.isEmpty() && stack.getItem() instanceof IGasItem gi) {
-            var gas = gi.getGas(stack);
+    public static String getGasNameFromItem(final ItemStack stack) {
+        if (!stack.isEmpty() && stack.getItem() instanceof final IGasItem gi) {
+            final var gas = gi.getGas(stack);
             if (gas != null && gas.amount > 0) {
                 return gas.getGas().getLocalizedName();
             }
@@ -107,9 +107,9 @@ public final class Util {
     }
 
     @Optional.Method(modid = "mekeng")
-    public static GasStack getGasFromItem(ItemStack stack) {
-        if (!stack.isEmpty() && stack.getItem() instanceof IGasItem gi) {
-            var gas = gi.getGas(stack);
+    public static GasStack getGasFromItem(final ItemStack stack) {
+        if (!stack.isEmpty() && stack.getItem() instanceof final IGasItem gi) {
+            final var gas = gi.getGas(stack);
             if (gas != null && gas.amount > 0) {
                 return gas;
             }
@@ -117,10 +117,10 @@ public final class Util {
         return null;
     }
 
-    public static ItemStack getEmptiedContainer(ItemStack stack) {
+    public static ItemStack getEmptiedContainer(final ItemStack stack) {
         if (!stack.isEmpty() && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-            ItemStack dummy = stack.copy();
-            IFluidHandlerItem fh = dummy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+            final ItemStack dummy = stack.copy();
+            final IFluidHandlerItem fh = dummy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
             if (fh != null) {
                 fh.drain(Integer.MAX_VALUE, true);
                 return fh.getContainer();
@@ -129,7 +129,7 @@ public final class Util {
         return stack;
     }
 
-    public static void writeFluidInventoryToBuffer(@Nonnull AEFluidInventory inv, ByteBuf data) throws IOException {
+    public static void writeFluidInventoryToBuffer(@Nonnull final AEFluidInventory inv, final ByteBuf data) throws IOException {
         int fluidMask = 0;
         for (int i = 0; i < inv.getSlots(); ++i) {
             if (inv.getFluidInSlot(i) != null) {
@@ -138,21 +138,21 @@ public final class Util {
         }
         data.writeByte(fluidMask);
         for (int i = 0; i < inv.getSlots(); ++i) {
-            IAEFluidStack fluid = inv.getFluidInSlot(i);
+            final IAEFluidStack fluid = inv.getFluidInSlot(i);
             if (fluid != null) {
                 fluid.writeToPacket(data);
             }
         }
     }
 
-    public static boolean readFluidInventoryToBuffer(@Nonnull AEFluidInventory inv, ByteBuf data) throws IOException {
+    public static boolean readFluidInventoryToBuffer(@Nonnull final AEFluidInventory inv, final ByteBuf data) throws IOException {
         boolean changed = false;
-        int fluidMask = data.readByte();
+        final int fluidMask = data.readByte();
         for (int i = 0; i < inv.getSlots(); ++i) {
             if ((fluidMask & (1 << i)) != 0) {
-                IAEFluidStack fluid = AEFluidStack.fromPacket(data);
+                final IAEFluidStack fluid = AEFluidStack.fromPacket(data);
                 if (fluid != null) { // this shouldn't happen, but better safe than sorry
-                    IAEFluidStack origFluid = inv.getFluidInSlot(i);
+                    final IAEFluidStack origFluid = inv.getFluidInSlot(i);
                     if (!fluid.equals(origFluid) || fluid.getStackSize() != origFluid.getStackSize()) {
                         inv.setFluidInSlot(i, fluid);
                         changed = true;
@@ -166,12 +166,12 @@ public final class Util {
         return changed;
     }
 
-    public static void fuzzyTransferItems(int slot, ItemStack[] inputs, ItemStack[] des, IItemList<IAEItemStack> storage) {
+    public static void fuzzyTransferItems(final int slot, final ItemStack[] inputs, final ItemStack[] des, final IItemList<IAEItemStack> storage) {
         if (slot < des.length && inputs.length > 0) {
             if (storage != null) {
                 IAEItemStack select = AEItemStack.fromItemStack(inputs[0]);
-                for (ItemStack item : inputs) {
-                    IAEItemStack result = storage.findPrecise(AEItemStack.fromItemStack(item));
+                for (final ItemStack item : inputs) {
+                    final IAEItemStack result = storage.findPrecise(AEItemStack.fromItemStack(item));
                     if (result != null) {
                         select = AEItemStack.fromItemStack(item);
                         break;
@@ -186,13 +186,13 @@ public final class Util {
         }
     }
 
-    public static void clearItemInventory(IItemHandlerModifiable inv) {
+    public static void clearItemInventory(final IItemHandlerModifiable inv) {
         for (int i = 0; i < inv.getSlots(); ++i) {
             inv.setStackInSlot(i, ItemStack.EMPTY);
         }
     }
 
-    public static void putPattern(AbstractPartEncoder part, IAEItemStack[] inputs, IAEItemStack[] outputs) {
+    public static void putPattern(final AbstractPartEncoder part, final IAEItemStack[] inputs, final IAEItemStack[] outputs) {
         for (int x = 0; x < part.getInventoryByName("crafting").getSlots() && x < inputs.length; x++) {
             final IAEItemStack item = inputs[x];
             ((AppEngInternalInventory) part.getInventoryByName("crafting")).setStackInSlot(x, item == null ? ItemStack.EMPTY : item.createItemStack());
@@ -204,16 +204,16 @@ public final class Util {
         }
     }
 
-    public static ItemStack[] compress(ItemStack[] list) {
-        List<ItemStack> comp = new LinkedList<>();
-        for (ItemStack item : list) {
+    public static ItemStack[] compress(final ItemStack[] list) {
+        final List<ItemStack> comp = new LinkedList<>();
+        for (final ItemStack item : list) {
             if (item == null) continue;
-            ItemStack currentStack = item.copy();
+            final ItemStack currentStack = item.copy();
             if (currentStack.isEmpty() || currentStack.getCount() == 0) continue;
             boolean find = false;
-            for (ItemStack storedStack : comp) {
+            for (final ItemStack storedStack : comp) {
                 if (storedStack.isEmpty()) continue;
-                boolean areItemStackEqual = storedStack.isItemEqual(currentStack) && ItemStack.areItemStackTagsEqual(storedStack, currentStack);
+                final boolean areItemStackEqual = storedStack.isItemEqual(currentStack) && ItemStack.areItemStackTagsEqual(storedStack, currentStack);
                 if (areItemStackEqual && (storedStack.getCount() + currentStack.getCount()) <= storedStack.getMaxStackSize()) {
                     find = true;
                     storedStack.setCount(storedStack.getCount() + currentStack.getCount());
@@ -226,35 +226,35 @@ public final class Util {
         return comp.stream().filter(Objects::nonNull).toArray(ItemStack[]::new);
     }
 
-    public static int findMax(Collection<Integer> list) {
+    public static int findMax(final Collection<Integer> list) {
         int a = Integer.MIN_VALUE;
-        for (int x : list) {
+        for (final int x : list) {
             a = Math.max(x, a);
         }
         return a;
     }
 
-    public static void writeNBTToBytes(ByteBuf buf, NBTTagCompound nbt) {
-        PacketBuffer pb = new PacketBuffer(buf);
+    public static void writeNBTToBytes(final ByteBuf buf, final NBTTagCompound nbt) {
+        final PacketBuffer pb = new PacketBuffer(buf);
         try {
             pb.writeCompoundTag(nbt);
-        } catch (EncoderException ignore) {
+        } catch (final EncoderException ignore) {
         }
     }
 
-    public static NBTTagCompound readNBTFromBytes(ByteBuf from) {
-        PacketBuffer pb = new PacketBuffer(from);
+    public static NBTTagCompound readNBTFromBytes(final ByteBuf from) {
+        final PacketBuffer pb = new PacketBuffer(from);
         try {
             return pb.readCompoundTag();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return new NBTTagCompound();
         }
     }
 
-    public static boolean multiplySlotCheck(Slot[] slots, int multiple) {
-        for (Slot slot : slots) {
+    public static boolean multiplySlotCheck(final Slot[] slots, final int multiple) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                long amt = slot.getStack().getCount();
+                final long amt = slot.getStack().getCount();
                 if (amt * multiple > Integer.MAX_VALUE) {
                     return false;
                 }
@@ -263,19 +263,19 @@ public final class Util {
         return true;
     }
 
-    public static void multiplySlot(Slot[] slots, int multiple) {
-        for (Slot slot : slots) {
+    public static void multiplySlot(final Slot[] slots, final int multiple) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                ItemStack stack = slot.getStack();
+                final ItemStack stack = slot.getStack();
                 stack.setCount(stack.getCount() * multiple);
             }
         }
     }
 
-    public static boolean divideSlotCheck(Slot[] slots, int divide) {
-        for (Slot slot : slots) {
+    public static boolean divideSlotCheck(final Slot[] slots, final int divide) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                long amt = slot.getStack().getCount();
+                final long amt = slot.getStack().getCount();
                 if (amt % divide != 0) {
                     return false;
                 }
@@ -284,19 +284,19 @@ public final class Util {
         return true;
     }
 
-    public static void divideSlot(Slot[] slots, int divide) {
-        for (Slot slot : slots) {
+    public static void divideSlot(final Slot[] slots, final int divide) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                ItemStack stack = slot.getStack();
+                final ItemStack stack = slot.getStack();
                 stack.setCount(stack.getCount() / divide);
             }
         }
     }
 
-    public static boolean increaseSlotCheck(Slot[] slots, int increase) {
-        for (Slot slot : slots) {
+    public static boolean increaseSlotCheck(final Slot[] slots, final int increase) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                long amt = slot.getStack().getCount();
+                final long amt = slot.getStack().getCount();
                 if (amt + increase > Integer.MAX_VALUE) {
                     return false;
                 }
@@ -305,19 +305,19 @@ public final class Util {
         return true;
     }
 
-    public static void increaseSlot(Slot[] slots, int increase) {
-        for (Slot slot : slots) {
+    public static void increaseSlot(final Slot[] slots, final int increase) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                ItemStack stack = slot.getStack();
+                final ItemStack stack = slot.getStack();
                 stack.setCount(stack.getCount() + increase);
             }
         }
     }
 
-    public static boolean decreaseSlotCheck(Slot[] slots, int decrease) {
-        for (Slot slot : slots) {
+    public static boolean decreaseSlotCheck(final Slot[] slots, final int decrease) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                long amt = slot.getStack().getCount();
+                final long amt = slot.getStack().getCount();
                 if (amt - decrease < 1) {
                     return false;
                 }
@@ -326,17 +326,17 @@ public final class Util {
         return true;
     }
 
-    public static void decreaseSlot(Slot[] slots, int decrease) {
-        for (Slot slot : slots) {
+    public static void decreaseSlot(final Slot[] slots, final int decrease) {
+        for (final Slot slot : slots) {
             if (!slot.getStack().isEmpty()) {
-                ItemStack stack = slot.getStack();
+                final ItemStack stack = slot.getStack();
                 stack.setCount(stack.getCount() - decrease);
             }
         }
     }
 
-    public static void openWirelessTerminal(ItemStack item, int playerInvSlot, boolean isBaubleSlot, World w, EntityPlayer player, GuiType gui) {
-        IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
+    public static void openWirelessTerminal(final ItemStack item, final int playerInvSlot, final boolean isBaubleSlot, final World w, final EntityPlayer player, final GuiType gui) {
+        final IWirelessTermRegistry registry = AEApi.instance().registries().wireless();
         if (Platform.isClient()) {
             return;
         }
@@ -363,16 +363,16 @@ public final class Util {
         }
     }
 
-    public static void onPatternTerminalChangeCrafting(AbstractPartEncoder part, boolean noCraftingMode, Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
-        IItemHandler crafting = part.getInventoryByName("crafting");
-        IItemHandler output = part.getInventoryByName("output");
-        IItemList<IAEItemStack> storageList = part.getInventory(getItemChannel()) == null ?
+    public static void onPatternTerminalChangeCrafting(final AbstractPartEncoder part, final boolean noCraftingMode, final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
+        final IItemHandler crafting = part.getInventoryByName("crafting");
+        final IItemHandler output = part.getInventoryByName("output");
+        final IItemList<IAEItemStack> storageList = part.getInventory(getItemChannel()) == null ?
             null : part.getInventory(getItemChannel()).getStorageList();
         if (crafting instanceof AppEngInternalInventory && output instanceof AppEngInternalInventory) {
             clearItemInventory((IItemHandlerModifiable) crafting);
             clearItemInventory((IItemHandlerModifiable) output);
             ItemStack[] fuzzyFind = new ItemStack[findMax(inputs.keySet()) + 1];
-            for (int index : inputs.keySet()) {
+            for (final int index : inputs.keySet()) {
                 fuzzyTransferItems(index, inputs.get(index), fuzzyFind, storageList);
             }
             if (combine && noCraftingMode) {

@@ -15,14 +15,14 @@ public class GuiItemTrioInterface extends GuiItemDualInterface {
 
     private GuiTabButton switchGasInterface;
 
-    public GuiItemTrioInterface(InventoryPlayer inventoryPlayer, IInterfaceHost te) {
+    public GuiItemTrioInterface(final InventoryPlayer inventoryPlayer, final IInterfaceHost te) {
         super(inventoryPlayer, te);
     }
 
     @Override
     protected void addButtons() {
         super.addButtons();
-        ItemStack icon = new ItemStack(ItemAndBlocks.GAS_INTERFACE);
+        final ItemStack icon = new ItemStack(ItemAndBlocks.GAS_INTERFACE);
         this.switchGasInterface = new GuiTabButton(guiLeft + 112, guiTop, icon, icon.getDisplayName(), itemRender);
         this.buttonList.add(this.switchGasInterface);
     }

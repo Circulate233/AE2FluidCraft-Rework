@@ -11,14 +11,14 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ContainerFluidDualInterface extends ContainerFluidInterface {
     private final DualityFluidInterface dualityInterfaceCopy;
-    public ContainerFluidDualInterface(InventoryPlayer ip, IFluidInterfaceHost te) {
+    public ContainerFluidDualInterface(final InventoryPlayer ip, final IFluidInterfaceHost te) {
         super(ip, te);
         this.dualityInterfaceCopy = te.getDualityFluidInterface();
     }
 
     @Override
     protected void setupUpgrades() {
-        IItemHandler upgrades = this.getUpgradeable().getInventoryByName("fluid_upgrades");
+        final IItemHandler upgrades = this.getUpgradeable().getInventoryByName("fluid_upgrades");
         if (this.availableUpgrades() > 0) {
             this.addSlotToContainer((new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 0, 187, 8, this.getInventoryPlayer())).setNotDraggable());
         }

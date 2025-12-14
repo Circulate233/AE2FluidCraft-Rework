@@ -12,11 +12,11 @@ public class EmptyMachineSet implements IMachineSet {
 
     private final Class<? extends IGridHost> type;
 
-    public static EmptyMachineSet create(Class<? extends IGridHost> type) {
+    public static EmptyMachineSet create(final Class<? extends IGridHost> type) {
         return new EmptyMachineSet(type);
     }
 
-    private EmptyMachineSet(Class<? extends IGridHost> clazz) {
+    private EmptyMachineSet(final Class<? extends IGridHost> clazz) {
         this.type = clazz;
     }
 
@@ -37,14 +37,14 @@ public class EmptyMachineSet implements IMachineSet {
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(final Object o) {
         return false;
     }
 
     @Nonnull
     @Override
     public Iterator<IGridNode> iterator() {
-        return new Iterator<IGridNode>() {
+        return new Iterator<>() {
             @Override
             public boolean hasNext() {
                 return false;

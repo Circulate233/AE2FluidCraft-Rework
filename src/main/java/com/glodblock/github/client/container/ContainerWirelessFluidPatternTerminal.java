@@ -58,7 +58,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     @GuiSync(106)
     public boolean fluidFirst = false;
 
-    public ContainerWirelessFluidPatternTerminal(InventoryPlayer ip, WirelessTerminalGuiObject gui) {
+    public ContainerWirelessFluidPatternTerminal(final InventoryPlayer ip, final WirelessTerminalGuiObject gui) {
         super(ip, gui);
         this.wirelessTerminalGUIObject = gui;
         this.loadFromNBT();
@@ -100,15 +100,15 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
         return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
     }
 
-    private static IAEItemStack[] collectInventory(Slot[] slots) {
+    private static IAEItemStack[] collectInventory(final Slot[] slots) {
         // see note at top of DensePatternDetails
-        List<IAEItemStack> acc = new ArrayList<>();
-        for (Slot slot : slots) {
-            ItemStack stack = slot.getStack();
+        final List<IAEItemStack> acc = new ArrayList<>();
+        for (final Slot slot : slots) {
+            final ItemStack stack = slot.getStack();
             if (stack.isEmpty()) {
                 continue;
             }
-            IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
+            final IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
             if (aeStack == null) {
                 continue;
             }
@@ -118,8 +118,8 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     private void encodeFluidPattern() {
-        ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
-        FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
+        final ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
+        final FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
         patternSlotOUT.putStack(pattern.writeToStack());
@@ -130,7 +130,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
             return false;
         }
         boolean hasFluid = false, search = false;
-        for (Slot craftingSlot : this.craftingSlots) {
+        for (final Slot craftingSlot : this.craftingSlots) {
             final ItemStack crafting = craftingSlot.getStack();
             if (crafting.isEmpty()) {
                 continue;
@@ -149,7 +149,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
             return false;
         }
         // `search` should be true at this point
-        for (Slot outputSlot : this.outputSlots) {
+        for (final Slot outputSlot : this.outputSlots) {
             final ItemStack out = outputSlot.getStack();
             if (out.isEmpty()) {
                 continue;
@@ -188,7 +188,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
             if (output.getCount() == 0) {
                 this.patternSlotIN.putStack(ItemStack.EMPTY);
             }
-            Optional<ItemStack> maybePattern = AEApi.instance().definitions().items().encodedPattern().maybeStack(1);
+            final Optional<ItemStack> maybePattern = AEApi.instance().definitions().items().encodedPattern().maybeStack(1);
             if (maybePattern.isPresent()) {
                 output = maybePattern.get();
                 this.patternSlotOUT.putStack(output);
@@ -211,9 +211,9 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
         encodedValue.setTag("out", tagOut);
         encodedValue.setBoolean("crafting", this.isCraftingMode());
         encodedValue.setBoolean("substitute", this.substitute);
-        ItemStack patternStack = new ItemStack(FCItems.DENSE_CRAFT_ENCODED_PATTERN);
+        final ItemStack patternStack = new ItemStack(FCItems.DENSE_CRAFT_ENCODED_PATTERN);
         patternStack.setTagCompound(encodedValue);
-        FluidCraftingPatternDetails details = FluidCraftingPatternDetails.GetFluidPattern(patternStack, getNetworkNode().getWorld());
+        final FluidCraftingPatternDetails details = FluidCraftingPatternDetails.GetFluidPattern(patternStack, getNetworkNode().getWorld());
         if (details == null || !details.isNecessary()) {
             encode();
             return;
@@ -225,7 +225,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         if (Platform.isServer()) {
-            NBTTagCompound tag = this.iGuiItemObject.getItemStack().getTagCompound();
+            final NBTTagCompound tag = this.iGuiItemObject.getItemStack().getTagCompound();
             if (tag != null) {
                 this.combine = tag.getBoolean("combine");
                 this.fluidFirst = tag.getBoolean("fluidFirst");
@@ -240,7 +240,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     public void saveChanges() {
         super.saveChanges();
         if (Platform.isServer()) {
-            NBTTagCompound tag = new NBTTagCompound();
+            final NBTTagCompound tag = new NBTTagCompound();
             tag.setBoolean("combine", this.combine);
             tag.setBoolean("fluidFirst", this.fluidFirst);
             this.wirelessTerminalGUIObject.saveChanges(tag);
@@ -248,7 +248,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     private void loadFromNBT() {
-        NBTTagCompound data = this.wirelessTerminalGUIObject.getItemStack().getTagCompound();
+        final NBTTagCompound data = this.wirelessTerminalGUIObject.getItemStack().getTagCompound();
         if (data != null) {
             this.combine = data.getBoolean("combine");
             this.fluidFirst = data.getBoolean("fluidFirst");
@@ -256,7 +256,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
+    public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slotId, final long id) {
         if (this.isCraftingMode()) {
             super.doAction(player, action, slotId, id);
             return;
@@ -265,8 +265,8 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
             super.doAction(player, action, slotId, id);
             return;
         }
-        Slot slot = getSlot(slotId);
-        ItemStack stack = player.inventory.getItemStack();
+        final Slot slot = getSlot(slotId);
+        final ItemStack stack = player.inventory.getItemStack();
         if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && !stack.isEmpty()
             && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && Util.getFluidFromItem(stack) != null) {
             FluidStack fluid = null;
@@ -277,7 +277,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
                     fluid = Util.getFluidFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    FluidStack origin = FakeItemRegister.getStack(slot.getStack());
+                    final FluidStack origin = FakeItemRegister.getStack(slot.getStack());
                     if (fluid != null && fluid.equals(origin)) {
                         fluid.amount += origin.amount;
                         if (fluid.amount <= 0) fluid = null;
@@ -301,7 +301,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
                     gas = Util.getGasFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    GasStack origin = FakeItemRegister.getStack(slot.getStack());
+                    final GasStack origin = FakeItemRegister.getStack(slot.getStack());
                     if (gas != null && gas.equals(origin)) {
                         gas.amount += origin.amount;
                         if (gas.amount <= 0) gas = null;
@@ -319,7 +319,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public void onChangeInventory(IItemHandler inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack) {
         if (slot == 1) {
             final ItemStack is = inv.getStackInSlot(1);
             if (!is.isEmpty() && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemFluidCraftEncodedPattern || is.getItem() instanceof ItemLargeEncodedPattern)) {
@@ -346,7 +346,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
         super.onChangeInventory(inv, slot, mc, removedStack, newStack);
     }
 
-    public void putPattern(IAEItemStack[] inputs, IAEItemStack[] outputs) {
+    public void putPattern(final IAEItemStack[] inputs, final IAEItemStack[] outputs) {
         for (int x = 0; x < this.getInventoryByName("crafting").getSlots() && x < inputs.length; x++) {
             final IAEItemStack item = inputs[x];
             ((AppEngInternalInventory) this.getInventoryByName("crafting")).setStackInSlot(x, item == null ? ItemStack.EMPTY : item.createItemStack());
@@ -359,7 +359,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public void multiply(int multiple) {
+    public void multiply(final int multiple) {
         if (Util.multiplySlotCheck(this.craftingSlots, multiple) && Util.multiplySlotCheck(this.outputSlots, multiple)) {
             Util.multiplySlot(this.craftingSlots, multiple);
             Util.multiplySlot(this.outputSlots, multiple);
@@ -367,7 +367,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public void divide(int divide) {
+    public void divide(final int divide) {
         if (Util.divideSlotCheck(this.craftingSlots, divide) && Util.divideSlotCheck(this.outputSlots, divide)) {
             Util.divideSlot(this.craftingSlots, divide);
             Util.divideSlot(this.outputSlots, divide);
@@ -375,7 +375,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public void increase(int increase) {
+    public void increase(final int increase) {
         if (Util.increaseSlotCheck(this.craftingSlots, increase) && Util.increaseSlotCheck(this.outputSlots, increase)) {
             Util.increaseSlot(this.craftingSlots, increase);
             Util.increaseSlot(this.outputSlots, increase);
@@ -383,7 +383,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public void decrease(int decrease) {
+    public void decrease(final int decrease) {
         if (Util.decreaseSlotCheck(this.craftingSlots, decrease) && Util.decreaseSlotCheck(this.outputSlots, decrease)) {
             Util.decreaseSlot(this.craftingSlots, decrease);
             Util.decreaseSlot(this.outputSlots, decrease);
@@ -391,7 +391,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public IItemHandler getInventoryByName(String name) {
+    public IItemHandler getInventoryByName(final String name) {
         if (name.equals("crafting")) {
             return this.crafting;
         } else {
@@ -409,7 +409,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
         return fluidFirst;
     }
 
-    public void setCombineMode(boolean value) {
+    public void setCombineMode(final boolean value) {
         NBTTagCompound data = this.wirelessTerminalGUIObject.getItemStack().getTagCompound();
         if (data != null) {
             data.setBoolean("combine", value);
@@ -421,7 +421,7 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
         this.combine = value;
     }
 
-    public void setFluidPlaceMode(boolean value) {
+    public void setFluidPlaceMode(final boolean value) {
         NBTTagCompound data = this.wirelessTerminalGUIObject.getItemStack().getTagCompound();
         if (data != null) {
             data.setBoolean("fluidFirst", value);
@@ -434,14 +434,14 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
     }
 
     @Override
-    public void acceptPattern(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
-        IItemList<IAEItemStack> storageList = this.wirelessTerminalGUIObject.getInventory(Util.getItemChannel()) == null ?
+    public void acceptPattern(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
+        final IItemList<IAEItemStack> storageList = this.wirelessTerminalGUIObject.getInventory(Util.getItemChannel()) == null ?
             null : this.wirelessTerminalGUIObject.getInventory(Util.getItemChannel()).getStorageList();
         if (this.crafting instanceof AppEngInternalInventory && this.output != null) {
             Util.clearItemInventory((IItemHandlerModifiable) this.crafting);
             Util.clearItemInventory(this.output);
             ItemStack[] fuzzyFind = new ItemStack[Util.findMax(inputs.keySet()) + 1];
-            for (int index : inputs.keySet()) {
+            for (final int index : inputs.keySet()) {
                 Util.fuzzyTransferItems(index, inputs.get(index), fuzzyFind, storageList);
             }
             if (combine && !this.craftingMode) {
@@ -460,8 +460,8 @@ public class ContainerWirelessFluidPatternTerminal extends ContainerWirelessPatt
         }
     }
 
-    NBTBase createItemTag(ItemStack i) {
-        NBTTagCompound c = new NBTTagCompound();
+    NBTBase createItemTag(final ItemStack i) {
+        final NBTTagCompound c = new NBTTagCompound();
         if (!i.isEmpty()) {
             i.writeToNBT(c);
             if (i.getCount() > i.getMaxStackSize()) {

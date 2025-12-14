@@ -39,26 +39,26 @@ public class GasPacketModel extends FluidPacketModel {
 
     @Override
     @Nonnull
-    public IBakedModel bake(@Nonnull IModelState state, @Nonnull VertexFormat format, @Nonnull Function<ResourceLocation, TextureAtlasSprite> textureBakery) {
+    public IBakedModel bake(@Nonnull final IModelState state, @Nonnull final VertexFormat format, @Nonnull final Function<ResourceLocation, TextureAtlasSprite> textureBakery) {
         return new BakedGasPacketModel(state, format);
     }
 
     public static class Loader implements ICustomModelLoader {
 
         @Override
-        public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
+        public void onResourceManagerReload(@Nonnull final IResourceManager resourceManager) {
             // NO-OP
         }
 
         @Override
-        public boolean accepts(ResourceLocation modelLocation) {
+        public boolean accepts(final ResourceLocation modelLocation) {
             return modelLocation.compareTo(NameConst.MODEL_GAS_PACKET) == 0
                 || modelLocation.compareTo(NameConst.MODEL_GAS_DROP) == 0;
         }
 
         @Override
         @Nonnull
-        public IModel loadModel(@Nonnull ResourceLocation modelLocation) {
+        public IModel loadModel(@Nonnull final ResourceLocation modelLocation) {
             return new GasPacketModel();
         }
 
@@ -66,7 +66,7 @@ public class GasPacketModel extends FluidPacketModel {
 
     protected static class BakedGasPacketModel extends BakedFluidPacketModel {
 
-        public BakedGasPacketModel(IModelState modelState, VertexFormat vertexFormat) {
+        public BakedGasPacketModel(final IModelState modelState, final VertexFormat vertexFormat) {
             super(modelState, vertexFormat);
         }
 
@@ -91,19 +91,19 @@ public class GasPacketModel extends FluidPacketModel {
 
             @Override
             @Nonnull
-            public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, ItemStack stack,
-                                               @Nullable World world, @Nullable EntityLivingBase entity) {
+            public IBakedModel handleItemState(@Nonnull final IBakedModel originalModel, final ItemStack stack,
+                                               @Nullable final World world, @Nullable final EntityLivingBase entity) {
                 if (!(FakeGases.isGasFakeItem(stack))) {
                     return originalModel;
                 }
-                GasStack gas = FakeItemRegister.getStack(stack);
+                final GasStack gas = FakeItemRegister.getStack(stack);
                 return gas != null ? resolve(gas) : originalModel;
             }
 
-            OverrideCache.OverrideModel resolve(GasStack gas) {
+            OverrideCache.OverrideModel resolve(final GasStack gas) {
                 try {
                     return cache.get(gas.getGas(), () -> new OverrideCache.OverrideModel(gas));
-                } catch (ExecutionException e) {
+                } catch (final ExecutionException e) {
                     throw new IllegalStateException(e);
                 }
             }
@@ -113,14 +113,14 @@ public class GasPacketModel extends FluidPacketModel {
                 private final TextureAtlasSprite texture;
                 private final List<BakedQuad> quads;
 
-                OverrideModel(GasStack gasStack) {
+                OverrideModel(final GasStack gasStack) {
                     this.texture = gasStack.getGas().getSprite();
                     this.quads = ItemLayerModel.getQuadsForSprite(1, texture, vertexFormat, modelTransform);
                 }
 
                 @Override
                 @Nonnull
-                public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+                public List<BakedQuad> getQuads(@Nullable final IBlockState state, @Nullable final EnumFacing side, final long rand) {
                     return quads;
                 }
 

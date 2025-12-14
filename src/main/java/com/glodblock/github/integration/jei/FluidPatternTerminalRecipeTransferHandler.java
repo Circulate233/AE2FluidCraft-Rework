@@ -26,8 +26,8 @@ public class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransfe
 
     @Nullable
     @Override
-    public IRecipeTransferError transferRecipe(@Nonnull ContainerFluidPatternTerminal container, @Nonnull IRecipeLayout recipeLayout,
-                                               @Nonnull EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
+    public IRecipeTransferError transferRecipe(@Nonnull final ContainerFluidPatternTerminal container, @Nonnull final IRecipeLayout recipeLayout,
+                                               @Nonnull final EntityPlayer player, final boolean maxTransfer, final boolean doTransfer) {
         if (doTransfer && container.getPart() instanceof FCFluidPatternPart) {
             boolean craftMode = container.craftingMode;
             try {
@@ -39,9 +39,9 @@ public class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransfe
                     NetworkHandler.instance().sendToServer(new PacketValueConfig("PatternTerminal.CraftMode", "1"));
                     craftMode = true;
                 }
-            } catch (IOException ignore) {
+            } catch (final IOException ignore) {
             }
-            RecipeTransferBuilder transfer = new RecipeTransferBuilder(
+            final RecipeTransferBuilder transfer = new RecipeTransferBuilder(
                     recipeLayout)
                     .clearEmptySlot(!craftMode)
                     .putFluidFirst(container.fluidFirst)

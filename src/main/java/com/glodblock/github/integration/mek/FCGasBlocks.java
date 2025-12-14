@@ -15,7 +15,7 @@ public class FCGasBlocks {
     @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.BLOCK_TRIO_INTERFACE)
     public static BlockTrioInterface TRIO_INTERFACE;
 
-    public static void init(RegistryHandler regHandler) {
+    public static void init(final RegistryHandler regHandler) {
         regHandler.block(NameConst.BLOCK_GAS_DISCRETIZER, new BlockGasDiscretizer());
         regHandler.block(NameConst.BLOCK_TRIO_INTERFACE, new BlockTrioInterface());
     }

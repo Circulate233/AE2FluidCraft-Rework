@@ -15,19 +15,19 @@ import javax.annotation.Nonnull;
 public class ItemFluidDrop extends Item implements HasCustomModel {
 
     @Override
-    public void getSubItems(@Nonnull CreativeTabs tab,@Nonnull NonNullList<ItemStack> items) {
+    public void getSubItems(@Nonnull final CreativeTabs tab, @Nonnull final NonNullList<ItemStack> items) {
 
     }
 
     @Override
-    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+    protected boolean isInCreativeTab(final CreativeTabs targetTab) {
         return false;
     }
 
     @Override
     @Nonnull
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
-        FluidStack fluid = FakeItemRegister.getStack(stack);
+    public String getItemStackDisplayName(@Nonnull final ItemStack stack) {
+        final FluidStack fluid = FakeItemRegister.getStack(stack);
         // would like to use I18n::format instead of this deprecated function, but that only exists on the client :/
         return fluid != null ? fluid.getLocalizedName() : "???";
     }

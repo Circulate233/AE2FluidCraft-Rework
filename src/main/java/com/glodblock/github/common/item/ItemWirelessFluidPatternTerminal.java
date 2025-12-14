@@ -21,23 +21,23 @@ public class ItemWirelessFluidPatternTerminal extends ToolWirelessTerminal {
     private static final int OFFHAND_SLOT = 40;
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World w, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(final World w, final EntityPlayer player, final EnumHand hand) {
         Util.openWirelessTerminal(player.getHeldItem(hand), hand == EnumHand.MAIN_HAND ? player.inventory.currentItem : OFFHAND_SLOT, false, w, player, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
         return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
     }
 
     @Override
-    public boolean canHandle(ItemStack is) {
+    public boolean canHandle(final ItemStack is) {
         return is.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL;
     }
 
     @Override
-    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+    protected boolean isInCreativeTab(final CreativeTabs targetTab) {
         return false;
     }
 
     @Override
-    public void getCheckedSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
+    public void getCheckedSubItems(@Nonnull final CreativeTabs tab, @Nonnull final NonNullList<ItemStack> items) {
 
     }
 }

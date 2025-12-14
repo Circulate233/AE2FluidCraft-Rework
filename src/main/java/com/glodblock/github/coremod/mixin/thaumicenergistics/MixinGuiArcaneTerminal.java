@@ -33,17 +33,17 @@ import thaumicenergistics.container.slot.SlotME;
 @Mixin(value = GuiArcaneTerminal.class, remap = false)
 public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItemStack, IItemStorageChannel> {
 
-    public MixinGuiArcaneTerminal(ContainerBaseTerminal container) {
+    public MixinGuiArcaneTerminal(final ContainerBaseTerminal container) {
         super(container);
     }
 
     @Intrinsic
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        Slot slot = this.getSlotUnderMouse();
-        if (slot instanceof SlotME<?> s && s.isEnabled()) {
+    protected void renderHoveredToolTip(final int mouseX, final int mouseY) {
+        final Slot slot = this.getSlotUnderMouse();
+        if (slot instanceof final SlotME<?> s && s.isEnabled()) {
             if (UtilClient.getMouseItem().isEmpty()) {
-                var aItem = s.getAEStack();
-                if (aItem instanceof IAEItemStack item) {
+                final var aItem = s.getAEStack();
+                if (aItem instanceof final IAEItemStack item) {
                     if (item.getItem() == FCItems.FLUID_DROP) {
                         if (UtilClient.rendererFluid(this, item, mouseX, mouseY, true)) return;
                     }
@@ -57,16 +57,16 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
     }
 
     @Inject(method = "handleMouseClick", at = @At("HEAD"), cancellable = true)
-    private void fc$handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo ci) {
-        boolean success = false;
-        if (slot instanceof SlotME<?> s) {
+    private void fc$handleMouseClick(final Slot slot, final int slotId, final int mouseButton, final ClickType type, final CallbackInfo ci) {
+        final boolean success = false;
+        if (slot instanceof final SlotME<?> s) {
             if (!UtilClient.getMouseItem().isEmpty()) {
                 if (mouseButton == 0) {
-                    var h = this.mc.player.inventory.getItemStack();
+                    final var h = this.mc.player.inventory.getItemStack();
                     if (!h.isEmpty()) {
                         final boolean f;
                         if (s.getAEStack() != null) {
-                            if (s.getAEStack() instanceof IAEItemStack stack) {
+                            if (s.getAEStack() instanceof final IAEItemStack stack) {
                                 f = stack.getItem() == FCItems.FLUID_DROP;
                             } else {
                                 ci.cancel();
@@ -75,7 +75,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
                         } else f = false;
                         if (h.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
                             && (f || Util.getFluidFromItem(h) != null)) {
-                            FluidStack fluid = f ? FakeItemRegister.getStack((IAEItemStack) s.getAEStack()) : null;
+                            final FluidStack fluid = f ? FakeItemRegister.getStack((IAEItemStack) s.getAEStack()) : null;
                             FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
                                 (CpacketMEMonitorableAction.FLUID, fluid != null ? fluid.writeToNBT(new NBTTagCompound()) : new NBTTagCompound()));
                             ci.cancel();
@@ -87,12 +87,12 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
                     }
                 }
             }
-            if (s.getAEStack() instanceof IAEItemStack stack) {
+            if (s.getAEStack() instanceof final IAEItemStack stack) {
                 if (stack.getItem() == FCItems.FLUID_DROP
                     || (ModAndClassUtil.GAS && stack.getItem() == FCGasItems.GAS_DROP)) {
                     if (mouseButton != 2 && !(mouseButton == 0 && stack.getStackSize() == 0)) {
                         if (stack.getItem() == FCItems.FLUID_DROP) {
-                            var shift = stack.getDefinition().writeToNBT(new NBTTagCompound());
+                            final var shift = stack.getDefinition().writeToNBT(new NBTTagCompound());
                             shift.setBoolean("shift", isShiftKeyDown());
                             FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
                                 (CpacketMEMonitorableAction.FLUID_OPERATE, shift));
@@ -106,10 +106,10 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
 
     @Unique
     @Optional.Method(modid = "mekeng")
-    protected boolean mek$handleMouseClick(SlotME s, ItemStack h, CallbackInfo ci) {
+    protected boolean mek$handleMouseClick(final SlotME s, final ItemStack h, final CallbackInfo ci) {
         final boolean g;
         if (s.getAEStack() != null) {
-            if (s.getAEStack() instanceof IAEItemStack stack) {
+            if (s.getAEStack() instanceof final IAEItemStack stack) {
                 g = stack.getItem() == FCGasItems.GAS_DROP;
             } else {
                 ci.cancel();
@@ -117,7 +117,7 @@ public abstract class MixinGuiArcaneTerminal extends GuiAbstractTerminal<IAEItem
             }
         } else g = false;
         if (h.getItem() instanceof IGasItem && (g || Util.getGasFromItem(h) != null)) {
-            GasStack gas = g ? FakeItemRegister.getStack((IAEItemStack) s.getAEStack()) : null;
+            final GasStack gas = g ? FakeItemRegister.getStack((IAEItemStack) s.getAEStack()) : null;
             FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
                 (CpacketMEMonitorableAction.GAS, gas != null ? gas.write(new NBTTagCompound()) : new NBTTagCompound()));
             ci.cancel();

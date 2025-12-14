@@ -22,7 +22,7 @@ public class KeyBindings {
     }
 
     @SubscribeEvent
-    public static void onKeyInputEvent(InputEvent.KeyInputEvent event) {
+    public static void onKeyInputEvent(final InputEvent.KeyInputEvent event) {
         if (WIRELESS_FLUID_PATTERN_TERMINAL.isPressed()) {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketUseKeybind());
         }

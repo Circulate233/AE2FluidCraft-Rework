@@ -25,15 +25,15 @@ public class ExtendedFluidPatternTerminalRecipeTransferHandler implements IRecip
 
     @Nullable
     @Override
-    public IRecipeTransferError transferRecipe(@Nonnull ContainerExtendedFluidPatternTerminal container, @Nonnull IRecipeLayout recipeLayout,
-                                               @Nonnull EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
+    public IRecipeTransferError transferRecipe(@Nonnull final ContainerExtendedFluidPatternTerminal container, @Nonnull final IRecipeLayout recipeLayout,
+                                               @Nonnull final EntityPlayer player, final boolean maxTransfer, final boolean doTransfer) {
 
        if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
            return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_CRAFTING_RECIPE_ONLY));
        }
 
        if (doTransfer && container.part instanceof PartExtendedFluidPatternTerminal) {
-           RecipeTransferBuilder transfer = new RecipeTransferBuilder(
+           final RecipeTransferBuilder transfer = new RecipeTransferBuilder(
                    recipeLayout)
                    .clearEmptySlot(true)
                    .putFluidFirst(container.fluidFirst)

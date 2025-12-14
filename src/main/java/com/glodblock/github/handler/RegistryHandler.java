@@ -22,19 +22,19 @@ public class RegistryHandler {
     protected final List<Pair<String, Block>> blocks = new ArrayList<>();
     protected final List<Pair<String, Item>> items = new ArrayList<>();
 
-    public void block(String name, Block block) {
+    public void block(final String name, final Block block) {
         blocks.add(Pair.of(name, block));
     }
 
-    public void item(String name, Item item) {
+    public void item(final String name, final Item item) {
         items.add(Pair.of(name, item));
     }
 
     @SubscribeEvent
-    public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-        for (Pair<String, Block> entry : blocks) {
-            String key = entry.getLeft();
-            Block block = entry.getRight();
+    public void onRegisterBlocks(final RegistryEvent.Register<Block> event) {
+        for (final Pair<String, Block> entry : blocks) {
+            final String key = entry.getLeft();
+            final Block block = entry.getRight();
             block.setRegistryName(key);
             block.setTranslationKey(FluidCraft.MODID + ":" + key);
             block.setCreativeTab(FCItems.TAB_AE2FC);
@@ -43,17 +43,17 @@ public class RegistryHandler {
     }
 
     @SubscribeEvent
-    public void onRegisterItems(RegistryEvent.Register<Item> event) {
+    public void onRegisterItems(final RegistryEvent.Register<Item> event) {
         // TODO some way to handle blocks with custom ItemBlock
-        for (Pair<String, Block> entry : blocks) {
+        for (final Pair<String, Block> entry : blocks) {
             event.getRegistry().register(initItem(entry.getLeft(), new AEBaseItemBlock(entry.getRight())));
         }
-        for (Pair<String, Item> entry : items) {
+        for (final Pair<String, Item> entry : items) {
             event.getRegistry().register(initItem(entry.getLeft(), entry.getRight()));
         }
     }
 
-    private static Item initItem(String key, Item item) {
+    private static Item initItem(final String key, final Item item) {
         item.setRegistryName(key);
         item.setTranslationKey(FluidCraft.MODID + ":" + key);
         item.setCreativeTab(FCItems.TAB_AE2FC);
@@ -61,9 +61,9 @@ public class RegistryHandler {
     }
 
     public void onInit() {
-        for (Pair<String, Block> entry : blocks) {
+        for (final Pair<String, Block> entry : blocks) {
             // respects registry overrides, i guess
-            Block block = ForgeRegistries.BLOCKS.getValue(FluidCraft.resource(entry.getKey()));
+            final Block block = ForgeRegistries.BLOCKS.getValue(FluidCraft.resource(entry.getKey()));
             if (block instanceof AEBaseTileBlock) {
                 AEBaseTile.registerTileItem(((AEBaseTileBlock)block).getTileEntityClass(),
                         new BlockStackSrc(block, 0, ActivityState.Enabled));

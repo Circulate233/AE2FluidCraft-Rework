@@ -29,16 +29,16 @@ public class FluidCraftingPatternDetails implements ICraftingPatternDetails, Com
     private final boolean isNecessary;
     private int priority = 0;
 
-    public static FluidCraftingPatternDetails GetFluidPattern(ItemStack pattern, World w) {
+    public static FluidCraftingPatternDetails GetFluidPattern(final ItemStack pattern, final World w) {
         try {
             return new FluidCraftingPatternDetails(pattern, w);
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             return null;
         }
     }
 
-    public FluidCraftingPatternDetails(ItemStack pattern, World w) {
-        NBTTagCompound encodedValue = pattern.getTagCompound();
+    public FluidCraftingPatternDetails(final ItemStack pattern, final World w) {
+        final NBTTagCompound encodedValue = pattern.getTagCompound();
         this.pattern = AEItemStack.fromItemStack(pattern);
         this.patternItem = pattern;
         if (encodedValue == null) {
@@ -47,34 +47,34 @@ public class FluidCraftingPatternDetails implements ICraftingPatternDetails, Com
             if (!encodedValue.getBoolean("crafting")) {
                 throw new IllegalArgumentException("Not Crafting pattern!");
             }
-            NBTTagList inTag = encodedValue.getTagList("in", 10);
+            final NBTTagList inTag = encodedValue.getTagList("in", 10);
             this.canSubstitute = encodedValue.getBoolean("substitute");
-            InventoryCrafting crafting = new InventoryCrafting(new ContainerNull(), 3, 3);
+            final InventoryCrafting crafting = new InventoryCrafting(new ContainerNull(), 3, 3);
             for(int x = 0; x < inTag.tagCount(); x++) {
-                NBTTagCompound resultItemTag = inTag.getCompoundTagAt(x);
-                ItemStack gs = new ItemStack(resultItemTag);
+                final NBTTagCompound resultItemTag = inTag.getCompoundTagAt(x);
+                final ItemStack gs = new ItemStack(resultItemTag);
                 if (resultItemTag.hasKey("stackSize")) {
                     gs.setCount(resultItemTag.getInteger("stackSize"));
                 }
                 crafting.setInventorySlotContents(x, gs);
                 this.containerInputs[x] = AEItemStack.fromItemStack(gs);
             }
-            IRecipe standardRecipe = CraftingManager.findMatchingRecipe(crafting, w);
+            final IRecipe standardRecipe = CraftingManager.findMatchingRecipe(crafting, w);
             if (standardRecipe == null) {
                 throw new IllegalStateException("No pattern here!");
             }
-            ItemStack outputItem = standardRecipe.getCraftingResult(crafting);
-            List<ItemStack> remain = standardRecipe.getRemainingItems(crafting);
+            final ItemStack outputItem = standardRecipe.getCraftingResult(crafting);
+            final List<ItemStack> remain = standardRecipe.getRemainingItems(crafting);
             for (int x = 0; x < remain.size(); x++) {
                 this.remainingInputs[x] = AEItemStack.fromItemStack(remain.get(x));
             }
             this.containerOutputs[0] = AEItemStack.fromItemStack(outputItem);
         }
         for (int x = 0; x < 9; x++) {
-            IAEItemStack filledContainer = this.containerInputs[x];
-            IAEItemStack emptyContainer = this.remainingInputs[x];
+            final IAEItemStack filledContainer = this.containerInputs[x];
+            final IAEItemStack emptyContainer = this.remainingInputs[x];
             if (filledContainer != null && emptyContainer != null && Util.getFluidFromItem(filledContainer.getDefinition()) != null) {
-                ItemStack drained = Util.getEmptiedContainer(filledContainer.getDefinition());
+                final ItemStack drained = Util.getEmptiedContainer(filledContainer.getDefinition());
                 if (emptyContainer.equals(drained)) {
                     this.fluidInputs[x] = FakeFluids.packFluid2AEDrops(Util.getFluidFromItem(filledContainer.getDefinition()));
                     continue;
@@ -91,7 +91,7 @@ public class FluidCraftingPatternDetails implements ICraftingPatternDetails, Com
     }
 
     @Override
-    public boolean isValidItemForSlot(int i, ItemStack itemStack, World world) {
+    public boolean isValidItemForSlot(final int i, final ItemStack itemStack, final World world) {
         return false;
     }
 
@@ -130,7 +130,7 @@ public class FluidCraftingPatternDetails implements ICraftingPatternDetails, Com
     }
 
     @Override
-    public ItemStack getOutput(InventoryCrafting inventoryCrafting, World world) {
+    public ItemStack getOutput(final InventoryCrafting inventoryCrafting, final World world) {
         return null;
     }
 
@@ -140,12 +140,12 @@ public class FluidCraftingPatternDetails implements ICraftingPatternDetails, Com
     }
 
     @Override
-    public void setPriority(int i) {
+    public void setPriority(final int i) {
         this.priority = i;
     }
 
     @Override
-    public int compareTo(ICraftingPatternDetails o) {
+    public int compareTo(final ICraftingPatternDetails o) {
         return Integer.compare(o.getPriority(), this.priority);
     }
 
@@ -154,7 +154,7 @@ public class FluidCraftingPatternDetails implements ICraftingPatternDetails, Com
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return obj instanceof FluidCraftingPatternDetails && this.pattern.equals(((FluidCraftingPatternDetails)obj).pattern);
     }
 

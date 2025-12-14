@@ -25,20 +25,20 @@ public class ItemFluidPacket extends Item implements HasCustomModel {
     }
 
     @Override
-    public void getSubItems(@Nonnull CreativeTabs tab,@Nonnull NonNullList<ItemStack> items) {
+    public void getSubItems(@Nonnull final CreativeTabs tab, @Nonnull final NonNullList<ItemStack> items) {
         // NO-OP
     }
 
     @Override
-    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+    protected boolean isInCreativeTab(final CreativeTabs targetTab) {
         return false;
     }
 
     @Override
     @Nonnull
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
-        FluidStack fluid = FakeItemRegister.getStack(stack);
-        boolean display = isDisplay(stack);
+    public String getItemStackDisplayName(@Nonnull final ItemStack stack) {
+        final FluidStack fluid = FakeItemRegister.getStack(stack);
+        final boolean display = isDisplay(stack);
         if (display) {
             return fluid != null ? fluid.getLocalizedName() : super.getItemStackDisplayName(stack);
         }
@@ -48,12 +48,12 @@ public class ItemFluidPacket extends Item implements HasCustomModel {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flags) {
-        FluidStack fluid = FakeItemRegister.getStack(stack);
-        boolean display = isDisplay(stack);
+    public void addInformation(@Nonnull final ItemStack stack, @Nullable final World world, @Nonnull final List<String> tooltip, @Nonnull final ITooltipFlag flags) {
+        final FluidStack fluid = FakeItemRegister.getStack(stack);
+        final boolean display = isDisplay(stack);
         if (display) return;
         if (fluid != null) {
-            for (String line : I18n.translateToLocal(NameConst.TT_FLUID_PACKET).split("\\\\n")) {
+            for (final String line : I18n.translateToLocal(NameConst.TT_FLUID_PACKET).split("\\\\n")) {
                 tooltip.add(TextFormatting.GRAY + line);
             }
         } else {
@@ -61,7 +61,7 @@ public class ItemFluidPacket extends Item implements HasCustomModel {
         }
     }
 
-    public static boolean isDisplay(ItemStack stack) {
+    public static boolean isDisplay(final ItemStack stack) {
         if (stack.isEmpty() || !stack.hasTagCompound() || stack.getTagCompound() == null) {
             return false;
         }
@@ -73,7 +73,7 @@ public class ItemFluidPacket extends Item implements HasCustomModel {
         return NameConst.MODEL_FLUID_PACKET;
     }
 
-    public static boolean isFluidPacket(ItemStack is) {
+    public static boolean isFluidPacket(final ItemStack is) {
         return !is.isEmpty() && is.getItem() instanceof ItemFluidPacket;
     }
 

@@ -52,10 +52,10 @@ public class PartFluidPatternTerminal extends PartPatternTerminal implements FCF
     private static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, MODELS[1], MODEL_STATUS_OFF);
     private static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, MODELS[0], MODEL_STATUS_HAS_CHANNEL);
 
-    public PartFluidPatternTerminal(ItemStack is) {
+    public PartFluidPatternTerminal(final ItemStack is) {
         super(is);
-        ExAppEngInternalInventory exCraft = new ExAppEngInternalInventory((AppEngInternalInventory) getInventoryByName("crafting"));
-        ExAppEngInternalInventory exOutput = new ExAppEngInternalInventory((AppEngInternalInventory) getInventoryByName("output"));
+        final ExAppEngInternalInventory exCraft = new ExAppEngInternalInventory((AppEngInternalInventory) getInventoryByName("crafting"));
+        final ExAppEngInternalInventory exOutput = new ExAppEngInternalInventory((AppEngInternalInventory) getInventoryByName("output"));
         this.crafting = exCraft;
         this.output = exOutput;
     }
@@ -67,13 +67,13 @@ public class PartFluidPatternTerminal extends PartPatternTerminal implements FCF
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound data) {
+    public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
         combine = data.getBoolean("combineMode");
         fluidFirst = data.getBoolean("fluidFirst");
     }
 
-    public void setCombineMode(boolean value) {
+    public void setCombineMode(final boolean value) {
         this.combine = value;
     }
 
@@ -81,7 +81,7 @@ public class PartFluidPatternTerminal extends PartPatternTerminal implements FCF
         return this.combine;
     }
 
-    public void setFluidPlaceMode(boolean value) {
+    public void setFluidPlaceMode(final boolean value) {
         this.fluidFirst = value;
     }
 
@@ -90,7 +90,7 @@ public class PartFluidPatternTerminal extends PartPatternTerminal implements FCF
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound data) {
+    public void writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
         data.setBoolean("combineMode", combine);
         data.setBoolean("fluidFirst", fluidFirst);
@@ -98,8 +98,8 @@ public class PartFluidPatternTerminal extends PartPatternTerminal implements FCF
 
     @Override
     public boolean onPartActivate(final EntityPlayer player, final EnumHand hand, final Vec3d pos) {
-        TileEntity te = this.getTile();
-        BlockPos tePos = te.getPos();
+        final TileEntity te = this.getTile();
+        final BlockPos tePos = te.getPos();
         if (Platform.isWrench(player, player.inventory.getCurrentItem(), tePos)) {
             return super.onPartActivate(player, hand, pos);
         }
@@ -114,8 +114,8 @@ public class PartFluidPatternTerminal extends PartPatternTerminal implements FCF
     }
 
     @Override
-    public void onChangeInventory(IItemHandler inv, int slot, InvOperation mc, ItemStack removedStack,
-                                  ItemStack newStack) {
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removedStack,
+                                  final ItemStack newStack) {
         if (slot == 1) {
             final ItemStack is = inv.getStackInSlot(1);
             if (!is.isEmpty() && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemFluidCraftEncodedPattern || is.getItem() instanceof ItemLargeEncodedPattern)) {
@@ -142,7 +142,7 @@ public class PartFluidPatternTerminal extends PartPatternTerminal implements FCF
         super.onChangeInventory(inv, slot, mc, removedStack, newStack);
     }
 
-    public void onChangeCrafting(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
+    public void onChangeCrafting(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
         Util.onPatternTerminalChangeCrafting(this, !this.craftingMode, inputs, outputs, combine);
     }
 

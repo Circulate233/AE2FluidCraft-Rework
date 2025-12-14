@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinGuiCrafting {
 
     @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/util/Platform;getItemDisplayName(Ljava/lang/Object;)Ljava/lang/String;"))
-    public String getItemDisplayNameR(Object n, Operation<String> original) {
+    public String getItemDisplayNameR(final Object n, final Operation<String> original) {
         return original.call(CoreModHooks.displayAEFluid((IAEItemStack) n));
     }
 
     @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/api/storage/data/IAEItemStack;asItemStackRepresentation()Lnet/minecraft/item/ItemStack;"))
-    public ItemStack getItemDisplayNameR(IAEItemStack instance, Operation<ItemStack> original) {
+    public ItemStack getItemDisplayNameR(final IAEItemStack instance, final Operation<ItemStack> original) {
         return CoreModHooks.displayFluid(original.call(instance));
     }
 }

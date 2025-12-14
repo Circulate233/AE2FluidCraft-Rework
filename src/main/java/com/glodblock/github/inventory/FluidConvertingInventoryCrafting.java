@@ -15,14 +15,14 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FluidConvertingInventoryCrafting extends InventoryCrafting {
 
-    public FluidConvertingInventoryCrafting(Container container, int width, int height) {
+    public FluidConvertingInventoryCrafting(final Container container, final int width, final int height) {
         super(container, width, height);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setInventorySlotContents(final int index, final ItemStack stack) {
         if (stack.getItem() == FCItems.FLUID_DROP) {
-            FluidStack fluid = FakeItemRegister.getStack(stack);
+            final FluidStack fluid = FakeItemRegister.getStack(stack);
             if (fluid != null) {
                 super.setInventorySlotContents(index, FakeFluids.packFluid2Packet(new FluidStack(fluid, stack.getCount())));
             } else {
@@ -30,7 +30,7 @@ public class FluidConvertingInventoryCrafting extends InventoryCrafting {
                 super.setInventorySlotContents(index, FakeFluids.packFluid2Packet(new FluidStack(FluidRegistry.WATER, 1000)));
             }
         } else if (ModAndClassUtil.GAS && stack.getItem() == FCGasItems.GAS_DROP) {
-            GasStack gas = FakeItemRegister.getStack(stack);
+            final GasStack gas = FakeItemRegister.getStack(stack);
             if (gas != null && gas.getGas() != null) {
                 super.setInventorySlotContents(index, FakeGases.packGas2Packet(new GasStack(gas.getGas(), stack.getCount())));
             } else {

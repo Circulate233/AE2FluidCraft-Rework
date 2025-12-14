@@ -14,7 +14,7 @@ public class CPacketTransposeFluid implements IMessage {
     private int amount;
     private boolean into;
 
-    public CPacketTransposeFluid(int amount, boolean into) {
+    public CPacketTransposeFluid(final int amount, final boolean into) {
         this.amount = amount;
         this.into = into;
     }
@@ -24,12 +24,12 @@ public class CPacketTransposeFluid implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeInt(amount).writeBoolean(into);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         amount = buf.readInt();
         into = buf.readBoolean();
     }
@@ -38,8 +38,8 @@ public class CPacketTransposeFluid implements IMessage {
 
         @Nullable
         @Override
-        public IMessage onMessage(CPacketTransposeFluid message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
+        public IMessage onMessage(final CPacketTransposeFluid message, final MessageContext ctx) {
+            final EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 if (player.openContainer instanceof ContainerBurette) {
                     ((ContainerBurette)player.openContainer).tryTransferFluid(message.amount, message.into);

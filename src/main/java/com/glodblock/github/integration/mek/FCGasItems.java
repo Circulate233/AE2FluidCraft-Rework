@@ -17,7 +17,7 @@ public class FCGasItems {
     @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.ITEM_PART_TRIO_INTERFACE)
     public static ItemPartTrioInterface PART_TRIO_INTERFACE;
 
-    public static void init(RegistryHandler regHandler) {
+    public static void init(final RegistryHandler regHandler) {
         regHandler.item(NameConst.ITEM_GAS_DROP, new ItemGasDrop());
         regHandler.item(NameConst.ITEM_GAS_PACKET, new ItemGasPacket());
         regHandler.item(NameConst.ITEM_PART_TRIO_INTERFACE, new ItemPartTrioInterface());

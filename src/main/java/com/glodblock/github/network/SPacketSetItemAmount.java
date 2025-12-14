@@ -18,24 +18,24 @@ public class SPacketSetItemAmount implements IMessage {
         //NO-OP
     }
 
-    public SPacketSetItemAmount(int amount) {
+    public SPacketSetItemAmount(final int amount) {
         this.amount = amount;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         amount = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeInt(amount);
     }
 
     public static class Handler implements IMessageHandler<SPacketSetItemAmount, IMessage> {
         @Nullable
         @Override
-        public IMessage onMessage(SPacketSetItemAmount message, MessageContext ctx) {
+        public IMessage onMessage(final SPacketSetItemAmount message, final MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
                 if (gs instanceof GuiItemAmountChange) {

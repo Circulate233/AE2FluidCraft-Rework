@@ -28,7 +28,7 @@ public class ContainerBurette extends AEBaseContainer implements IFluidSyncConta
     private final TileBurette tile;
     private final FluidSyncHelper fluidSync;
 
-    public ContainerBurette(InventoryPlayer ipl, TileBurette tile) {
+    public ContainerBurette(final InventoryPlayer ipl, final TileBurette tile) {
         super(ipl, tile);
         this.tile = tile;
         this.fluidSync = new FluidSyncHelper(tile.getFluidInventory(), 0);
@@ -40,10 +40,10 @@ public class ContainerBurette extends AEBaseContainer implements IFluidSyncConta
         return tile;
     }
 
-    public boolean canTranferFluid(boolean into) {
-        IAEFluidTank tileTank = tile.getFluidInventory();
-        IFluidTankProperties tileTankInfo = tileTank.getTankProperties()[0];
-        IAEFluidStack tileFluid = tileTank.getFluidInSlot(0);
+    public boolean canTranferFluid(final boolean into) {
+        final IAEFluidTank tileTank = tile.getFluidInventory();
+        final IFluidTankProperties tileTankInfo = tileTank.getTankProperties()[0];
+        final IAEFluidStack tileFluid = tileTank.getFluidInSlot(0);
         if (into) {
             if (tileFluid != null && tileFluid.getStackSize() >= tileTankInfo.getCapacity()) {
                 return false;
@@ -51,13 +51,13 @@ public class ContainerBurette extends AEBaseContainer implements IFluidSyncConta
         } else if (tileFluid == null) {
             return false;
         }
-        ItemStack stack = tile.getInternalInventory().getStackInSlot(0);
+        final ItemStack stack = tile.getInternalInventory().getStackInSlot(0);
         if (stack.isEmpty() || !stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             return false;
         }
-        IFluidHandlerItem itemTank = Objects.requireNonNull(
+        final IFluidHandlerItem itemTank = Objects.requireNonNull(
                 stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null));
-        for (IFluidTankProperties itemTankInfo : itemTank.getTankProperties()) {
+        for (final IFluidTankProperties itemTankInfo : itemTank.getTankProperties()) {
             if (into) {
                 if (itemTankInfo.canDrain() && tileTankInfo.canFillFluidType(itemTankInfo.getContents())) {
                     return true;
@@ -69,13 +69,13 @@ public class ContainerBurette extends AEBaseContainer implements IFluidSyncConta
         return false;
     }
 
-    public void tryTransferFluid(int amount, boolean into) {
-        ItemStack stack = tile.getInternalInventory().getStackInSlot(0);
+    public void tryTransferFluid(final int amount, final boolean into) {
+        final ItemStack stack = tile.getInternalInventory().getStackInSlot(0);
         if (stack.isEmpty() || !stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             return;
         }
-        IAEFluidTank tileTank = tile.getFluidInventory();
-        IFluidHandlerItem itemTank = Objects.requireNonNull(
+        final IAEFluidTank tileTank = tile.getFluidInventory();
+        final IFluidHandlerItem itemTank = Objects.requireNonNull(
                 stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null));
         if (into) {
             transferFluidBetween(itemTank, tileTank, amount);
@@ -85,7 +85,7 @@ public class ContainerBurette extends AEBaseContainer implements IFluidSyncConta
         tile.getInternalInventory().setStackInSlot(0, itemTank.getContainer());
     }
 
-    private void transferFluidBetween(IFluidHandler from, IFluidHandler to, int amount) {
+    private void transferFluidBetween(final IFluidHandler from, final IFluidHandler to, int amount) {
         // simulated pass to figure out the real amount we can transfer
         FluidStack fluid = from.drain(amount, false);
         if (fluid == null) {
@@ -111,23 +111,23 @@ public class ContainerBurette extends AEBaseContainer implements IFluidSyncConta
     }
 
     @Override
-    public void addListener(@Nonnull IContainerListener listener) {
+    public void addListener(@Nonnull final IContainerListener listener) {
         super.addListener(listener);
         fluidSync.sendFull(Collections.singleton(listener));
     }
 
     @Override
-    public void receiveFluidSlots(Map<Integer, IAEFluidStack> fluids) {
+    public void receiveFluidSlots(final Map<Integer, IAEFluidStack> fluids) {
         fluidSync.readPacket(fluids);
     }
 
     @Override
-    public boolean canDumpTank(int index) {
+    public boolean canDumpTank(final int index) {
         return tile.getFluidInventory().getFluidInSlot(0) != null;
     }
 
     @Override
-    public void dumpTank(int index) {
+    public void dumpTank(final int index) {
         tile.getFluidInventory().setFluidInSlot(0, null);
     }
 

@@ -25,7 +25,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public class ClientRegistryHandler extends RegistryHandler {
 
     @SubscribeEvent
-    public void onRegisterModels(ModelRegistryEvent event) {
+    public void onRegisterModels(final ModelRegistryEvent event) {
         ModelLoaderRegistry.registerLoader(new DenseEncodedPatternModel.Loader());
         ModelLoaderRegistry.registerLoader(new DenseCraftEncodedPatternModel.Loader());
         ModelLoaderRegistry.registerLoader(new LargeItemEncodedPatternModel.Loader());
@@ -34,10 +34,10 @@ public class ClientRegistryHandler extends RegistryHandler {
             ModelLoaderRegistry.registerLoader(new GasPacketModel.Loader());
             AEApi.instance().registries().partModels().registerModels(PartTrioInterface.MODELS);
         }
-        for (Pair<String, Block> entry : blocks) {
+        for (final Pair<String, Block> entry : blocks) {
             registerModel(entry.getLeft(), Item.getItemFromBlock(entry.getRight()));
         }
-        for (Pair<String, Item> entry : items) {
+        for (final Pair<String, Item> entry : items) {
             registerModel(entry.getLeft(), entry.getRight());
         }
         AEApi.instance().registries().partModels().registerModels(PartDualInterface.MODELS);
@@ -45,7 +45,7 @@ public class ClientRegistryHandler extends RegistryHandler {
         AEApi.instance().registries().partModels().registerModels(PartExtendedFluidPatternTerminal.MODELS);
     }
 
-    private static void registerModel(String key, Item item) {
+    private static void registerModel(final String key, final Item item) {
         ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(
                 item instanceof HasCustomModel ? ((HasCustomModel)item).getCustomModelPath() : FluidCraft.resource(key),
                 "inventory"));

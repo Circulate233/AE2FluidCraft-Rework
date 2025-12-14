@@ -57,7 +57,6 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
         super();
     }
 
-    @SuppressWarnings("unchecked")
     protected final DualityDualInterface<TileDualInterface> duality = createDuality();
 
     // Indicates that this interface has no specific direction set
@@ -83,7 +82,7 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
             return;
         }
 
-        EnumFacing newForward;
+        final EnumFacing newForward;
 
         if (!this.omniDirectional && this.getForward() == facing.getOpposite()) {
             newForward = facing;
@@ -156,7 +155,7 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     @Override
     protected boolean readFromStream(final ByteBuf data) throws IOException {
         final boolean c = super.readFromStream(data);
-        boolean oldOmniDirectional = this.omniDirectional;
+        final boolean oldOmniDirectional = this.omniDirectional;
         this.omniDirectional = data.readBoolean();
         return oldOmniDirectional != this.omniDirectional || c;
     }
@@ -213,12 +212,12 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     }
 
     @Override
-    public void onStackReturnNetwork(IAEFluidStack stack) {
+    public void onStackReturnNetwork(final IAEFluidStack stack) {
         duality.getItemInterface().onStackReturnedToNetwork(FakeFluids.packFluid2AEDrops(stack));
     }
 
     @Override
-    public void onStackReturnNetwork(IAEItemStack stack) {
+    public void onStackReturnNetwork(final IAEItemStack stack) {
         duality.getItemInterface().onStackReturnedToNetwork(stack);
     }
 
@@ -303,14 +302,14 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(final Capability<?> capability, @Nullable final EnumFacing facing) {
         return duality.hasCapability(capability, facing) || super.hasCapability(capability, facing);
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        T capInst = duality.getCapability(capability, facing);
+    public <T> T getCapability(final Capability<T> capability, @Nullable final EnumFacing facing) {
+        final T capInst = duality.getCapability(capability, facing);
         return capInst != null ? capInst : super.getCapability(capability, facing);
     }
 
@@ -325,15 +324,15 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     }
 
     @Override
-    public NBTTagCompound downloadSettings(SettingsFrom from) {
-        NBTTagCompound pre = super.downloadSettings(from);
-        NBTTagCompound tag = pre == null ? new NBTTagCompound() : pre;
+    public NBTTagCompound downloadSettings(final SettingsFrom from) {
+        final NBTTagCompound pre = super.downloadSettings(from);
+        final NBTTagCompound tag = pre == null ? new NBTTagCompound() : pre;
         tag.setTag("pattern", this.duality.downloadSettings(from));
         return tag.isEmpty() ? null : tag;
     }
 
     @Override
-    public void uploadSettings(SettingsFrom from, NBTTagCompound compound, EntityPlayer player) {
+    public void uploadSettings(final SettingsFrom from, final NBTTagCompound compound, final EntityPlayer player) {
         super.uploadSettings(from, compound, player);
         if (compound.hasKey("pattern")) {
             this.duality.uploadSettings(compound.getCompoundTag("pattern"), player);

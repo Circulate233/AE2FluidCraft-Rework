@@ -38,24 +38,24 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
     private final GuiNumberBox[] request = new GuiNumberBox[TileGeneralLevelMaintainer.MAX_FLUID];
     private final Map<IGhostIngredientHandler.Target<?>, Object> mapTargetSlot = new Object2ObjectOpenHashMap<>();
 
-    public GuiGeneralLevelMaintainer(InventoryPlayer ipl, TileGeneralLevelMaintainer tile) {
+    public GuiGeneralLevelMaintainer(final InventoryPlayer ipl, final TileGeneralLevelMaintainer tile) {
         super(new ContainerGeneralLevelMaintainer(ipl, tile));
         this.cont = (ContainerGeneralLevelMaintainer) inventorySlots;
         this.ySize = 223;
     }
 
-    public void setMaintainNumber(int id, int size) {
+    public void setMaintainNumber(final int id, final int size) {
         if (id < 0 || id >= TileGeneralLevelMaintainer.MAX_FLUID || size < 0)
             return;
         this.maintain[id].setText(String.valueOf(size));
     }
 
     @Override
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        Slot slot = this.getSlotUnderMouse();
-        if (slot instanceof SlotFake s && s.isEnabled()) {
+    protected void renderHoveredToolTip(final int mouseX, final int mouseY) {
+        final Slot slot = this.getSlotUnderMouse();
+        if (slot instanceof final SlotFake s && s.isEnabled()) {
             if (UtilClient.getMouseItem().isEmpty()) {
-                var item = s.getStack();
+                final var item = s.getStack();
                 if (!item.isEmpty()) {
                     if (item.getItem() == FCItems.FLUID_DROP) {
                         if (UtilClient.rendererFluid(this, AEItemStack.fromItemStack(item), mouseX, mouseY, false))
@@ -72,7 +72,7 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
     }
 
     @Override
-    protected void keyTyped(char character, int key) throws IOException {
+    protected void keyTyped(final char character, final int key) throws IOException {
         if (!this.checkHotbarKeys(key)) {
             GuiNumberBox focus = null;
             int id = 0;
@@ -118,7 +118,7 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
                         if (id >= 10 || result != 0)
                             FluidCraft.proxy.netHandler.sendToServer(new CPacketUpdateGeneralLevel(id, (int) result));
 
-                    } catch (NumberFormatException ignored) {
+                    } catch (final NumberFormatException ignored) {
                     }
                 }
             } else {
@@ -140,8 +140,8 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
             maintain[i].setMaxStringLength(10);
             request[i].setMaxStringLength(10);
         }
-        TileGeneralLevelMaintainer tile = this.cont.getTile();
-        IItemHandler inv = tile.getInventoryHandler();
+        final TileGeneralLevelMaintainer tile = this.cont.getTile();
+        final IItemHandler inv = tile.getInventoryHandler();
         for (int i = 0; i < inv.getSlots(); i++) {
             if (!inv.getStackInSlot(i).isEmpty()) {
                 this.maintain[i].setText(Integer.toString(inv.getStackInSlot(i).getCount()));
@@ -153,7 +153,7 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
     }
 
     @Override
-    protected void mouseClicked(int xCoord, int yCoord, int btn) throws IOException {
+    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) throws IOException {
         for (int i = 0; i < TileGeneralLevelMaintainer.MAX_FLUID; i++) {
             this.configNumberBar(request[i], xCoord, yCoord, btn);
             this.configNumberBar(maintain[i], xCoord, yCoord, btn);
@@ -161,7 +161,7 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
         super.mouseClicked(xCoord, yCoord, btn);
     }
 
-    private void configNumberBar(GuiNumberBox bar, int xCoord, int yCoord, int btn) {
+    private void configNumberBar(final GuiNumberBox bar, final int xCoord, final int yCoord, final int btn) {
         bar.mouseClicked(xCoord, yCoord, btn);
         if (btn == 1 && bar.isFocused()) {
             bar.setText("");
@@ -169,7 +169,7 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         fontRenderer.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_LEVEL_MAINTAINER)), 8, 6, 0x404040);
         fontRenderer.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         fontRenderer.drawString(I18n.format(NameConst.MISC_THRESHOLD), 39, 19, 0x404040);
@@ -177,7 +177,7 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         mc.getTextureManager().bindTexture(TEX_BG);
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, ySize);
         for (int i = 0; i < TileGeneralLevelMaintainer.MAX_FLUID; i++) {
@@ -187,12 +187,12 @@ public class GuiGeneralLevelMaintainer extends AEBaseGui implements IJEIGhostIng
     }
 
     @Override
-    public List<IGhostIngredientHandler.Target<?>> getPhantomTargets(Object ingredient) {
+    public List<IGhostIngredientHandler.Target<?>> getPhantomTargets(final Object ingredient) {
         this.mapTargetSlot.clear();
-        List<IGhostIngredientHandler.Target<?>> list = new ObjectArrayList<>();
+        final List<IGhostIngredientHandler.Target<?>> list = new ObjectArrayList<>();
         if (!this.inventorySlots.inventorySlots.isEmpty()) {
-            for (Slot slots : this.inventorySlots.inventorySlots) {
-                if (slots instanceof SlotFake slot) {
+            for (final Slot slots : this.inventorySlots.inventorySlots) {
+                if (slots instanceof final SlotFake slot) {
                     final IGhostIngredientHandler.Target<Object> targetItem
                         = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
                     list.add(targetItem);

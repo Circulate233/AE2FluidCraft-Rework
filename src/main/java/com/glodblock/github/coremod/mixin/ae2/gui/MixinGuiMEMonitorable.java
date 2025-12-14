@@ -28,16 +28,16 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(value = GuiMEMonitorable.class,remap = false)
 public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
 
-    public MixinGuiMEMonitorable(Container container) {
+    public MixinGuiMEMonitorable(final Container container) {
         super(container);
     }
 
     @Intrinsic
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        Slot slot = this.getSlotUnderMouse();
-        if (slot instanceof SlotME s && s.isEnabled()) {
+    protected void renderHoveredToolTip(final int mouseX, final int mouseY) {
+        final Slot slot = this.getSlotUnderMouse();
+        if (slot instanceof final SlotME s && s.isEnabled()) {
             if (UtilClient.getMouseItem().isEmpty()) {
-                var item = s.getAEStack();
+                final var item = s.getAEStack();
                 if (item != null) {
                     if (item.getItem() == FCItems.FLUID_DROP) {
                         if (UtilClient.rendererFluid(this, item, mouseX, mouseY, true)) return;
@@ -52,11 +52,11 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
     }
 
     @Intrinsic
-    protected void handleMouseClick(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
-        if (slot instanceof SlotME s) {
+    protected void handleMouseClick(final Slot slot, final int slotIdx, final int mouseButton, final ClickType clickType) {
+        if (slot instanceof final SlotME s) {
             if (!UtilClient.getMouseItem().isEmpty()) {
                 if (mouseButton == 0) {
-                    var h = this.mc.player.inventory.getItemStack();
+                    final var h = this.mc.player.inventory.getItemStack();
                     if (!h.isEmpty()) {
                         final boolean f;
                         if (s.getAEStack() != null) {
@@ -64,7 +64,7 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
                         } else f = false;
                         if (h.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
                             && (f || Util.getFluidFromItem(h) != null)) {
-                            FluidStack fluid = f ? FakeItemRegister.getStack(s.getAEStack()) : null;
+                            final FluidStack fluid = f ? FakeItemRegister.getStack(s.getAEStack()) : null;
                             FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
                                 (CpacketMEMonitorableAction.FLUID, fluid != null ? fluid.writeToNBT(new NBTTagCompound()) : new NBTTagCompound()));
                             return;
@@ -83,7 +83,7 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
                         && (s.getAEStack().getStackSize() == 0 || isAltKeyDown()))
                     ) {
                         if (s.getAEStack().getItem() == FCItems.FLUID_DROP) {
-                            var shift = s.getAEStack().getDefinition().writeToNBT(new NBTTagCompound());
+                            final var shift = s.getAEStack().getDefinition().writeToNBT(new NBTTagCompound());
                             shift.setBoolean("shift", isShiftKeyDown());
                             FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
                                 (CpacketMEMonitorableAction.FLUID_OPERATE, shift));
@@ -98,13 +98,13 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
 
     @Unique
     @Optional.Method(modid = "mekeng")
-    protected boolean mek$handleMouseClick(SlotME s, ItemStack h) {
+    protected boolean mek$handleMouseClick(final SlotME s, final ItemStack h) {
         final boolean g;
         if (s.getAEStack() != null) {
             g = s.getAEStack().getItem() == FCGasItems.GAS_DROP;
         } else g = false;
         if (h.getItem() instanceof IGasItem && (g || Util.getGasFromItem(h) != null)) {
-            GasStack gas = g ? FakeItemRegister.getStack(s.getAEStack()) : null;
+            final GasStack gas = g ? FakeItemRegister.getStack(s.getAEStack()) : null;
             FluidCraft.proxy.netHandler.sendToServer(new CpacketMEMonitorableAction
                 (CpacketMEMonitorableAction.GAS, gas != null ? gas.write(new NBTTagCompound()) : new NBTTagCompound()));
             return true;

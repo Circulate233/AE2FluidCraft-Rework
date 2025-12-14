@@ -21,18 +21,18 @@ import java.util.Collections;
 
 @Mixin(GuiCraftAmount.class)
 public abstract class MixinGuiCraftAmount extends AEBaseGui {
-    public MixinGuiCraftAmount(Container container) {
+    public MixinGuiCraftAmount(final Container container) {
         super(container);
     }
 
     @Intrinsic
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        Slot slot = this.getSlotUnderMouse();
+    protected void renderHoveredToolTip(final int mouseX, final int mouseY) {
+        final Slot slot = this.getSlotUnderMouse();
         if (UtilClient.getMouseItem().isEmpty() && slot != null) {
             if (slot.getHasStack()) {
-                var item = slot.getStack();
+                final var item = slot.getStack();
                 if (item.getItem() == FCItems.FLUID_DROP) {
-                    IAEFluidStack fluidStack = FakeItemRegister.getAEStack(item);
+                    final IAEFluidStack fluidStack = FakeItemRegister.getAEStack(item);
                     if (fluidStack != null) {
                         this.drawHoveringText(Collections.singletonList(fluidStack.getFluidStack().getLocalizedName()), mouseX, mouseY);
                         return;
@@ -49,8 +49,8 @@ public abstract class MixinGuiCraftAmount extends AEBaseGui {
 
     @Unique
     @Optional.Method(modid = "mekeng")
-    private boolean rendererGas(ItemStack item, int mouseX, int mouseY) {
-        GasStack gs = FakeItemRegister.getStack(item);
+    private boolean rendererGas(final ItemStack item, final int mouseX, final int mouseY) {
+        final GasStack gs = FakeItemRegister.getStack(item);
         if (gs != null) {
             this.drawHoveringText(Collections.singletonList(gs.getGas().getLocalizedName()), mouseX, mouseY);
             return true;

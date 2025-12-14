@@ -19,7 +19,7 @@ public class CPacketSwitchGuis implements IMessage {
 
     private GuiType guiType;
 
-    public CPacketSwitchGuis(GuiType guiType) {
+    public CPacketSwitchGuis(final GuiType guiType) {
         this.guiType = guiType;
     }
 
@@ -28,28 +28,28 @@ public class CPacketSwitchGuis implements IMessage {
     }
 
     @Override
-    public void fromBytes(ByteBuf byteBuf) {
+    public void fromBytes(final ByteBuf byteBuf) {
         guiType = GuiType.getByOrdinal(byteBuf.readByte());
     }
 
     @Override
-    public void toBytes(ByteBuf byteBuf) {
+    public void toBytes(final ByteBuf byteBuf) {
         byteBuf.writeByte(guiType != null ? guiType.ordinal() : 0);
     }
 
     public static class Handler implements IMessageHandler<CPacketSwitchGuis, IMessage> {
         @Nullable
         @Override
-        public IMessage onMessage(CPacketSwitchGuis message, MessageContext ctx) {
+        public IMessage onMessage(final CPacketSwitchGuis message, final MessageContext ctx) {
             if (message.guiType == null) {
                 return null;
             }
-            EntityPlayerMP player = ctx.getServerHandler().player;
-            Container cont = player.openContainer;
+            final EntityPlayerMP player = ctx.getServerHandler().player;
+            final Container cont = player.openContainer;
             if (!(cont instanceof AEBaseContainer)) {
                 return null;
             }
-            ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();
+            final ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();
             if (context == null) {
                 return null;
             }

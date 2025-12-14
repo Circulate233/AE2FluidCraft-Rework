@@ -2,7 +2,6 @@ package com.glodblock.github.integration.dynamistics;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEItemStack;
-import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.loader.FCItems;
 import com.glodblock.github.util.FluidPatternDetails;
@@ -31,9 +30,8 @@ public class FluidPatternPlugin implements IRecipeRegistryPlugin {
     }
 
     @Override
-    public <V> List<String> getRecipeCategoryUids(IFocus<V> focus) {
-        if(focus.getValue() instanceof ItemStack) {
-            ItemStack stack = (ItemStack) focus.getValue();
+    public <V> List<String> getRecipeCategoryUids(final IFocus<V> focus) {
+        if(focus.getValue() instanceof final ItemStack stack) {
             if((stack.getItem() == FCItems.DENSE_ENCODED_PATTERN || stack.getItem() == FCItems.LARGE_ITEM_ENCODED_PATTERN) && stack.hasTagCompound()) {
                 return Collections.singletonList(FluidPatternCategory.UID);
             }
@@ -42,7 +40,7 @@ public class FluidPatternPlugin implements IRecipeRegistryPlugin {
     }
 
     @Override
-    public <T extends IRecipeWrapper, V> List<T> getRecipeWrappers(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
+    public <T extends IRecipeWrapper, V> List<T> getRecipeWrappers(final IRecipeCategory<T> recipeCategory, final IFocus<V> focus) {
         if(recipeCategory instanceof FluidPatternCategory &&
                 (((ItemStack) focus.getValue()).getItem() == FCItems.DENSE_ENCODED_PATTERN
                         || ((ItemStack) focus.getValue()).getItem() == FCItems.LARGE_ITEM_ENCODED_PATTERN)) {
@@ -52,7 +50,7 @@ public class FluidPatternPlugin implements IRecipeRegistryPlugin {
     }
 
     @Override
-    public <T extends IRecipeWrapper> List<T> getRecipeWrappers(IRecipeCategory<T> recipeCategory) {
+    public <T extends IRecipeWrapper> List<T> getRecipeWrappers(final IRecipeCategory<T> recipeCategory) {
         if (recipeCategory instanceof FluidPatternCategory) {
             return Collections.singletonList(new SingletonRecipe(getExampleItem(), true).cast());
         }
@@ -62,7 +60,7 @@ public class FluidPatternPlugin implements IRecipeRegistryPlugin {
     private static ItemStack getExampleItem() {
         if (EXAMPLE_PATTERN == null) {
             EXAMPLE_PATTERN = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
-            FluidPatternDetails pattern = new FluidPatternDetails(EXAMPLE_PATTERN);
+            final FluidPatternDetails pattern = new FluidPatternDetails(EXAMPLE_PATTERN);
             pattern.setInputs(new IAEItemStack[] {
                     FakeFluids.packFluid2AEDrops(FluidRegistry.getFluidStack("water", 1000)),
                     AEItemStack.fromItemStack(new ItemStack(Items.BUCKET))

@@ -38,10 +38,10 @@ import java.util.Locale;
 @SideOnly(Side.CLIENT)
 public final class UtilClient {
 
-    public static boolean shouldAutoCraft(Slot slot, int mouseButton, ClickType clickType) {
+    public static boolean shouldAutoCraft(final Slot slot, final int mouseButton, final ClickType clickType) {
         if (slot instanceof SlotME) {
-            IAEItemStack stack;
-            InventoryAction action;
+            final IAEItemStack stack;
+            final InventoryAction action;
             final EntityPlayer player = Minecraft.getMinecraft().player;
             switch (clickType) {
                 case PICKUP:
@@ -64,11 +64,11 @@ public final class UtilClient {
         return false;
     }
 
-    public static boolean renderPatternSlotTip(GuiScreen gui, int mouseX, int mouseY) {
-        var item = getMouseItem();
+    public static boolean renderPatternSlotTip(final GuiScreen gui, final int mouseX, final int mouseY) {
+        final var item = getMouseItem();
         if (item.isEmpty()) return false;
 
-        var f = Util.getFluidFromItem(item);
+        final var f = Util.getFluidFromItem(item);
         if (f != null) {
             gui.drawHoveringText(
                 Arrays.asList(
@@ -81,7 +81,7 @@ public final class UtilClient {
             return true;
         }
         if (ModAndClassUtil.GAS) {
-            var g = Util.getGasNameFromItem(item);
+            final var g = Util.getGasNameFromItem(item);
             if (g != null) {
                 gui.drawHoveringText(
                     Arrays.asList(
@@ -97,11 +97,11 @@ public final class UtilClient {
         return false;
     }
 
-    public static boolean renderContainerToolTip(GuiContainer gui, int mouseX, int mouseY) {
-        var item = Minecraft.getMinecraft().player.inventory.getItemStack();
+    public static boolean renderContainerToolTip(final GuiContainer gui, final int mouseX, final int mouseY) {
+        final var item = Minecraft.getMinecraft().player.inventory.getItemStack();
         if (item.isEmpty()) return false;
 
-        var f = Util.getFluidFromItem(item);
+        final var f = Util.getFluidFromItem(item);
         if (f != null) {
             final String s = " ： " + I18n.format("gui.appliedenergistics2.security.inject.name") + " " + TextFormatting.RESET;
             gui.drawHoveringText(
@@ -115,7 +115,7 @@ public final class UtilClient {
             return true;
         }
         if (ModAndClassUtil.GAS) {
-            var g = Util.getGasNameFromItem(item);
+            final var g = Util.getGasNameFromItem(item);
             if (g != null) {
                 final String s = " ： " + I18n.format("gui.appliedenergistics2.security.inject.name") + " " + TextFormatting.RESET;
                 gui.drawHoveringText(
@@ -133,7 +133,7 @@ public final class UtilClient {
     }
 
     public static ItemStack getMouseItem() {
-        var i = Minecraft.getMinecraft().player.inventory.getItemStack();
+        final var i = Minecraft.getMinecraft().player.inventory.getItemStack();
         if (!i.isEmpty()) return i;
 
         if (ModAndClassUtil.JEI) return getJEIMouseItem();
@@ -143,24 +143,24 @@ public final class UtilClient {
 
     @Optional.Method(modid = "jei")
     public static ItemStack getJEIMouseItem() {
-        var ii = ((AccessorGhostIngredientDragManager) ((AccessorIngredientListOverlay) ((AccessorInputHandler) Ae2ReflectClient.getInputHandler()).getIngredientListOverlay()).getGhostIngredientDragManager()).getGhostIngredientDrag();
-        if (ii != null && ii.getIngredient() instanceof ItemStack stack) return stack;
+        final var ii = ((AccessorGhostIngredientDragManager) ((AccessorIngredientListOverlay) ((AccessorInputHandler) Ae2ReflectClient.getInputHandler()).getIngredientListOverlay()).getGhostIngredientDragManager()).getGhostIngredientDrag();
+        if (ii != null && ii.getIngredient() instanceof final ItemStack stack) return stack;
         return ItemStack.EMPTY;
     }
 
     private static final MutablePair<IAEStack<?>, List<String>> cacheTooltip = new MutablePair<>();
     private static boolean cacheIsStorage = false;
 
-    public static boolean rendererFluid(GuiContainer gui, IAEItemStack item, int mouseX, int mouseY, boolean isStorage) {
+    public static boolean rendererFluid(final GuiContainer gui, final IAEItemStack item, final int mouseX, final int mouseY, final boolean isStorage) {
         if (item == null) return false;
         if (item.getItem() == FCItems.FLUID_DROP) {
             if (cacheTooltip.left == null || !cacheTooltip.left.equals(item) || cacheTooltip.left.getStackSize() != item.getStackSize() || cacheIsStorage != isStorage) {
-                IAEFluidStack fluidStack = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
+                final IAEFluidStack fluidStack = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
                 if (fluidStack != null) {
                     fluidStack.setStackSize(item.getStackSize());
-                    String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(fluidStack.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) fluidStack.getStackSize() / (double) 1000.0F) + " B";
-                    String modName = TextFormatting.BLUE.toString() + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get(Platform.getModId(fluidStack)).getName();
-                    List<String> list = new ObjectArrayList<>();
+                    final String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(fluidStack.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) fluidStack.getStackSize() / (double) 1000.0F) + " B";
+                    final String modName = TextFormatting.BLUE.toString() + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get(Platform.getModId(fluidStack)).getName();
+                    final List<String> list = new ObjectArrayList<>();
                     list.add(fluidStack.getFluidStack().getLocalizedName());
                     list.add(modName);
                     if (isStorage)
@@ -182,16 +182,16 @@ public final class UtilClient {
     }
 
     @Optional.Method(modid = "mekeng")
-    public static boolean rendererGas(GuiContainer gui, IAEItemStack item, int mouseX, int mouseY, boolean isStorage) {
+    public static boolean rendererGas(final GuiContainer gui, final IAEItemStack item, final int mouseX, final int mouseY, final boolean isStorage) {
         if (item == null) return false;
         if (item.getItem() == FCGasItems.GAS_DROP) {
             if (cacheTooltip.left == null || !cacheTooltip.left.equals(item) || cacheTooltip.left.getStackSize() != item.getStackSize() || cacheIsStorage != isStorage) {
-                IAEGasStack gs = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
+                final IAEGasStack gs = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
                 if (gs != null) {
                     gs.setStackSize(item.getStackSize());
-                    String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(gs.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) gs.getStackSize() / (double) 1000.0F) + " B";
-                    String modName = "" + TextFormatting.BLUE + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get("mekanism").getName();
-                    List<String> list = new ObjectArrayList<>();
+                    final String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(gs.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) gs.getStackSize() / (double) 1000.0F) + " B";
+                    final String modName = "" + TextFormatting.BLUE + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get("mekanism").getName();
+                    final List<String> list = new ObjectArrayList<>();
                     list.add(gs.getGas().getLocalizedName());
                     list.add(modName);
                     if (isStorage)

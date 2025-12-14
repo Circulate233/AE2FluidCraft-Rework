@@ -48,7 +48,7 @@ public class FCItems {
     @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.ITEM_WIRELESS_FLUID_PATTERN_TERMINAL)
     public static ItemWirelessFluidPatternTerminal WIRELESS_FLUID_PATTERN_TERMINAL;
 
-    public static void init(RegistryHandler regHandler) {
+    public static void init(final RegistryHandler regHandler) {
         regHandler.item(NameConst.ITEM_FLUID_DROP, new ItemFluidDrop());
         regHandler.item(NameConst.ITEM_FLUID_PACKET, new ItemFluidPacket());
         regHandler.item(NameConst.ITEM_DENSE_ENCODED_PATTERN, new ItemFluidEncodedPattern());

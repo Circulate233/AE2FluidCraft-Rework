@@ -17,22 +17,22 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class CPacketUseKeybind implements IMessage {
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         // empty for now, can be changed to allow differentiating keybinds if more are added in the future
     }
 
     public static class Handler implements IMessageHandler<CPacketUseKeybind, IMessage> {
 
         @Override
-        public IMessage onMessage(CPacketUseKeybind message, MessageContext ctx) {
+        public IMessage onMessage(final CPacketUseKeybind message, final MessageContext ctx) {
             final EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                    ItemStack stackInSlot = player.inventory.getStackInSlot(i);
+                    final ItemStack stackInSlot = player.inventory.getStackInSlot(i);
                     if (stackInSlot.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                         Util.openWirelessTerminal(stackInSlot, i, false, player.world, player, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
                         return;
@@ -46,9 +46,9 @@ public class CPacketUseKeybind implements IMessage {
         }
 
         @Optional.Method(modid = "baubles")
-        private static void tryOpenBauble(EntityPlayer player) {
+        private static void tryOpenBauble(final EntityPlayer player) {
             for (int i = 0; i < BaublesApi.getBaublesHandler(player).getSlots(); i++) {
-                ItemStack stackInSlot = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
+                final ItemStack stackInSlot = BaublesApi.getBaublesHandler(player).getStackInSlot(i);
                 if (stackInSlot.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                     Util.openWirelessTerminal(stackInSlot, i, true, player.world, player, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
                     return;

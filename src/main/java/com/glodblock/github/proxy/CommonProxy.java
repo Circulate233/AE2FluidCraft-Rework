@@ -56,7 +56,7 @@ public class CommonProxy {
         return new RegistryHandler();
     }
 
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(final FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(regHandler);
         FCBlocks.init(regHandler);
         FCItems.init(regHandler);
@@ -91,10 +91,10 @@ public class CommonProxy {
         PackagedFluidCrafting.init();
     }
 
-    public void init(FMLInitializationEvent event) {
+    public void init(final FMLInitializationEvent event) {
         regHandler.onInit();
         AEApi.instance().registries().wireless().registerWirelessHandler(FCItems.WIRELESS_FLUID_PATTERN_TERMINAL);
-        IRecipe disassembleRecipe = ForgeRegistries.RECIPES.getValue(new ResourceLocation(AppEng.MOD_ID, "disassemble"));
+        final IRecipe disassembleRecipe = ForgeRegistries.RECIPES.getValue(new ResourceLocation(AppEng.MOD_ID, "disassemble"));
         if (disassembleRecipe instanceof DisassembleRecipe) {
             Ae2Reflect.getDisassemblyNonCellMap((DisassembleRecipe) disassembleRecipe).put(
                 createItemDefn(FCItems.DENSE_ENCODED_PATTERN),
@@ -108,7 +108,7 @@ public class CommonProxy {
         }
     }
 
-    public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(final FMLPostInitializationEvent event) {
         Upgrades.PATTERN_EXPANSION.registerItem(new ItemStack(FCBlocks.DUAL_INTERFACE), 3);
         Upgrades.CRAFTING.registerItem(new ItemStack(FCBlocks.DUAL_INTERFACE), 1);
         Upgrades.CAPACITY.registerItem(new ItemStack(FCBlocks.DUAL_INTERFACE), 2);
@@ -123,7 +123,7 @@ public class CommonProxy {
         NetworkRegistry.INSTANCE.registerGuiHandler(FluidCraft.INSTANCE, new InventoryHandler());
     }
 
-    private static IItemDefinition createItemDefn(Item item) {
+    private static IItemDefinition createItemDefn(final Item item) {
         return new ItemDefinition(Objects.requireNonNull(item.getRegistryName()).toString(), item);
     }
 

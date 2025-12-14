@@ -29,14 +29,14 @@ public class MixinPartType {
     private Class<? extends IPart> myPart;
 
     @Inject(method = "<init>(Ljava/lang/String;IILjava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Class;Lappeng/core/localization/GuiText;Ljava/lang/String;)V", at = @At("TAIL"))
-    private void partFluidExportBusI(String name, int o, int baseMetaValue, String itemModel, Set<AEFeature> features, Set<IntegrationType> integrations, Class<? extends IPart> c, GuiText par8, String par9, CallbackInfo ci) {
+    private void partFluidExportBusI(final String name, final int o, final int baseMetaValue, final String itemModel, final Set<AEFeature> features, final Set<IntegrationType> integrations, final Class<? extends IPart> c, final GuiText par8, final String par9, final CallbackInfo ci) {
         if (c == PartFluidExportBus.class) {
             this.myPart = com.glodblock.github.common.part.PartFluidExportBus.class;
         }
     }
 
     @WrapOperation(method = "<init>(Ljava/lang/String;IILjava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Class;Lappeng/core/localization/GuiText;Ljava/lang/String;)V", at = @At(value = "INVOKE", target = "Lappeng/items/parts/PartModelsHelper;createModels(Ljava/lang/Class;)Ljava/util/List;"))
-    public List<ResourceLocation> partFluidExportBusR(Class<?> value, Operation<List<ResourceLocation>> original) {
+    public List<ResourceLocation> partFluidExportBusR(final Class<?> value, final Operation<List<ResourceLocation>> original) {
         if (value == PartFluidExportBus.class) {
             return original.call(com.glodblock.github.common.part.PartFluidExportBus.class);
         }

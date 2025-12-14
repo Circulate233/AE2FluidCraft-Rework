@@ -57,26 +57,26 @@ public class FluidPacketModel implements IModel {
 
     @Override
     @Nonnull
-    public IBakedModel bake(@Nonnull IModelState state, @Nonnull VertexFormat format, @Nonnull Function<ResourceLocation, TextureAtlasSprite> textureBakery) {
+    public IBakedModel bake(@Nonnull final IModelState state, @Nonnull final VertexFormat format, @Nonnull final Function<ResourceLocation, TextureAtlasSprite> textureBakery) {
         return new BakedFluidPacketModel(state, format);
     }
 
     public static class Loader implements ICustomModelLoader {
 
         @Override
-        public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
+        public void onResourceManagerReload(@Nonnull final IResourceManager resourceManager) {
             // NO-OP
         }
 
         @Override
-        public boolean accepts(ResourceLocation modelLocation) {
+        public boolean accepts(final ResourceLocation modelLocation) {
             return modelLocation.compareTo(NameConst.MODEL_FLUID_PACKET) == 0
                 || modelLocation.compareTo(NameConst.MODEL_FLUID_DROP) == 0;
         }
 
         @Override
         @Nonnull
-        public IModel loadModel(@Nonnull ResourceLocation modelLocation) {
+        public IModel loadModel(@Nonnull final ResourceLocation modelLocation) {
             return new FluidPacketModel();
         }
 
@@ -90,7 +90,7 @@ public class FluidPacketModel implements IModel {
         protected final ItemOverrideList overrides;
         private final IBakedModel defaultOverride;
 
-        public BakedFluidPacketModel(IModelState modelState, VertexFormat vertexFormat) {
+        public BakedFluidPacketModel(final IModelState modelState, final VertexFormat vertexFormat) {
             this.modelTransform = modelState.apply(Optional.empty());
             this.vertexFormat = vertexFormat;
             this.overrides = this.genOverrides();
@@ -99,7 +99,7 @@ public class FluidPacketModel implements IModel {
 
         @Override
         @Nonnull
-        public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+        public List<BakedQuad> getQuads(@Nullable final IBlockState state, @Nullable final EnumFacing side, final long rand) {
             return defaultOverride.getQuads(state, side, rand);
         }
 
@@ -125,7 +125,7 @@ public class FluidPacketModel implements IModel {
         }
 
         @Override
-        public boolean isAmbientOcclusion(@Nonnull IBlockState state) {
+        public boolean isAmbientOcclusion(@Nonnull final IBlockState state) {
             return defaultOverride.isAmbientOcclusion(state);
         }
 
@@ -138,7 +138,7 @@ public class FluidPacketModel implements IModel {
 
         @Override
         @Nonnull
-        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(@Nonnull ItemCameraTransforms.TransformType cameraTransformType) {
+        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(@Nonnull final ItemCameraTransforms.TransformType cameraTransformType) {
             return defaultOverride.handlePerspective(cameraTransformType);
         }
 
@@ -169,19 +169,19 @@ public class FluidPacketModel implements IModel {
 
             @Override
             @Nonnull
-            public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, ItemStack stack,
-                                               @Nullable World world, @Nullable EntityLivingBase entity) {
+            public IBakedModel handleItemState(@Nonnull final IBakedModel originalModel, final ItemStack stack,
+                                               @Nullable final World world, @Nullable final EntityLivingBase entity) {
                 if (!(FakeFluids.isFluidFakeItem(stack))) {
                     return originalModel;
                 }
-                FluidStack fluid = FakeItemRegister.getStack(stack);
+                final FluidStack fluid = FakeItemRegister.getStack(stack);
                 return fluid != null ? resolve(fluid) : originalModel;
             }
 
-            OverrideModel resolve(FluidStack fluid) {
+            OverrideModel resolve(final FluidStack fluid) {
                 try {
                     return cache.get(new FluidKey(fluid), () -> new OverrideModel(fluid));
-                } catch (ExecutionException e) {
+                } catch (final ExecutionException e) {
                     throw new IllegalStateException(e);
                 }
             }
@@ -191,7 +191,7 @@ public class FluidPacketModel implements IModel {
                 private final TextureAtlasSprite texture;
                 private final List<BakedQuad> quads;
 
-                OverrideModel(FluidStack fluidStack) {
+                OverrideModel(final FluidStack fluidStack) {
                     this.texture = Minecraft.getMinecraft().getTextureMapBlocks()
                             .getAtlasSprite(fluidStack.getFluid().getStill(fluidStack).toString());
                     this.quads = ItemLayerModel.getQuadsForSprite(1, texture, vertexFormat, modelTransform);
@@ -199,7 +199,7 @@ public class FluidPacketModel implements IModel {
 
                 @Override
                 @Nonnull
-                public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+                public List<BakedQuad> getQuads(@Nullable final IBlockState state, @Nullable final EnumFacing side, final long rand) {
                     return quads;
                 }
 

@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class FluidConvertingItemHandler  implements IItemHandler {
 
-    public static FluidConvertingItemHandler wrap(ICapabilityProvider capProvider, EnumFacing face) {
+    public static FluidConvertingItemHandler wrap(final ICapabilityProvider capProvider, final EnumFacing face) {
         // sometimes i wish i had the monadic version from 1.15
         return new FluidConvertingItemHandler(
                 capProvider.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face)
@@ -36,7 +36,7 @@ public class FluidConvertingItemHandler  implements IItemHandler {
     @Nullable
     private final IFluidHandler invFluids;
 
-    private FluidConvertingItemHandler(@Nullable IItemHandler invItems, @Nullable IFluidHandler invFluids) {
+    private FluidConvertingItemHandler(@Nullable final IItemHandler invItems, @Nullable final IFluidHandler invFluids) {
         this.invItems = invItems;
         this.invFluids = invFluids;
     }
@@ -55,33 +55,33 @@ public class FluidConvertingItemHandler  implements IItemHandler {
 
     @Override
     @Nonnull
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getStackInSlot(final int slot) {
         return slotOp(slot, IItemHandler::getStackInSlot,
                 (fh, i) -> FakeFluids.packFluid2Drops(fh.getTankProperties()[i].getContents()));
     }
 
     @Override
     @Nonnull
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(final int slot, @Nonnull final ItemStack stack, final boolean simulate) {
         return slotOp(slot,
                 (ih, i) -> (stack.getItem() instanceof ItemFluidDrop || stack.getItem() instanceof ItemFluidPacket)
                         ? stack : ih.insertItem(i, stack, simulate),
                 (fh, i) -> {
                     if (stack.getItem() instanceof ItemFluidDrop) {
-                        FluidStack toInsert = FakeItemRegister.getStack(stack);
+                        final FluidStack toInsert = FakeItemRegister.getStack(stack);
                         if (toInsert != null && toInsert.amount > 0) {
-                            FluidStack contained = fh.getTankProperties()[i].getContents();
+                            final FluidStack contained = fh.getTankProperties()[i].getContents();
                             if (contained == null || contained.amount == 0 || contained.isFluidEqual(toInsert)) {
                                 toInsert.amount -= fh.fill(toInsert, !simulate);
                                 return FakeFluids.packFluid2Drops(toInsert);
                             }
                         }
                     } else if (stack.getItem() instanceof ItemFluidPacket) {
-                        FluidStack toInsert = FakeItemRegister.getStack(stack);
+                        final FluidStack toInsert = FakeItemRegister.getStack(stack);
                         if (toInsert != null && toInsert.amount > 0) {
-                            FluidStack contained = fh.getTankProperties()[i].getContents();
+                            final FluidStack contained = fh.getTankProperties()[i].getContents();
                             if (contained == null || contained.amount == 0 || contained.isFluidEqual(toInsert)) {
-                                int insertable = fh.fill(toInsert, false); // only insert if the entire packet fits
+                                final int insertable = fh.fill(toInsert, false); // only insert if the entire packet fits
                                 if (insertable >= toInsert.amount) {
                                     if (!simulate) {
                                         fh.fill(toInsert, true);
@@ -97,9 +97,9 @@ public class FluidConvertingItemHandler  implements IItemHandler {
 
     @Override
     @Nonnull
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+    public ItemStack extractItem(final int slot, final int amount, final boolean simulate) {
         return slotOp(slot, (ih, i) -> ih.extractItem(i, slot, simulate), (fh, i) -> {
-            FluidStack contained = fh.getTankProperties()[i].getContents();
+            final FluidStack contained = fh.getTankProperties()[i].getContents();
             if (contained != null && contained.amount > 0) {
                 return FakeFluids.packFluid2Drops(fh.drain(contained, !simulate));
             }
@@ -108,17 +108,17 @@ public class FluidConvertingItemHandler  implements IItemHandler {
     }
 
     @Override
-    public int getSlotLimit(int slot) {
+    public int getSlotLimit(final int slot) {
         return slotOp(slot, IItemHandler::getSlotLimit, (fh, i) -> fh.getTankProperties()[i].getCapacity());
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+    public boolean isItemValid(final int slot, @Nonnull final ItemStack stack) {
         return slotOp(slot, (ih, i) -> ih.isItemValid(i, stack),
                 (fh, i) -> stack.getItem() instanceof ItemFluidDrop || stack.getItem() instanceof ItemFluidPacket);
     }
 
-    private <T> T slotOp(int slot, Op<IItemHandler, T> itemConsumer, Op<IFluidHandler, T> fluidConsumer) {
+    private <T> T slotOp(final int slot, final Op<IItemHandler, T> itemConsumer, final Op<IFluidHandler, T> fluidConsumer) {
         if (slot >= 0) {
             int fluidSlot = slot;
             if (invItems != null) {
@@ -129,7 +129,7 @@ public class FluidConvertingItemHandler  implements IItemHandler {
                 }
             }
             if (invFluids != null) {
-                IFluidTankProperties[] tanks = invFluids.getTankProperties();
+                final IFluidTankProperties[] tanks = invFluids.getTankProperties();
                 if (fluidSlot < tanks.length) {
                     return fluidConsumer.apply(invFluids, fluidSlot);
                 }

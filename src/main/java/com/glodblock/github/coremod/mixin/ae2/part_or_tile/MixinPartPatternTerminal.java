@@ -34,7 +34,7 @@ public abstract class MixinPartPatternTerminal extends AbstractPartEncoder imple
     @Unique
     private boolean fc$fluidFirst = false;
 
-    public MixinPartPatternTerminal(ItemStack is) {
+    public MixinPartPatternTerminal(final ItemStack is) {
         super(is);
     }
 
@@ -42,7 +42,7 @@ public abstract class MixinPartPatternTerminal extends AbstractPartEncoder imple
         return this.fc$combine;
     }
 
-    public void setCombineMode(boolean value) {
+    public void setCombineMode(final boolean value) {
         this.fc$combine = value;
     }
 
@@ -50,30 +50,30 @@ public abstract class MixinPartPatternTerminal extends AbstractPartEncoder imple
         return this.fc$fluidFirst;
     }
 
-    public void setFluidPlaceMode(boolean value) {
+    public void setFluidPlaceMode(final boolean value) {
         this.fc$fluidFirst = value;
     }
 
     @Override
-    public void onChangeCrafting(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
+    public void onChangeCrafting(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
         Util.onPatternTerminalChangeCrafting(this, !this.craftingMode, inputs, outputs, combine);
     }
 
     @Inject(method = "readFromNBT", at = @At("TAIL"))
-    public void readFromNBT(NBTTagCompound data, CallbackInfo ci) {
+    public void readFromNBT(final NBTTagCompound data, final CallbackInfo ci) {
         fc$combine = data.getBoolean("combineMode");
         fc$fluidFirst = data.getBoolean("fluidFirst");
     }
 
     @Inject(method = "writeToNBT", at = @At("TAIL"))
-    public void writeToNBT(NBTTagCompound data, CallbackInfo ci) {
+    public void writeToNBT(final NBTTagCompound data, final CallbackInfo ci) {
         data.setBoolean("combineMode", fc$combine);
         data.setBoolean("fluidFirst", fc$fluidFirst);
     }
 
     @Intrinsic
-    public void onChangeInventory(IItemHandler inv, int slot, InvOperation mc, ItemStack removedStack,
-                                  ItemStack newStack) {
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removedStack,
+                                  final ItemStack newStack) {
         if (slot == 1) {
             final ItemStack is = inv.getStackInSlot(1);
             if (!is.isEmpty() && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemFluidCraftEncodedPattern || is.getItem() instanceof ItemLargeEncodedPattern)) {

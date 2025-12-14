@@ -20,9 +20,9 @@ public class WarnMessage {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(receiveCanceled = true)
-    public void onTick(TickEvent.ClientTickEvent event) {
+    public void onTick(final TickEvent.ClientTickEvent event) {
         if (FluidCraft.beta && !finished && Minecraft.getMinecraft().player != null) {
-            EntityPlayer player = Minecraft.getMinecraft().player;
+            final EntityPlayer player = Minecraft.getMinecraft().player;
             finished = true;
             player.sendMessage(new TextComponentString("AE2FC 2.5.3-r is on beta test!"));
             player.sendMessage(new TextComponentString("If you encounter any bug or something not working"));

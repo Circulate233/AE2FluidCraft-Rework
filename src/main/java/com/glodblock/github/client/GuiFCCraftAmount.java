@@ -26,7 +26,7 @@ public class GuiFCCraftAmount extends GuiCraftAmount {
     private GuiButton next;
     private GuiType originGui;
 
-    public GuiFCCraftAmount(InventoryPlayer inventoryPlayer, ITerminalHost te) {
+    public GuiFCCraftAmount(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te);
     }
 
@@ -36,9 +36,9 @@ public class GuiFCCraftAmount extends GuiCraftAmount {
         this.originalGuiBtn = Ae2ReflectClient.getGuiCraftAmountBackButton(this);
         this.next = Ae2ReflectClient.getGuiCraftAmountNextButton(this);
         ItemStack icon = ItemStack.EMPTY;
-        Object te = ((AEBaseContainer)this.inventorySlots).getTarget();
+        final Object te = ((AEBaseContainer)this.inventorySlots).getTarget();
         if (te instanceof WirelessTerminalGuiObject) {
-            ItemStack tool = ((WirelessTerminalGuiObject) te).getItemStack();
+            final ItemStack tool = ((WirelessTerminalGuiObject) te).getItemStack();
             if (tool.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                 icon = new ItemStack(FCItems.WIRELESS_FLUID_PATTERN_TERMINAL, 1);
                 this.originGui = GuiType.WIRELESS_FLUID_PATTERN_TERMINAL;
@@ -59,13 +59,13 @@ public class GuiFCCraftAmount extends GuiCraftAmount {
     }
 
     @Override
-    protected void actionPerformed(GuiButton btn) throws IOException {
+    protected void actionPerformed(final GuiButton btn) throws IOException {
         if (btn == this.originalGuiBtn && this.originGui != null) {
             InventoryHandler.switchGui(this.originGui);
         } else if (btn == this.next) {
-            String text = Ae2ReflectClient.getGuiCraftAmountTextBox(this).getText();
-            double resultD = MathExpressionParser.parse(text);
-            int result;
+            final String text = Ae2ReflectClient.getGuiCraftAmountTextBox(this).getText();
+            final double resultD = MathExpressionParser.parse(text);
+            final int result;
             if (resultD <= 0 || Double.isNaN(resultD)) {
                 result = 1;
             } else {

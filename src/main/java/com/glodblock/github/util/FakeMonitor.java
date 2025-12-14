@@ -32,17 +32,17 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
     private final GridStorageCache storage;
     private final IStorageChannel<IAEItemStack> channel = Util.getItemChannel();
 
-    public FakeMonitor(GridStorageCache grid, IStorageChannel<T> channel) {
+    public FakeMonitor(final GridStorageCache grid, final IStorageChannel<T> channel) {
         monitor = (NetworkMonitor<T>) grid.getInventory(channel);
         storage = grid;
     }
 
     @Override
-    public IAEItemStack injectItems(IAEItemStack stack, Actionable actionable, IActionSource source) {
-        T i = FakeItemRegister.getAEStack(stack);
+    public IAEItemStack injectItems(final IAEItemStack stack, final Actionable actionable, final IActionSource source) {
+        final T i = FakeItemRegister.getAEStack(stack);
         if (i == null) return null;
-        FakeMonitorSource fakeSource = FakeMonitorSource.release(source);
-        T s = monitor.injectItems(i, actionable, fakeSource);
+        final FakeMonitorSource fakeSource = FakeMonitorSource.release(source);
+        final T s = monitor.injectItems(i, actionable, fakeSource);
         fakeSource.recycle();
         if (actionable == Actionable.MODULATE) {
             storage.postAlterationOfStoredItems(
@@ -63,16 +63,16 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
     }
 
     @Override
-    public IAEItemStack extractItems(IAEItemStack stack, Actionable actionable, IActionSource source) {
-        T i = FakeItemRegister.getAEStack(stack);
+    public IAEItemStack extractItems(final IAEItemStack stack, final Actionable actionable, final IActionSource source) {
+        final T i = FakeItemRegister.getAEStack(stack);
         if (i == null) return null;
-        FakeMonitorSource fakeSource = FakeMonitorSource.release(source);
-        T s = monitor.extractItems(i, actionable, fakeSource);
+        final FakeMonitorSource fakeSource = FakeMonitorSource.release(source);
+        final T s = monitor.extractItems(i, actionable, fakeSource);
         fakeSource.recycle();
         if (s == null) {
             return null;
         } else {
-            var o = FakeItemRegister.packAEStackLong(s, stack.getItem());
+            final var o = FakeItemRegister.packAEStackLong(s, stack.getItem());
             if (actionable == Actionable.MODULATE && o != null) {
                 storage.postAlterationOfStoredItems(
                     channel,
@@ -102,12 +102,12 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
     }
 
     @Override
-    public void addListener(IMEMonitorHandlerReceiver<IAEItemStack> imeMonitorHandlerReceiver, Object o) {
+    public void addListener(final IMEMonitorHandlerReceiver<IAEItemStack> imeMonitorHandlerReceiver, final Object o) {
 
     }
 
     @Override
-    public void removeListener(IMEMonitorHandlerReceiver<IAEItemStack> imeMonitorHandlerReceiver) {
+    public void removeListener(final IMEMonitorHandlerReceiver<IAEItemStack> imeMonitorHandlerReceiver) {
 
     }
 
@@ -117,12 +117,12 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
     }
 
     @Override
-    public boolean isPrioritized(IAEItemStack stack) {
+    public boolean isPrioritized(final IAEItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canAccept(IAEItemStack stack) {
+    public boolean canAccept(final IAEItemStack stack) {
         return true;
     }
 
@@ -137,7 +137,7 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
     }
 
     @Override
-    public boolean validForPass(int i) {
+    public boolean validForPass(final int i) {
         return i == 2;
     }
 
@@ -146,11 +146,11 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
         private static final Deque<FakeMonitorSource> POOL = new ArrayDeque<>(100);
         private IActionSource source;
 
-        private FakeMonitorSource(IActionSource source) {
+        private FakeMonitorSource(final IActionSource source) {
             this.source = source;
         }
 
-        public static FakeMonitorSource release(IActionSource source) {
+        public static FakeMonitorSource release(final IActionSource source) {
             synchronized (POOL) {
                 if (!POOL.isEmpty()) {
                     return POOL.peek().setSource(source);
@@ -159,7 +159,7 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
             return new FakeMonitorSource(source);
         }
 
-        public FakeMonitorSource setSource(IActionSource source) {
+        public FakeMonitorSource setSource(final IActionSource source) {
             this.source = source;
             return this;
         }
@@ -185,7 +185,7 @@ public abstract class FakeMonitor<T extends IAEStack<T>> implements IMEMonitor<I
 
         @Nonnull
         @Override
-        public <T> Optional<T> context(@Nonnull Class<T> aClass) {
+        public <T> Optional<T> context(@Nonnull final Class<T> aClass) {
             return source.context(aClass);
         }
     }

@@ -11,10 +11,10 @@ public class ContainerIngredientBuffer extends AEBaseContainer implements TankDu
 
     private final TileIngredientBuffer tile;
 
-    public ContainerIngredientBuffer(InventoryPlayer ipl, TileIngredientBuffer tile) {
+    public ContainerIngredientBuffer(final InventoryPlayer ipl, final TileIngredientBuffer tile) {
         super(ipl, tile);
         this.tile = tile;
-        IItemHandler inv = tile.getInternalInventory();
+        final IItemHandler inv = tile.getInternalInventory();
         for (int i = 0; i < 9; i++) {
             addSlotToContainer(new SlotNormal(inv, i, 8 + 18 * i, 108));
         }
@@ -26,12 +26,12 @@ public class ContainerIngredientBuffer extends AEBaseContainer implements TankDu
     }
 
     @Override
-    public boolean canDumpTank(int index) {
+    public boolean canDumpTank(final int index) {
         return tile.getFluidInventory().getFluidInSlot(index) != null;
     }
 
     @Override
-    public void dumpTank(int index) {
+    public void dumpTank(final int index) {
         if (index >= 0 && index < tile.getFluidInventory().getSlots()) {
             tile.getFluidInventory().setFluidInSlot(index, null);
         }

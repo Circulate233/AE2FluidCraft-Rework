@@ -54,7 +54,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     @GuiSync(106)
     public boolean fluidFirst = false;
 
-    public ContainerUltimateEncoder(InventoryPlayer ipl, TileUltimateEncoder encoder) {
+    public ContainerUltimateEncoder(final InventoryPlayer ipl, final TileUltimateEncoder encoder) {
         super(ipl, encoder);
         this.encoder = encoder;
         this.patternSlotIN = new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.BLANK_PATTERN, this.encoder.getPattern(), 0, 137, 91, this.getInventoryPlayer());
@@ -81,7 +81,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
         return false;
     }
 
-    public void setCombineMode(boolean val) {
+    public void setCombineMode(final boolean val) {
         this.combine = val;
         this.encoder.combine = val;
     }
@@ -100,16 +100,16 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer p, int idx) {
+    public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
         if (Platform.isClient()) {
             return ItemStack.EMPTY;
         } else {
             if (this.inventorySlots.get(idx) instanceof SlotPlayerInv || this.inventorySlots.get(idx) instanceof SlotPlayerHotBar) {
-                AppEngSlot clickSlot = (AppEngSlot)this.inventorySlots.get(idx);
-                ItemStack itemStack = clickSlot.getStack();
+                final AppEngSlot clickSlot = (AppEngSlot)this.inventorySlots.get(idx);
+                final ItemStack itemStack = clickSlot.getStack();
                 if (AEApi.instance().definitions().materials().blankPattern().isSameAs(itemStack)) {
-                    IItemHandler patternInv = this.encoder.getPattern();
-                    ItemStack remainder = patternInv.insertItem(0, itemStack, false);
+                    final IItemHandler patternInv = this.encoder.getPattern();
+                    final ItemStack remainder = patternInv.insertItem(0, itemStack, false);
                     clickSlot.putStack(remainder);
                 }
             }
@@ -134,15 +134,15 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
         }
     }
 
-    private static IAEItemStack[] collectInventory(Slot[] slots) {
+    private static IAEItemStack[] collectInventory(final Slot[] slots) {
         // see note at top of DensePatternDetails
-        List<IAEItemStack> acc = new ObjectArrayList<>();
-        for (Slot slot : slots) {
-            ItemStack stack = slot.getStack();
+        final List<IAEItemStack> acc = new ObjectArrayList<>();
+        for (final Slot slot : slots) {
+            final ItemStack stack = slot.getStack();
             if (stack.isEmpty()) {
                 continue;
             }
-            IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
+            final IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
             if (aeStack == null) {
                 continue;
             }
@@ -153,7 +153,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
 
     public void encodeAndMoveToInventory() {
         encode();
-        ItemStack output = this.patternSlotOUT.getStack();
+        final ItemStack output = this.patternSlotOUT.getStack();
         if (!output.isEmpty()) {
             if (!getPlayerInv().addItemStackToInventory(output)) {
                 getPlayerInv().player.dropItem(output, false);
@@ -202,8 +202,8 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     }
 
     public void encodeItem() {
-        ItemStack patternStack = new ItemStack(FCItems.LARGE_ITEM_ENCODED_PATTERN);
-        FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
+        final ItemStack patternStack = new ItemStack(FCItems.LARGE_ITEM_ENCODED_PATTERN);
+        final FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
         pattern.setEncoder(this.getInventoryPlayer().player.getGameProfile());
@@ -211,13 +211,13 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     }
 
     @Override
-    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
+    public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slotId, final long id) {
         if (id != 0 || slotId < 0 || slotId >= this.inventorySlots.size()) {
             super.doAction(player, action, slotId, id);
             return;
         }
-        Slot slot = getSlot(slotId);
-        ItemStack stack = player.inventory.getItemStack();
+        final Slot slot = getSlot(slotId);
+        final ItemStack stack = player.inventory.getItemStack();
         if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && !stack.isEmpty()
             && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && Util.getFluidFromItem(stack) != null) {
             FluidStack fluid = null;
@@ -228,7 +228,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
                     fluid = Util.getFluidFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    FluidStack origin = FakeItemRegister.getStack(slot.getStack());
+                    final FluidStack origin = FakeItemRegister.getStack(slot.getStack());
                     if (fluid != null && fluid.equals(origin)) {
                         fluid.amount += origin.amount;
                         if (fluid.amount <= 0) fluid = null;
@@ -252,7 +252,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
                     gas = Util.getGasFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    GasStack origin = FakeItemRegister.getStack(slot.getStack());
+                    final GasStack origin = FakeItemRegister.getStack(slot.getStack());
                     if (gas != null && gas.equals(origin)) {
                         gas.amount += origin.amount;
                         if (gas.amount <= 0) gas = null;
@@ -270,8 +270,8 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     }
 
     private void encodeFluidPattern() {
-        ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
-        FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
+        final ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
+        final FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
         pattern.setEncoder(this.getInventoryPlayer().player.getGameProfile());
@@ -280,7 +280,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
 
     private boolean checkHasFluidPattern() {
         boolean hasFluid = false, search = false;
-        for (Slot craftingSlot : this.craftingSlots) {
+        for (final Slot craftingSlot : this.craftingSlots) {
             final ItemStack crafting = craftingSlot.getStack();
             if (crafting.isEmpty()) {
                 continue;
@@ -299,7 +299,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
             return false;
         }
         // `search` should be true at this point
-        for (Slot outputSlot : this.outputSlots) {
+        for (final Slot outputSlot : this.outputSlots) {
             final ItemStack out = outputSlot.getStack();
             if (out.isEmpty()) {
                 continue;
@@ -330,7 +330,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
         return !defs.items().encodedPattern().isSameAs(output) && !defs.materials().blankPattern().isSameAs(output);
     }
 
-    public void multiply(int multiple) {
+    public void multiply(final int multiple) {
         if (Util.multiplySlotCheck(this.craftingSlots, multiple) && Util.multiplySlotCheck(this.outputSlots, multiple)) {
             Util.multiplySlot(this.craftingSlots, multiple);
             Util.multiplySlot(this.outputSlots, multiple);
@@ -338,29 +338,29 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     }
 
     public void clear() {
-        for (Slot slot : this.craftingSlots) {
+        for (final Slot slot : this.craftingSlots) {
             slot.putStack(ItemStack.EMPTY);
         }
-        for (Slot slot : this.outputSlots) {
+        for (final Slot slot : this.outputSlots) {
             slot.putStack(ItemStack.EMPTY);
         }
     }
 
-    public void divide(int divide) {
+    public void divide(final int divide) {
         if (Util.divideSlotCheck(this.craftingSlots, divide) && Util.divideSlotCheck(this.outputSlots, divide)) {
             Util.divideSlot(this.craftingSlots, divide);
             Util.divideSlot(this.outputSlots, divide);
         }
     }
 
-    public void increase(int increase) {
+    public void increase(final int increase) {
         if (Util.increaseSlotCheck(this.craftingSlots, increase) && Util.increaseSlotCheck(this.outputSlots, increase)) {
             Util.increaseSlot(this.craftingSlots, increase);
             Util.increaseSlot(this.outputSlots, increase);
         }
     }
 
-    public void decrease(int decrease) {
+    public void decrease(final int decrease) {
         if (Util.decreaseSlotCheck(this.craftingSlots, decrease) && Util.decreaseSlotCheck(this.outputSlots, decrease)) {
             Util.decreaseSlot(this.craftingSlots, decrease);
             Util.decreaseSlot(this.outputSlots, decrease);
@@ -368,12 +368,12 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     }
 
     @Override
-    public boolean isSlotEnabled(int i) {
+    public boolean isSlotEnabled(final int i) {
         return true;
     }
 
     @Override
-    public void acceptPattern(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
+    public void acceptPattern(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
         this.encoder.onChangeCrafting(inputs, outputs, combine);
     }
 
@@ -382,7 +382,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
         return false;
     }
 
-    public void setFluidPlaceMode(boolean val) {
+    public void setFluidPlaceMode(final boolean val) {
         this.fluidFirst = val;
         this.encoder.fluidFirst = val;
     }

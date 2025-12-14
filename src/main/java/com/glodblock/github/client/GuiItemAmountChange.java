@@ -43,7 +43,7 @@ public class GuiItemAmountChange extends GuiCraftAmount {
     private GuiButton minus100;
     private GuiButton minus1000;
 
-    public GuiItemAmountChange(InventoryPlayer inventoryPlayer, ITerminalHost te) {
+    public GuiItemAmountChange(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te);
         this.inventorySlots = new ContainerItemAmountChange(inventoryPlayer, te);
     }
@@ -52,13 +52,13 @@ public class GuiItemAmountChange extends GuiCraftAmount {
     public void initGui() {
         super.initGui();
         ItemStack myIcon = null;
-        Object target = ((AEBaseContainer) this.inventorySlots).getTarget();
+        final Object target = ((AEBaseContainer) this.inventorySlots).getTarget();
         this.originalGuiBtn = Ae2ReflectClient.getGuiCraftAmountBackButton(this);
         this.originalGuiB = Ae2ReflectClient.getGuiCraftAmountOriginalGui(this);
         this.buttonList.remove(this.originalGuiBtn);
 
         if (target instanceof WirelessTerminalGuiObject) {
-            ItemStack tool = ((WirelessTerminalGuiObject) target).getItemStack();
+            final ItemStack tool = ((WirelessTerminalGuiObject) target).getItemStack();
             if (tool.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                 myIcon = new ItemStack(FCItems.WIRELESS_FLUID_PATTERN_TERMINAL);
                 this.originalGui = GuiType.WIRELESS_FLUID_PATTERN_TERMINAL;
@@ -97,12 +97,12 @@ public class GuiItemAmountChange extends GuiCraftAmount {
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fontRenderer.drawString(I18n.format(NameConst.GUI_ITEM_AMOUNT_SET), 8, 6, 4210752);
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         super.drawBG(offsetX, offsetY, mouseX, mouseY);
         this.next.displayString = I18n.format(NameConst.GUI_ITEM_AMOUNT_SET_CONFIRM);
     }
@@ -118,9 +118,9 @@ public class GuiItemAmountChange extends GuiCraftAmount {
             }
 
             if (btn == this.next) {
-                String text = Ae2ReflectClient.getGuiCraftAmountTextBox(this).getText();
-                double resultD = MathExpressionParser.parse(text);
-                int result;
+                final String text = Ae2ReflectClient.getGuiCraftAmountTextBox(this).getText();
+                final double resultD = MathExpressionParser.parse(text);
+                final int result;
                 if (resultD <= 0 || Double.isNaN(resultD)) {
                     result = 1;
                 } else {
@@ -131,7 +131,7 @@ public class GuiItemAmountChange extends GuiCraftAmount {
         } catch (final NumberFormatException e) {
             // nope..
             this.amountToCraft.setText("1");
-        } catch (IOException ignored) {
+        } catch (final IOException ignored) {
 
         }
 
@@ -143,7 +143,7 @@ public class GuiItemAmountChange extends GuiCraftAmount {
         }
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(final int amount) {
         this.amountToCraft.setText(String.valueOf(amount));
     }
 

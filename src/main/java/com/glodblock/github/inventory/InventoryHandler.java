@@ -16,41 +16,41 @@ import java.util.ConcurrentModificationException;
 
 public class InventoryHandler implements IGuiHandler {
 
-    public static void switchGui(GuiType guiType) {
+    public static void switchGui(final GuiType guiType) {
         FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(guiType));
     }
 
-    public static void openGui(EntityPlayer player, World world, BlockPos pos, EnumFacing face, GuiType guiType) {
+    public static void openGui(final EntityPlayer player, final World world, final BlockPos pos, final EnumFacing face, final GuiType guiType) {
         try {
             player.openGui(FluidCraft.INSTANCE,
                     (guiType.ordinal() << 3) | face.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
-        } catch (ConcurrentModificationException e) {
+        } catch (final ConcurrentModificationException e) {
             AELog.warn("catch CME when trying to open %s.", guiType);
         }
     }
 
     @Nullable
     @Override
-    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        int faceOrd = id & 0x7;
+    public Object getServerGuiElement(final int id, final EntityPlayer player, final World world, final int x, final int y, final int z) {
+        final int faceOrd = id & 0x7;
         if (faceOrd > EnumFacing.VALUES.length) {
             return null;
         }
-        EnumFacing face = EnumFacing.VALUES[faceOrd];
-        GuiType type = GuiType.getByOrdinal(id >>> 3);
+        final EnumFacing face = EnumFacing.VALUES[faceOrd];
+        final GuiType type = GuiType.getByOrdinal(id >>> 3);
         return type != null ? type.getFactory().createServerGui(player, world, x, y, z, face) : null;
     }
 
     @SideOnly(Side.CLIENT)
     @Nullable
     @Override
-    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        int faceOrd = id & 0x7;
+    public Object getClientGuiElement(final int id, final EntityPlayer player, final World world, final int x, final int y, final int z) {
+        final int faceOrd = id & 0x7;
         if (faceOrd > EnumFacing.VALUES.length) {
             return null;
         }
-        EnumFacing face = EnumFacing.VALUES[faceOrd];
-        GuiType type = GuiType.getByOrdinal(id >>> 3);
+        final EnumFacing face = EnumFacing.VALUES[faceOrd];
+        final GuiType type = GuiType.getByOrdinal(id >>> 3);
         return type != null ? type.getFactory().createClientGui(player, world, x, y, z, face) : null;
     }
 

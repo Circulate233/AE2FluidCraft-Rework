@@ -23,14 +23,14 @@ public class ItemPartTrioInterface extends Item implements IPartItem<PartTrioInt
 
     @Nullable
     @Override
-    public PartTrioInterface createPartFromItemStack(ItemStack is) {
+    public PartTrioInterface createPartFromItemStack(final ItemStack is) {
         return new PartTrioInterface(is);
     }
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumHand hand, @Nonnull EnumFacing side,
-                                      float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(@Nonnull final EntityPlayer player, @Nonnull final World world, @Nonnull final BlockPos pos, @Nonnull final EnumHand hand, @Nonnull final EnumFacing side,
+                                      final float hitX, final float hitY, final float hitZ) {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(hand), pos, side, player, hand, world);
     }
 

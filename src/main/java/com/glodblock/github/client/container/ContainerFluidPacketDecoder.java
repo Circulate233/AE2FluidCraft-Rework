@@ -7,7 +7,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 public class ContainerFluidPacketDecoder extends AEBaseContainer {
 
-    public ContainerFluidPacketDecoder(InventoryPlayer ipl, TileFluidPacketDecoder tile) {
+    public ContainerFluidPacketDecoder(final InventoryPlayer ipl, final TileFluidPacketDecoder tile) {
         super(ipl, tile);
         addSlotToContainer(new SlotNormal(tile.getInventory(), 0, 80, 35));
         bindPlayerInventory(ipl, 0, 84);

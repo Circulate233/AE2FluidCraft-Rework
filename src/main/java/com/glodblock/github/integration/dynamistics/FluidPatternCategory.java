@@ -4,7 +4,6 @@ import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.items.misc.ItemEncodedPattern;
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 import com.glodblock.github.common.item.ItemLargeEncodedPattern;
 import com.glodblock.github.common.item.fake.FakeItemRegister;
@@ -20,7 +19,12 @@ import mekanism.api.gas.GasStack;
 import mekanism.client.jei.MekanismJEI;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiHelpers;
-import mezz.jei.api.gui.*;
+import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IDrawableStatic;
+import mezz.jei.api.gui.IGuiFluidStackGroup;
+import mezz.jei.api.gui.IGuiIngredientGroup;
+import mezz.jei.api.gui.IGuiItemStackGroup;
+import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
@@ -47,8 +51,8 @@ public class FluidPatternCategory implements IRecipeCategory<SingletonRecipe> {
     private final int guiStartX;
     private final int guiStartY;
 
-    public FluidPatternCategory(IJeiHelpers helpers) {
-        IGuiHelper guiHelper = helpers.getGuiHelper();
+    public FluidPatternCategory(final IJeiHelpers helpers) {
+        final IGuiHelper guiHelper = helpers.getGuiHelper();
         this.slot = JeiHelper.getSlotDrawable();
         this.craftingBackground = guiHelper.createDrawable(new ResourceLocation("appliedenergistics2", "textures/guis/pattern2.png"), 9, 85, 126, 68);
         this.background = guiHelper.createBlankDrawable(WIDTH, HEIGHT);
@@ -90,9 +94,9 @@ public class FluidPatternCategory implements IRecipeCategory<SingletonRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull SingletonRecipe recipe, @Nonnull IIngredients ingredients) {
-        IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
-        IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
+    public void setRecipe(final IRecipeLayout recipeLayout, @Nonnull final SingletonRecipe recipe, @Nonnull final IIngredients ingredients) {
+        final IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
+        final IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
 
         ItemStack patternStack = recipe.stack;
 
@@ -113,16 +117,16 @@ public class FluidPatternCategory implements IRecipeCategory<SingletonRecipe> {
                 return;
             }
 
-            IAEItemStack[] inputs = details.getInputs();
-            IAEItemStack[] outputs = details.getOutputs();
+            final IAEItemStack[] inputs = details.getInputs();
+            final IAEItemStack[] outputs = details.getOutputs();
 
-            int gridStartY = 7;
-            int gridStartX = 8;
-            int gridSize = 18;
+            final int gridStartY = 7;
+            final int gridStartX = 8;
+            final int gridSize = 18;
             for(int i = 0; i < inputs.length; i++) {
                 if (inputs[i] != null) {
                     if (inputs[i].getItem() == FCItems.FLUID_DROP) {
-                        FluidStack fluidStack = FakeItemRegister.getStack(inputs[i]);
+                        final FluidStack fluidStack = FakeItemRegister.getStack(inputs[i]);
                         if (fluidStack != null) {
                             fluids.init(
                                     i, true,
@@ -138,8 +142,8 @@ public class FluidPatternCategory implements IRecipeCategory<SingletonRecipe> {
                             stacks.set(i, inputs[i].createItemStack());
                         }
                     } else if (ModAndClassUtil.GAS && inputs[i].getItem() == FCGasItems.GAS_DROP) {
-                        GasStack gasStack = FakeItemRegister.getStack(inputs[i]);
-                        IGuiIngredientGroup<GasStack> gases = recipeLayout.getIngredientsGroup(MekanismJEI.TYPE_GAS);
+                        final GasStack gasStack = FakeItemRegister.getStack(inputs[i]);
+                        final IGuiIngredientGroup<GasStack> gases = recipeLayout.getIngredientsGroup(MekanismJEI.TYPE_GAS);
                         if (gasStack != null) {
                             gases.init(
                                     i, true,
@@ -161,11 +165,11 @@ public class FluidPatternCategory implements IRecipeCategory<SingletonRecipe> {
                 }
             }
 
-            int outStartX = 100;
+            final int outStartX = 100;
             for(int i = 0; i < outputs.length; i++) {
                 if (outputs[i] != null) {
                     if (outputs[i].getItem() == FCItems.FLUID_DROP) {
-                        FluidStack fluidStack = FakeItemRegister.getStack(outputs[i]);
+                        final FluidStack fluidStack = FakeItemRegister.getStack(outputs[i]);
                         if (fluidStack != null) {
                             fluids.init(
                                     9 + i, false,
@@ -181,8 +185,8 @@ public class FluidPatternCategory implements IRecipeCategory<SingletonRecipe> {
                             stacks.set(9 + i, outputs[i].createItemStack());
                         }
                     } else if (ModAndClassUtil.GAS && outputs[i].getItem() == FCGasItems.GAS_DROP) {
-                        GasStack gasStack = FakeItemRegister.getStack(outputs[i]);
-                        IGuiIngredientGroup<GasStack> gases = recipeLayout.getIngredientsGroup(MekanismJEI.TYPE_GAS);
+                        final GasStack gasStack = FakeItemRegister.getStack(outputs[i]);
+                        final IGuiIngredientGroup<GasStack> gases = recipeLayout.getIngredientsGroup(MekanismJEI.TYPE_GAS);
                         if (gasStack != null) {
                             gases.init(
                                     9 + i, false,
@@ -207,7 +211,7 @@ public class FluidPatternCategory implements IRecipeCategory<SingletonRecipe> {
     }
 
     @Override
-    public void drawExtras(@Nonnull Minecraft minecraft) {
+    public void drawExtras(@Nonnull final Minecraft minecraft) {
         this.arrow.draw(minecraft,
                 (WIDTH - this.arrow.getWidth()) / 2,
                 27);

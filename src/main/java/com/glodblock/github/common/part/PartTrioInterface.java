@@ -35,7 +35,7 @@ public class PartTrioInterface extends PartDualInterface implements IGasInterfac
     public static final PartModel MODELS_ON = new PartModel(MODELS[0], MODELS[1]);
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS[0], MODELS[3]);
 
-    public PartTrioInterface(ItemStack is) {
+    public PartTrioInterface(final ItemStack is) {
         super(is);
     }
 
@@ -62,7 +62,7 @@ public class PartTrioInterface extends PartDualInterface implements IGasInterfac
     @Override
     public boolean onPartActivate(final EntityPlayer p, final EnumHand hand, final Vec3d pos) {
         if (Platform.isServer()) {
-            TileEntity tile = getTileEntity();
+            final TileEntity tile = getTileEntity();
             InventoryHandler.openGui(p, tile.getWorld(), tile.getPos(), getSide().getFacing(), GuiType.TRIO_ITEM_INTERFACE);
         }
         return true;

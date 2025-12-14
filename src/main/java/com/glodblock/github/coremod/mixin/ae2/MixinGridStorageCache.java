@@ -31,22 +31,22 @@ public abstract class MixinGridStorageCache {
     private Map<IStorageChannel<? extends IAEStack<?>>, NetworkMonitor<?>> storageMonitors;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void onInit(IGrid g, CallbackInfo ci) {
+    private void onInit(final IGrid g, final CallbackInfo ci) {
         ((FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel())).init();
     }
 
     @Inject(method = "buildNetworkStorage", at = @At("RETURN"))
-    public void onBuild(IStorageChannel<?> chan, CallbackInfoReturnable<NetworkInventoryHandler<?>> cir) {
-        var m = ((FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel()));
+    public void onBuild(final IStorageChannel<?> chan, final CallbackInfoReturnable<NetworkInventoryHandler<?>> cir) {
+        final var m = ((FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel()));
         ((FCNetworkInventoryHandler) cir.getReturnValue()).init(m);
     }
 
     @Inject(method = "postAlterationOfStoredItems", at = @At("TAIL"))
-    public void postAlterationOfStoredItems(IStorageChannel<?> chan, Iterable<? extends IAEStack<?>> input, IActionSource src, CallbackInfo ci) {
+    public void postAlterationOfStoredItems(final IStorageChannel<?> chan, final Iterable<? extends IAEStack<?>> input, final IActionSource src, final CallbackInfo ci) {
         if (chan == Util.getFluidChannel() || (ModAndClassUtil.GAS && chan == Util.getGasChannel())) {
-            var list = new ObjectArrayList<IAEItemStack>();
-            for (IAEStack<?> i : input) {
-                var drop = Util.packAEStackToDrop(i);
+            final var list = new ObjectArrayList<IAEItemStack>();
+            for (final IAEStack<?> i : input) {
+                final var drop = Util.packAEStackToDrop(i);
                 if (drop != null) list.add(drop);
             }
             ((FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel())).fc$postChange(true, list, src);

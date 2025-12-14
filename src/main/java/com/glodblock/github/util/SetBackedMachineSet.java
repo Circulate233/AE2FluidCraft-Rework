@@ -16,8 +16,8 @@ public class SetBackedMachineSet implements IMachineSet {
     private final List<IMachineSet> backingSet = new ArrayList<>();
     private int count;
 
-    public static IMachineSet combine(Class<? extends IGridHost> machineClass, IMachineSet... backingSet) {
-        SetBackedMachineSet packed = new SetBackedMachineSet(machineClass, backingSet);
+    public static IMachineSet combine(final Class<? extends IGridHost> machineClass, final IMachineSet... backingSet) {
+        final SetBackedMachineSet packed = new SetBackedMachineSet(machineClass, backingSet);
         if (packed.backingSet.isEmpty()) {
             return EmptyMachineSet.create(machineClass);
         }
@@ -27,10 +27,10 @@ public class SetBackedMachineSet implements IMachineSet {
         return packed;
     }
 
-    private SetBackedMachineSet(Class<? extends IGridHost> machineClass, IMachineSet... backingSet) {
+    private SetBackedMachineSet(final Class<? extends IGridHost> machineClass, final IMachineSet... backingSet) {
         this.machineClass = machineClass;
         this.count = 0;
-        for (IMachineSet set : backingSet) {
+        for (final IMachineSet set : backingSet) {
             if (!set.isEmpty()) {
                 this.count += set.size();
                 this.backingSet.add(set);
@@ -51,7 +51,7 @@ public class SetBackedMachineSet implements IMachineSet {
 
     @Override
     public boolean isEmpty() {
-        for (IMachineSet set : this.backingSet) {
+        for (final IMachineSet set : this.backingSet) {
             if (!set.isEmpty()) {
                 return false;
             }
@@ -60,8 +60,8 @@ public class SetBackedMachineSet implements IMachineSet {
     }
 
     @Override
-    public boolean contains(Object o) {
-        for (IMachineSet set : this.backingSet) {
+    public boolean contains(final Object o) {
+        for (final IMachineSet set : this.backingSet) {
             if (set.contains(o)) {
                 return true;
             }
@@ -76,8 +76,8 @@ public class SetBackedMachineSet implements IMachineSet {
     }
 
     @Override
-    public void forEach(Consumer<? super IGridNode> action) {
-        for (IMachineSet set : this.backingSet) {
+    public void forEach(final Consumer<? super IGridNode> action) {
+        for (final IMachineSet set : this.backingSet) {
             set.forEach(action);
         }
     }
@@ -87,8 +87,8 @@ public class SetBackedMachineSet implements IMachineSet {
         final Iterator<Iterator<IGridNode>> iterators;
 
         CombinedIterator() {
-            List<Iterator<IGridNode>> list = new ArrayList<>();
-            for (IMachineSet set : SetBackedMachineSet.this.backingSet) {
+            final List<Iterator<IGridNode>> list = new ArrayList<>();
+            for (final IMachineSet set : SetBackedMachineSet.this.backingSet) {
                 list.add(set.iterator());
             }
             this.iterators = list.iterator();

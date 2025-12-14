@@ -52,10 +52,10 @@ import java.util.Objects;
 
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
-    public static InventoryAdaptor wrap(ICapabilityProvider capProvider, EnumFacing face) {
-        TileEntity cap = (TileEntity) capProvider;
-        TileEntity inter = cap.getWorld().getTileEntity(cap.getPos().add(face.getDirectionVec()));
-        DualityInterface dualInterface = getInterfaceTE(inter, face) == null ?
+    public static InventoryAdaptor wrap(final ICapabilityProvider capProvider, final EnumFacing face) {
+        final TileEntity cap = (TileEntity) capProvider;
+        final TileEntity inter = cap.getWorld().getTileEntity(cap.getPos().add(face.getDirectionVec()));
+        final DualityInterface dualInterface = getInterfaceTE(inter, face) == null ?
                 null : Objects.requireNonNull(getInterfaceTE(inter, face)).getInterfaceDuality();
         boolean onmi = false;
         if (inter instanceof TileInterface) {
@@ -90,7 +90,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     @Nullable
     private final DualityInterface self;
 
-    public FluidConvertingInventoryAdaptor(ICapabilityProvider facingTE, @Nullable TileEntity pos, boolean isOnmi, @Nullable DualityInterface interSelf, EnumFacing facing) {
+    public FluidConvertingInventoryAdaptor(final ICapabilityProvider facingTE, @Nullable final TileEntity pos, final boolean isOnmi, @Nullable final DualityInterface interSelf, final EnumFacing facing) {
         this.invItems = facingTE.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())
                 ? new AdaptorItemHandler(Objects.requireNonNull(facingTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())))
                 : null;
@@ -104,14 +104,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Override
-    public ItemStack addItems(ItemStack toBeAdded) {
+    public ItemStack addItems(final ItemStack toBeAdded) {
         if (FakeFluids.isFluidFakeItem(toBeAdded)) {
             if (onmi) {
-                FluidStack fluid = FakeItemRegister.getStack(toBeAdded);
+                final FluidStack fluid = FakeItemRegister.getStack(toBeAdded);
                 // First try to output to the same side
                 if (invFluids != null) {
                     if (fluid != null) {
-                        int filled = invFluids.fill(fluid, true);
+                        final int filled = invFluids.fill(fluid, true);
                         if (filled > 0) {
                             fluid.amount -= filled;
                             return FakeFluids.packFluid2Packet(fluid);
@@ -120,16 +120,16 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 }
 
                 if (self != null && fluid != null && posInterface != null && ((FCDualityInterface) self).isAllowSplitting()) {
-                    for (EnumFacing dir : EnumFacing.values()) {
-                        TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
+                    for (final EnumFacing dir : EnumFacing.values()) {
+                        final TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                         if (te != null) {
-                            IFluidInterfaceHost interFTE = getFluidInterfaceTE(te, dir);
+                            final IFluidInterfaceHost interFTE = getFluidInterfaceTE(te, dir);
                             if (interFTE != null && isSameGrid(interFTE)) {
                                 continue;
                             }
-                            IFluidHandler fh = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite());
+                            final IFluidHandler fh = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite());
                             if (fh != null) {
-                                int filled = fh.fill(fluid, false);
+                                final int filled = fh.fill(fluid, false);
                                 if (filled == fluid.amount) {
                                     fh.fill(fluid, true);
                                     return ItemStack.EMPTY;
@@ -141,9 +141,9 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 return FakeFluids.packFluid2Packet(fluid);
             }
             if (invFluids != null) {
-                FluidStack fluid = FakeItemRegister.getStack(toBeAdded);
+                final FluidStack fluid = FakeItemRegister.getStack(toBeAdded);
                 if (fluid != null) {
-                    int filled = invFluids.fill(fluid, true);
+                    final int filled = invFluids.fill(fluid, true);
                     if (filled > 0) {
                         fluid.amount -= filled;
                         return FakeFluids.packFluid2Packet(fluid);
@@ -154,14 +154,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         }
         if (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(toBeAdded)) {
             if (onmi) {
-                GasStack gas = FakeItemRegister.getStack(toBeAdded);
+                final GasStack gas = FakeItemRegister.getStack(toBeAdded);
                 if (invGases != null && posInterface != null) {
-                    TileEntity te = (TileEntity) facingTE;
-                    AENetworkProxy node = getGasInterfaceGrid(te, facing);
-                    IGasHandler gasHandler = (IGasHandler) invGases;
+                    final TileEntity te = (TileEntity) facingTE;
+                    final AENetworkProxy node = getGasInterfaceGrid(te, facing);
+                    final IGasHandler gasHandler = (IGasHandler) invGases;
                     if (!isSameGrid(node)) {
                         if (gas != null && gas.getGas() != null) {
-                            int filled = gasHandler.receiveGas(facing.getOpposite(), gas, true);
+                            final int filled = gasHandler.receiveGas(facing.getOpposite(), gas, true);
                             if (filled > 0) {
                                 gas.amount -= filled;
                                 return FakeGases.packGas2Packet(gas);
@@ -171,16 +171,16 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 }
 
                 if (self != null && gas != null && gas.getGas() != null && posInterface != null && ((FCDualityInterface) self).isAllowSplitting()) {
-                    for (EnumFacing dir : EnumFacing.values()) {
-                        TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
+                    for (final EnumFacing dir : EnumFacing.values()) {
+                        final TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                         if (te != null) {
-                            AENetworkProxy node = getGasInterfaceGrid(te, dir);
+                            final AENetworkProxy node = getGasInterfaceGrid(te, dir);
                             if (node != null && isSameGrid(node)) {
                                 continue;
                             }
-                            IGasHandler gh = te.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, dir.getOpposite());
+                            final IGasHandler gh = te.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, dir.getOpposite());
                             if (gh != null) {
-                                int filled = gh.receiveGas(dir.getOpposite(), gas, false);
+                                final int filled = gh.receiveGas(dir.getOpposite(), gas, false);
                                 if (filled == gas.amount) {
                                     gh.receiveGas(dir.getOpposite(), gas, true);
                                     return ItemStack.EMPTY;
@@ -192,13 +192,13 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 return FakeGases.packGas2Packet(gas);
             }
             if (invGases != null && posInterface != null) {
-                GasStack gas = FakeItemRegister.getStack(toBeAdded);
-                TileEntity te = (TileEntity) facingTE;
-                AENetworkProxy node = getGasInterfaceGrid(te, facing);
-                IGasHandler gasHandler = (IGasHandler) invGases;
+                final GasStack gas = FakeItemRegister.getStack(toBeAdded);
+                final TileEntity te = (TileEntity) facingTE;
+                final AENetworkProxy node = getGasInterfaceGrid(te, facing);
+                final IGasHandler gasHandler = (IGasHandler) invGases;
                 if (!isSameGrid(node)) {
                     if (gas != null && gas.getGas() != null) {
-                        int filled = gasHandler.receiveGas(facing.getOpposite(), gas, true);
+                        final int filled = gasHandler.receiveGas(facing.getOpposite(), gas, true);
                         if (filled > 0) {
                             gas.amount -= filled;
                             return FakeGases.packGas2Packet(gas);
@@ -212,16 +212,16 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Override
-    public ItemStack simulateAdd(ItemStack toBeSimulated) {
+    public ItemStack simulateAdd(final ItemStack toBeSimulated) {
         if (FakeFluids.isFluidFakeItem(toBeSimulated)) {
             if (onmi) {
                 boolean sus = false;
-                FluidStack fluid = FakeItemRegister.getStack(toBeSimulated);
+                final FluidStack fluid = FakeItemRegister.getStack(toBeSimulated);
 
                 // First try to output to the same side
                 if (invFluids != null) {
                     if (fluid != null) {
-                        int filled = invFluids.fill(fluid, false);
+                        final int filled = invFluids.fill(fluid, false);
                         if (filled > 0) {
                             fluid.amount -= filled;
                             return FakeFluids.packFluid2Packet(fluid);
@@ -231,20 +231,20 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
                 if (fluid != null && posInterface != null) {
                     if (self != null && ((FCDualityInterface) self).isAllowSplitting()) {
-                        for (EnumFacing dir : EnumFacing.values()) {
-                            TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
+                        for (final EnumFacing dir : EnumFacing.values()) {
+                            final TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                             if (te != null) {
-                                IInterfaceHost interTE = getInterfaceTE(te, dir);
+                                final IInterfaceHost interTE = getInterfaceTE(te, dir);
                                 if (interTE != null && isSameGrid(interTE)) {
                                     continue;
                                 }
-                                IFluidInterfaceHost interFTE = getFluidInterfaceTE(te, dir);
+                                final IFluidInterfaceHost interFTE = getFluidInterfaceTE(te, dir);
                                 if (interFTE != null && isSameGrid(interFTE)) {
                                     continue;
                                 }
-                                IFluidHandler fh = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite());
+                                final IFluidHandler fh = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite());
                                 if (fh != null) {
-                                    int filled = fh.fill(fluid, false);
+                                    final int filled = fh.fill(fluid, false);
                                     if (filled == fluid.amount) {
                                         sus = true;
                                         break;
@@ -259,9 +259,9 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 return sus ? ItemStack.EMPTY : toBeSimulated;
             }
             if (invFluids != null) {
-                FluidStack fluid = FakeItemRegister.getStack(toBeSimulated);
+                final FluidStack fluid = FakeItemRegister.getStack(toBeSimulated);
                 if (fluid != null) {
-                    int filled = invFluids.fill(fluid, false);
+                    final int filled = invFluids.fill(fluid, false);
                     if (filled > 0) {
                         fluid.amount -= filled;
                         return FakeFluids.packFluid2Packet(fluid);
@@ -273,14 +273,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         if (ModAndClassUtil.GAS && FakeGases.isGasFakeItem(toBeSimulated)) {
             if (onmi) {
                 boolean sus = false;
-                GasStack gas = FakeItemRegister.getStack(toBeSimulated);
+                final GasStack gas = FakeItemRegister.getStack(toBeSimulated);
                 if (invGases != null && posInterface != null) {
-                    TileEntity te = (TileEntity) facingTE;
-                    AENetworkProxy node = getGasInterfaceGrid(te, facing);
-                    IGasHandler gasHandler = (IGasHandler) invGases;
+                    final TileEntity te = (TileEntity) facingTE;
+                    final AENetworkProxy node = getGasInterfaceGrid(te, facing);
+                    final IGasHandler gasHandler = (IGasHandler) invGases;
                     if (!isSameGrid(node)) {
                         if (gas != null && gas.getGas() != null) {
-                            int filled = gasHandler.receiveGas(facing.getOpposite(), gas, false);
+                            final int filled = gasHandler.receiveGas(facing.getOpposite(), gas, false);
                             if (filled > 0) {
                                 gas.amount -= filled;
                                 return FakeGases.packGas2Packet(gas);
@@ -291,24 +291,24 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
                 if (gas != null && posInterface != null) {
                     if (self != null && ((FCDualityInterface) self).isAllowSplitting()) {
-                        for (EnumFacing dir : EnumFacing.values()) {
-                            TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
+                        for (final EnumFacing dir : EnumFacing.values()) {
+                            final TileEntity te = posInterface.getWorld().getTileEntity(posInterface.getPos().add(dir.getDirectionVec()));
                             if (te != null) {
-                                IInterfaceHost interTE = getInterfaceTE(te, dir);
+                                final IInterfaceHost interTE = getInterfaceTE(te, dir);
                                 if (interTE != null && isSameGrid(interTE)) {
                                     continue;
                                 }
-                                IFluidInterfaceHost interFTE = getFluidInterfaceTE(te, dir);
+                                final IFluidInterfaceHost interFTE = getFluidInterfaceTE(te, dir);
                                 if (interFTE != null && isSameGrid(interFTE)) {
                                     continue;
                                 }
-                                AENetworkProxy node = getGasInterfaceGrid(te, dir);
+                                final AENetworkProxy node = getGasInterfaceGrid(te, dir);
                                 if (isSameGrid(node)) {
                                     continue;
                                 }
-                                IGasHandler gh = te.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, dir.getOpposite());
+                                final IGasHandler gh = te.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, dir.getOpposite());
                                 if (gh != null) {
-                                    int filled = gh.receiveGas(dir.getOpposite(), gas, false);
+                                    final int filled = gh.receiveGas(dir.getOpposite(), gas, false);
                                     if (filled == gas.amount) {
                                         sus = true;
                                         break;
@@ -323,13 +323,13 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 return sus ? ItemStack.EMPTY : toBeSimulated;
             }
             if (invGases != null && posInterface != null) {
-                GasStack gas = FakeItemRegister.getStack(toBeSimulated);
-                TileEntity te = (TileEntity) facingTE;
-                AENetworkProxy node = getGasInterfaceGrid(te, facing);
-                IGasHandler gasHandler = (IGasHandler) invGases;
+                final GasStack gas = FakeItemRegister.getStack(toBeSimulated);
+                final TileEntity te = (TileEntity) facingTE;
+                final AENetworkProxy node = getGasInterfaceGrid(te, facing);
+                final IGasHandler gasHandler = (IGasHandler) invGases;
                 if (!isSameGrid(node)) {
                     if (gas != null) {
-                        int filled = gasHandler.receiveGas(facing.getOpposite(), gas, false);
+                        final int filled = gasHandler.receiveGas(facing.getOpposite(), gas, false);
                         if (filled > 0) {
                             gas.amount -= filled;
                             return FakeGases.packGas2Packet(gas);
@@ -343,22 +343,22 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Override
-    public ItemStack removeItems(int amount, ItemStack filter, IInventoryDestination destination) {
+    public ItemStack removeItems(final int amount, final ItemStack filter, final IInventoryDestination destination) {
         return invItems != null ? invItems.removeItems(amount, filter, destination) : ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack simulateRemove(int amount, ItemStack filter, IInventoryDestination destination) {
+    public ItemStack simulateRemove(final int amount, final ItemStack filter, final IInventoryDestination destination) {
         return invItems != null ? invItems.simulateRemove(amount, filter, destination) : ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack removeSimilarItems(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack removeSimilarItems(final int amount, final ItemStack filter, final FuzzyMode fuzzyMode, final IInventoryDestination destination) {
         return invItems != null ? invItems.removeSimilarItems(amount, filter, fuzzyMode, destination) : ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack simulateSimilarRemove(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack simulateSimilarRemove(final int amount, final ItemStack filter, final FuzzyMode fuzzyMode, final IInventoryDestination destination) {
         return invItems != null ? invItems.simulateSimilarRemove(amount, filter, fuzzyMode, destination) : ItemStack.EMPTY;
     }
 
@@ -371,19 +371,19 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         if (this.self != null) {
             blockMode = ((FCDualityInterface) this.self).getBlockModeEx();
         }
-        boolean checkFluid = blockMode != 1;
-        boolean checkItem = blockMode != 2;
+        final boolean checkFluid = blockMode != 1;
+        final boolean checkItem = blockMode != 2;
 
-        IFluidInterfaceHost fluidHost = getFluidInterfaceTE((TileEntity) facingTE, facing);
+        final IFluidInterfaceHost fluidHost = getFluidInterfaceTE((TileEntity) facingTE, facing);
         if (fluidHost != null && !isSameGrid(fluidHost) && checkFluid) {
-            DualityFluidInterface inter = fluidHost.getDualityFluidInterface();
-            IMEMonitor<IAEFluidStack> monitor = inter.getInventory(Util.getFluidChannel());
+            final DualityFluidInterface inter = fluidHost.getDualityFluidInterface();
+            final IMEMonitor<IAEFluidStack> monitor = inter.getInventory(Util.getFluidChannel());
             if (monitor != null && !monitor.getStorageList().isEmpty()) {
                 return true;
             }
         } else if (invFluids != null && checkFluid) {
-            for (IFluidTankProperties tank : invFluids.getTankProperties()) {
-                FluidStack fluid = tank.getContents();
+            for (final IFluidTankProperties tank : invFluids.getTankProperties()) {
+                final FluidStack fluid = tank.getContents();
                 if (fluid != null && fluid.amount > 0) {
                     return true;
                 }
@@ -392,17 +392,17 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
         /*yeah, gas is fluid*/
         if (ModAndClassUtil.GAS) {
-            Object gasHost = getGasInterfaceTE((TileEntity) facingTE, facing);
+            final Object gasHost = getGasInterfaceTE((TileEntity) facingTE, facing);
             if (gasHost != null && !isSameGrid(((IGasInterfaceHost) gasHost).getProxy()) && checkFluid) {
-                DualityGasInterface inter = ((IGasInterfaceHost) gasHost).getDualityGasInterface();
-                IMEMonitor<IAEGasStack> monitor = inter.getInventory(AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class));
+                final DualityGasInterface inter = ((IGasInterfaceHost) gasHost).getDualityGasInterface();
+                final IMEMonitor<IAEGasStack> monitor = inter.getInventory(AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class));
                 if (monitor != null && !monitor.getStorageList().isEmpty()) {
                     return true;
                 }
             } else if (invGases != null && checkFluid) {
-                IGasHandler gasHandler = (IGasHandler) invGases;
-                for (GasTankInfo tank : gasHandler.getTankInfo()) {
-                    GasStack gas = tank.getGas();
+                final IGasHandler gasHandler = (IGasHandler) invGases;
+                for (final GasTankInfo tank : gasHandler.getTankInfo()) {
+                    final GasStack gas = tank.getGas();
                     if (gas != null && gas.getGas() != null && gas.amount > 0) {
                         return true;
                     }
@@ -410,10 +410,10 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
         }
 
-        IInterfaceHost itemHost = getInterfaceTE((TileEntity) facingTE, facing);
+        final IInterfaceHost itemHost = getInterfaceTE((TileEntity) facingTE, facing);
         if (itemHost != null && !isSameGrid(itemHost) && checkItem) {
-            DualityInterface inter = itemHost.getInterfaceDuality();
-            IMEMonitor<IAEItemStack> monitor = inter.getInventory(Util.getItemChannel());
+            final DualityInterface inter = itemHost.getInterfaceDuality();
+            final IMEMonitor<IAEItemStack> monitor = inter.getInventory(Util.getItemChannel());
             return monitor != null && !monitor.getStorageList().isEmpty();
         } else if (invItems != null && checkItem) {
             return invItems.containsItems();
@@ -428,11 +428,11 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Nullable
-    protected static IInterfaceHost getInterfaceTE(TileEntity te, EnumFacing face) {
+    protected static IInterfaceHost getInterfaceTE(final TileEntity te, final EnumFacing face) {
         if (te instanceof IInterfaceHost) {
             return (IInterfaceHost) te;
         } else if (te instanceof TileCableBus) {
-            IPart part = ((TileCableBus) te).getPart(face.getOpposite());
+            final IPart part = ((TileCableBus) te).getPart(face.getOpposite());
             if (part instanceof IInterfaceHost) {
                 return (IInterfaceHost) part;
             }
@@ -441,11 +441,11 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Nullable
-    protected static IFluidInterfaceHost getFluidInterfaceTE(TileEntity te, EnumFacing face) {
+    protected static IFluidInterfaceHost getFluidInterfaceTE(final TileEntity te, final EnumFacing face) {
         if (te instanceof IFluidInterfaceHost) {
             return (IFluidInterfaceHost) te;
         } else if (te instanceof TileCableBus) {
-            IPart part = ((TileCableBus) te).getPart(face.getOpposite());
+            final IPart part = ((TileCableBus) te).getPart(face.getOpposite());
             if (part instanceof IFluidInterfaceHost) {
                 return (IFluidInterfaceHost) part;
             }
@@ -454,11 +454,11 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Nullable
-    protected static Object getGasInterfaceTE(TileEntity te, EnumFacing face) {
+    protected static Object getGasInterfaceTE(final TileEntity te, final EnumFacing face) {
         if (te instanceof IGasInterfaceHost) {
             return te;
         } else if (te instanceof TileCableBus) {
-            IPart part = ((TileCableBus) te).getPart(face.getOpposite());
+            final IPart part = ((TileCableBus) te).getPart(face.getOpposite());
             if (part instanceof IGasInterfaceHost) {
                 return part;
             }
@@ -466,11 +466,11 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         return null;
     }
 
-    protected static AENetworkProxy getGasInterfaceGrid(@Nullable TileEntity te, EnumFacing face) {
+    protected static AENetworkProxy getGasInterfaceGrid(@Nullable final TileEntity te, final EnumFacing face) {
         if (te instanceof IGasInterfaceHost) {
             return Ae2Reflect.getGasInterfaceGrid(((IGasInterfaceHost) te).getDualityGasInterface());
         } else if (te instanceof TileCableBus) {
-            IPart part = ((TileCableBus) te).getPart(face.getOpposite());
+            final IPart part = ((TileCableBus) te).getPart(face.getOpposite());
             if (part instanceof IGasInterfaceHost) {
                 return Ae2Reflect.getGasInterfaceGrid(((IGasInterfaceHost) part).getDualityGasInterface());
             }
@@ -478,46 +478,46 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         return null;
     }
 
-    private boolean isSameGrid(IInterfaceHost target) {
+    private boolean isSameGrid(final IInterfaceHost target) {
         if (this.self != null && target != null) {
-            DualityInterface other = target.getInterfaceDuality();
+            final DualityInterface other = target.getInterfaceDuality();
             try {
-                AENetworkProxy proxy1 = Ae2Reflect.getInterfaceProxy(other);
-                AENetworkProxy proxy2 = Ae2Reflect.getInterfaceProxy(this.self);
+                final AENetworkProxy proxy1 = Ae2Reflect.getInterfaceProxy(other);
+                final AENetworkProxy proxy2 = Ae2Reflect.getInterfaceProxy(this.self);
                 if (proxy1.getGrid() == proxy2.getGrid()) {
                     return true;
                 }
-            } catch (GridAccessException e) {
+            } catch (final GridAccessException e) {
                 return false;
             }
         }
         return false;
     }
 
-    private boolean isSameGrid(IFluidInterfaceHost target) {
+    private boolean isSameGrid(final IFluidInterfaceHost target) {
         if (this.self != null && target != null) {
-            DualityFluidInterface other = target.getDualityFluidInterface();
+            final DualityFluidInterface other = target.getDualityFluidInterface();
             try {
-                AENetworkProxy proxy1 = Ae2Reflect.getInterfaceProxy(other);
-                AENetworkProxy proxy2 = Ae2Reflect.getInterfaceProxy(this.self);
+                final AENetworkProxy proxy1 = Ae2Reflect.getInterfaceProxy(other);
+                final AENetworkProxy proxy2 = Ae2Reflect.getInterfaceProxy(this.self);
                 if (proxy1.getGrid() == proxy2.getGrid()) {
                     return true;
                 }
-            } catch (GridAccessException e) {
+            } catch (final GridAccessException e) {
                 return false;
             }
         }
         return false;
     }
 
-    private boolean isSameGrid(AENetworkProxy target) {
+    private boolean isSameGrid(final AENetworkProxy target) {
         if (this.self != null && target != null) {
             try {
-                AENetworkProxy proxy = Ae2Reflect.getInterfaceProxy(this.self);
+                final AENetworkProxy proxy = Ae2Reflect.getInterfaceProxy(this.self);
                 if (proxy.getGrid() == target.getGrid()) {
                     return true;
                 }
-            } catch (GridAccessException e) {
+            } catch (final GridAccessException e) {
                 return false;
             }
         }
@@ -538,7 +538,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         private final Iterator<ItemSlot> itemSlots;
         private int nextSlotIndex = 0;
 
-        SlotIterator(IFluidTankProperties[] tanks, Iterator<ItemSlot> itemSlots) {
+        SlotIterator(final IFluidTankProperties[] tanks, final Iterator<ItemSlot> itemSlots) {
             this.tanks = tanks;
             this.itemSlots = itemSlots;
         }
@@ -551,14 +551,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         @Override
         public ItemSlot next() {
             if (nextSlotIndex < tanks.length) {
-                FluidStack fluid = tanks[nextSlotIndex].getContents();
-                ItemSlot slot = new ItemSlot();
+                final FluidStack fluid = tanks[nextSlotIndex].getContents();
+                final ItemSlot slot = new ItemSlot();
                 slot.setSlot(nextSlotIndex++);
                 slot.setItemStack(fluid != null ? FakeFluids.packFluid2Packet(fluid) : ItemStack.EMPTY);
                 Ae2Reflect.setItemSlotExtractable(slot, false);
                 return slot;
             } else {
-                ItemSlot slot = itemSlots.next();
+                final ItemSlot slot = itemSlots.next();
                 slot.setSlot(nextSlotIndex++);
                 return slot;
             }

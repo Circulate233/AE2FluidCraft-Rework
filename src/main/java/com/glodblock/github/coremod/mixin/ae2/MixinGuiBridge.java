@@ -27,7 +27,7 @@ public class MixinGuiBridge {
     private Class<?> containerClass;
 
     @WrapOperation(method = "<init>(Ljava/lang/String;ILjava/lang/Class;Ljava/lang/Class;Lappeng/core/sync/GuiHostType;Lappeng/api/config/SecurityPermissions;)V", at = @At(value = "INVOKE", target = "Lappeng/core/sync/GuiBridge;getGui()V"))
-    private void containerInterfaceR(GuiBridge instance, Operation<Void> original, @Local(name = "containerClass") Class<?> containerClass) {
+    private void containerInterfaceR(final GuiBridge instance, final Operation<Void> original, @Local(name = "containerClass") final Class<?> containerClass) {
         if (containerClass == ContainerInterface.class) {
             this.containerClass = ContainerWrapInterface.class;
         }

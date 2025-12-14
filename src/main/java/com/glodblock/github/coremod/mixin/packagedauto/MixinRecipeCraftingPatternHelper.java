@@ -13,7 +13,7 @@ import thelm.packagedauto.integration.appeng.recipe.RecipeCraftingPatternHelper;
 public class MixinRecipeCraftingPatternHelper {
 
     @WrapOperation(method = "<init>", at = @At(value = "FIELD", target = "Lthelm/packagedauto/integration/appeng/recipe/RecipeCraftingPatternHelper;outputs:[Lappeng/api/storage/data/IAEItemStack;", opcode = Opcodes.PUTFIELD))
-    public void packInputs(RecipeCraftingPatternHelper instance, IAEItemStack[] value, Operation<Void> original) {
+    public void packInputs(final RecipeCraftingPatternHelper instance, final IAEItemStack[] value, final Operation<Void> original) {
         original.call(instance, CoreModHooks.flattenFluidPackets(value));
     }
 

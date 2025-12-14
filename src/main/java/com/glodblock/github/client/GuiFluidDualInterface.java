@@ -25,7 +25,7 @@ public class GuiFluidDualInterface extends GuiFluidInterface {
     @Override
     public void initGui() {
         super.initGui();
-        ItemStack icon = AEApi.instance().definitions().blocks().iface().maybeStack(1).orElse(ItemStack.EMPTY);
+        final ItemStack icon = AEApi.instance().definitions().blocks().iface().maybeStack(1).orElse(ItemStack.EMPTY);
         switchInterface = new GuiTabButton(guiLeft + 133, guiTop, icon, icon.getDisplayName(), itemRender);
         buttonList.add(switchInterface);
         priorityBtn = Ae2ReflectClient.getPriorityButton(this);

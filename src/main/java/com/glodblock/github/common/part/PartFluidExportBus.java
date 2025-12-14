@@ -1,6 +1,13 @@
 package com.glodblock.github.common.part;
 
-import appeng.api.config.*;
+import appeng.api.config.Actionable;
+import appeng.api.config.FuzzyMode;
+import appeng.api.config.PowerMultiplier;
+import appeng.api.config.RedstoneMode;
+import appeng.api.config.SchedulingMode;
+import appeng.api.config.Settings;
+import appeng.api.config.Upgrades;
+import appeng.api.config.YesNo;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingLink;
@@ -17,7 +24,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.core.AELog;
 import appeng.core.AppEng;
 import appeng.core.settings.TickRates;
-import appeng.core.sync.GuiBridge;
 import appeng.fluids.parts.PartSharedFluidBus;
 import appeng.helpers.MultiCraftingTracker;
 import appeng.items.parts.PartModels;
@@ -27,7 +33,6 @@ import appeng.parts.PartModel;
 import appeng.util.InventoryAdaptor;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
-import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.inventory.FluidConvertingInventoryAdaptor;
 import com.glodblock.github.inventory.GuiType;
@@ -60,7 +65,7 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
     private final IActionSource source;
     private final MultiCraftingTracker craftingTracker = new MultiCraftingTracker( this, 9 );
 
-    public PartFluidExportBus( ItemStack is )
+    public PartFluidExportBus(final ItemStack is )
     {
         super( is );
         this.getConfigManager().registerSetting( Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE );
@@ -85,9 +90,9 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
     }
 
     @Override
-    public boolean onPartActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
-        TileEntity te = this.getTile();
-        BlockPos tePos = te.getPos();
+    public boolean onPartActivate(final EntityPlayer player, final EnumHand hand, final Vec3d pos) {
+        final TileEntity te = this.getTile();
+        final BlockPos tePos = te.getPos();
         if (Platform.isServer()) {
             InventoryHandler.openGui(player, te.getWorld(), tePos, this.getSide().getFacing(), GuiType.FLUID_EXPORT_BUS);
         }
@@ -96,14 +101,14 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
 
     @Override
     @Nonnull
-    public TickingRequest getTickingRequest(@Nonnull IGridNode node )
+    public TickingRequest getTickingRequest(@Nonnull final IGridNode node )
     {
         return new TickingRequest( TickRates.FluidExportBus.getMin(), TickRates.FluidExportBus.getMax(), this.isSleeping(), false );
     }
 
     @Override
     @Nonnull
-    public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall )
+    public TickRateModulation tickingRequest(@Nonnull final IGridNode node, final int ticksSinceLastCall )
     {
         return this.canDoBusWork() ? this.doBusWork() : TickRateModulation.IDLE;
     }
@@ -141,7 +146,7 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
                 {
                     for( int i = 0; i < this.getConfig().getSlots(); i++ )
                     {
-                        IAEFluidStack fluid = this.getConfig().getFluidInSlot( i );
+                        final IAEFluidStack fluid = this.getConfig().getFluidInSlot( i );
 
                         if( fluid != null )
                         {
@@ -161,7 +166,7 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
 
                             if( out != null && isAllowed )
                             {
-                                int wasInserted = fh.fill( out.getFluidStack(), true );
+                                final int wasInserted = fh.fill( out.getFluidStack(), true );
 
                                 if( wasInserted > 0 )
                                 {
@@ -182,7 +187,7 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
                     return TickRateModulation.SLOWER;
                 }
             }
-            catch( GridAccessException e )
+            catch( final GridAccessException e )
             {
                 // Ignore
             }
@@ -235,18 +240,18 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
     }
 
     protected InventoryAdaptor getHandler() {
-        TileEntity self = this.getHost().getTile();
-        TileEntity target = this.getTileEntity(self, self.getPos().offset(this.getSide().getFacing()));
+        final TileEntity self = this.getHost().getTile();
+        final TileEntity target = this.getTileEntity(self, self.getPos().offset(this.getSide().getFacing()));
         return target != null ? FluidConvertingInventoryAdaptor.wrap(target, this.getSide().getFacing().getOpposite()) : null;
     }
 
-    private TileEntity getTileEntity(TileEntity self, BlockPos pos) {
-        World w = self.getWorld();
+    private TileEntity getTileEntity(final TileEntity self, final BlockPos pos) {
+        final World w = self.getWorld();
         return w.getChunkProvider().getLoadedChunk(pos.getX() >> 4, pos.getZ() >> 4) != null ? w.getTileEntity(pos) : null;
     }
 
     @Override
-    public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
+    public IAEItemStack injectCraftedItems(final ICraftingLink link, final IAEItemStack items, final Actionable mode) {
         final InventoryAdaptor d = this.getHandler();
 
         try
@@ -258,9 +263,9 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
 
                 if( energy.extractAEPower( power, mode, PowerMultiplier.CONFIG ) > power - 0.01 )
                 {
-                    ItemStack inputStack = items.getCachedItemStack( items.getStackSize() );
+                    final ItemStack inputStack = items.getCachedItemStack( items.getStackSize() );
 
-                    ItemStack remaining;
+                    final ItemStack remaining;
 
                     if( mode == Actionable.SIMULATE )
                     {
@@ -294,7 +299,7 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
     }
 
     @Override
-    public void jobStateChange(ICraftingLink link) {
+    public void jobStateChange(final ICraftingLink link) {
         this.craftingTracker.jobStateChange( link );
     }
 }

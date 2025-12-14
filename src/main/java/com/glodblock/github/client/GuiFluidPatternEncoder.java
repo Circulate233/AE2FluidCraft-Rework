@@ -23,7 +23,7 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
     private final ContainerFluidPatternEncoder cont;
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
 
-    public GuiFluidPatternEncoder(InventoryPlayer ipl, TileFluidPatternEncoder tile) {
+    public GuiFluidPatternEncoder(final InventoryPlayer ipl, final TileFluidPatternEncoder tile) {
         super(new ContainerFluidPatternEncoder(ipl, tile));
         this.cont = (ContainerFluidPatternEncoder)inventorySlots;
         mouseRegions.addRegion(141, 38, 10, 10, new MouseRegionManager.Handler() {
@@ -33,7 +33,7 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
             }
 
             @Override
-            public boolean onClick(int button) {
+            public boolean onClick(final int button) {
                 if (button == 0) {
                     if (cont.canEncodePattern()) {
                         FluidCraft.proxy.netHandler.sendToServer(new CPacketEncodePattern());
@@ -46,20 +46,20 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
     }
 
     @Override
-    protected void mouseClicked(int xCoord, int yCoord, int btn) throws IOException {
+    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) throws IOException {
         if (mouseRegions.onClick(xCoord, yCoord, btn)) {
             super.mouseClicked(xCoord, yCoord, btn);
         }
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         mc.getTextureManager().bindTexture(TEX_BG);
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, ySize);
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         fontRenderer.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_PATTERN_ENCODER)), 8, 6, 0x404040);
         fontRenderer.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         mouseRegions.render(mouseX, mouseY);

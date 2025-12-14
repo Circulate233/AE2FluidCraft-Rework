@@ -11,7 +11,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
+import java.awt.Rectangle;
 import java.io.IOException;
 
 public class ItemTarget implements IGhostIngredientHandler.Target<Object> {
@@ -20,7 +20,7 @@ public class ItemTarget implements IGhostIngredientHandler.Target<Object> {
     private final int top;
     private final Slot slot;
 
-    public ItemTarget(int guiLeft, int guiTop, Slot slot) {
+    public ItemTarget(final int guiLeft, final int guiTop, final Slot slot) {
         this.left = guiLeft;
         this.top = guiTop;
         this.slot = slot;
@@ -33,11 +33,11 @@ public class ItemTarget implements IGhostIngredientHandler.Target<Object> {
     }
 
     @Override
-    public void accept(@Nonnull Object ingredient) {
+    public void accept(@Nonnull final Object ingredient) {
         if (!(ingredient instanceof ItemStack)) {
             return;
         }
-        IAEItemStack stack = AEItemStack.fromItemStack((ItemStack) ingredient);
+        final IAEItemStack stack = AEItemStack.fromItemStack((ItemStack) ingredient);
         if (stack == null) {
             return;
         }
@@ -45,7 +45,7 @@ public class ItemTarget implements IGhostIngredientHandler.Target<Object> {
         try {
             p = new PacketInventoryAction(InventoryAction.PLACE_JEI_GHOST_ITEM, (SlotFake) slot, stack);
             NetworkHandler.instance().sendToServer(p);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }

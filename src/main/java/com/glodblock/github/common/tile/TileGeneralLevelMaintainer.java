@@ -48,12 +48,12 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
 
     private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, MAX_FLUID) {
         @Override
-        public int getSlotLimit(int slot) {
+        public int getSlotLimit(final int slot) {
             return Integer.MAX_VALUE;
         }
 
         @Override
-        protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+        protected int getStackLimit(final int slot, @Nonnull final ItemStack stack) {
             return Integer.MAX_VALUE;
         }
     };
@@ -68,17 +68,17 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
         this.source = new MachineSource(this);
     }
 
-    public void setConfig(int id, int size) {
+    public void setConfig(final int id, final int size) {
         if (id < 0 || id >= MAX_FLUID || this.config.getStackInSlot(id).isEmpty()) {
             return;
         }
-        ItemStack drop = this.config.getStackInSlot(id).copy();
+        final ItemStack drop = this.config.getStackInSlot(id).copy();
         drop.setCount(size);
         this.config.setStackInSlot(id, drop);
         doWork();
     }
 
-    public void setRequest(int id, long amount) {
+    public void setRequest(final int id, final long amount) {
         if (id < 0 || id >= MAX_FLUID || amount < 0) {
             return;
         }
@@ -96,19 +96,19 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
     }
 
     @MENetworkEventSubscribe
-    public void onStorageUpdate(MENetworkStorageEvent event) {
+    public void onStorageUpdate(final MENetworkStorageEvent event) {
         if (event.channel.equals(Util.getFluidChannel())) {
             doWork();
         }
     }
 
     @MENetworkEventSubscribe
-    public void onPowerUpdate(MENetworkPowerStatusChange event) {
+    public void onPowerUpdate(final MENetworkPowerStatusChange event) {
         doWork();
     }
 
     @MENetworkEventSubscribe
-    public void onChannelUpdate(MENetworkChannelsChanged event) {
+    public void onChannelUpdate(final MENetworkChannelsChanged event) {
         doWork();
     }
 
@@ -116,27 +116,27 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
         if (!getProxy().isActive()) {
             return;
         }
-        var storage = getItemMonitor();
+        final var storage = getItemMonitor();
         try {
             for (int i = 0; i < MAX_FLUID; i++) {
-                IAEItemStack drop = this.config.getAEStackInSlot(i);
+                final IAEItemStack drop = this.config.getAEStackInSlot(i);
                 if (drop != null && drop.getStackSize() > 0) {
-                    IAEItemStack remain = storage.getStorageList().findPrecise(drop);
+                    final IAEItemStack remain = storage.getStorageList().findPrecise(drop);
                     if (remain == null || remain.getStackSize() < drop.getStackSize()) {
                         this.craftingTracker.handleCrafting(i, request[i], drop.copy().setStackSize(request[i]), DummyInvAdaptor.INSTANCE, getWorld(), getProxy().getGrid(), getProxy().getCrafting(), this.source);
                     }
                 }
             }
-        } catch (GridAccessException e) {
+        } catch (final GridAccessException e) {
             //Ignore
         }
     }
 
     @Override
-    protected boolean readFromStream(ByteBuf data) throws IOException {
+    protected boolean readFromStream(final ByteBuf data) throws IOException {
         boolean changed = super.readFromStream(data);
         for (int i = 0; i < config.getSlots(); i++) {
-            ItemStack stack = ByteBufUtils.readItemStack(data);
+            final ItemStack stack = ByteBufUtils.readItemStack(data);
             if (!ItemStack.areItemStacksEqual(stack, config.getStackInSlot(i))) {
                 config.setStackInSlot(i, stack);
                 changed = true;
@@ -151,7 +151,7 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
     }
 
     @Override
-    protected void writeToStream(ByteBuf data) throws IOException {
+    protected void writeToStream(final ByteBuf data) throws IOException {
         super.writeToStream(data);
         for (int i = 0; i < config.getSlots(); i++) {
             ByteBufUtils.writeItemStack(data, config.getStackInSlot(i));
@@ -166,7 +166,7 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound data) {
+    public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
         for (int i = 0; i < MAX_FLUID; i++) {
             request[i] = data.getLong("reqX" + i);
@@ -182,7 +182,7 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+    public NBTTagCompound writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
         for (int i = 0; i < MAX_FLUID; i++) {
             data.setLong("reqX" + i, request[i]);
@@ -204,7 +204,7 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
     }
 
     @Override
-    public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
+    public IAEItemStack injectCraftedItems(final ICraftingLink link, final IAEItemStack items, final Actionable mode) {
         final var monitor = getItemMonitor();
 
         try {
@@ -213,15 +213,15 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
                 final double power = items.getStackSize() / 1000D;
 
                 if (energy.extractAEPower(power, mode, PowerMultiplier.CONFIG) > power - 0.01) {
-                    ItemStack inputStack = items.getCachedItemStack(items.getStackSize());
+                    final ItemStack inputStack = items.getCachedItemStack(items.getStackSize());
 
                     if (mode == Actionable.SIMULATE) {
                         monitor.injectItems(items, Actionable.SIMULATE, source);
                         items.setCachedItemStack(inputStack);
                     } else {
-                        IAEItemStack remaining = monitor.injectItems(items, Actionable.MODULATE, source);
+                        final IAEItemStack remaining = monitor.injectItems(items, Actionable.MODULATE, source);
                         if (remaining == null || remaining.getStackSize() <= 0) {
-                            ItemStack tmp = items.getDefinition();
+                            final ItemStack tmp = items.getDefinition();
                             items.setCachedItemStack(tmp);
                         }
                     }
@@ -238,12 +238,12 @@ public class TileGeneralLevelMaintainer extends AENetworkTile implements ICrafti
     }
 
     @Override
-    public void jobStateChange(ICraftingLink link) {
+    public void jobStateChange(final ICraftingLink link) {
         this.craftingTracker.jobStateChange(link);
     }
 
     @Override
-    public void onChangeInventory(IItemHandler iItemHandler, int i, InvOperation invOperation, ItemStack itemStack, ItemStack itemStack1) {
+    public void onChangeInventory(final IItemHandler iItemHandler, final int i, final InvOperation invOperation, final ItemStack itemStack, final ItemStack itemStack1) {
         markForUpdate();
     }
 

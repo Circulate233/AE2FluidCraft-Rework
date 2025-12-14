@@ -57,26 +57,26 @@ public class Ae2Reflect {
             } else {
                 fGetDualityGasInterface_gridProxy = null;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
     }
 
-    public static MethodHandle reflectConstructor(Class<?> owner, Class<?>... paramTypes) throws NoSuchMethodException, IllegalAccessException {
-        Constructor<?> constructor = owner.getDeclaredConstructor(paramTypes);
+    public static MethodHandle reflectConstructor(final Class<?> owner, final Class<?>... paramTypes) throws NoSuchMethodException, IllegalAccessException {
+        final Constructor<?> constructor = owner.getDeclaredConstructor(paramTypes);
         constructor.setAccessible(true);
         return MethodHandles.lookup().unreflectConstructor(constructor);
     }
 
-    public static MethodHandle reflectMethodHandle(Class<?> owner, String name, Class<?>... paramTypes) throws NoSuchMethodException, IllegalAccessException {
+    public static MethodHandle reflectMethodHandle(final Class<?> owner, final String name, final Class<?>... paramTypes) throws NoSuchMethodException, IllegalAccessException {
         return reflectMethodHandle(owner, new String[]{name}, paramTypes);
     }
 
-    public static MethodHandle reflectMethodHandle(Class<?> owner, String[] names, Class<?>... paramTypes) throws NoSuchMethodException, IllegalAccessException {
+    public static MethodHandle reflectMethodHandle(final Class<?> owner, final String[] names, final Class<?>... paramTypes) throws NoSuchMethodException, IllegalAccessException {
         return MethodHandles.lookup().unreflect(reflectMethod(owner, names, paramTypes));
     }
 
-    public static Method reflectMethod(Class<?> owner, String name, Class<?>... paramTypes) throws NoSuchMethodException {
+    public static Method reflectMethod(final Class<?> owner, final String name, final Class<?>... paramTypes) throws NoSuchMethodException {
         return reflectMethod(owner, new String[]{name}, paramTypes);
     }
 
@@ -96,11 +96,11 @@ public class Ae2Reflect {
         return m;
     }
 
-    public static MethodHandle reflectFieldGetter(Class<?> owner, String ...names) throws IllegalAccessException, NoSuchFieldException {
+    public static MethodHandle reflectFieldGetter(final Class<?> owner, final String ...names) throws IllegalAccessException, NoSuchFieldException {
         return MethodHandles.lookup().unreflectGetter(reflectField(owner, names));
     }
 
-    public static MethodHandle reflectFieldSetter(Class<?> owner, String ...names) throws IllegalAccessException, NoSuchFieldException {
+    public static MethodHandle reflectFieldSetter(final Class<?> owner, final String ...names) throws IllegalAccessException, NoSuchFieldException {
         return MethodHandles.lookup().unreflectSetter(reflectField(owner, names));
     }
 
@@ -120,95 +120,95 @@ public class Ae2Reflect {
         return f;
     }
 
-    public static <T> T readField(Object owner, Field field) {
+    public static <T> T readField(final Object owner, final Field field) {
         try {
             return (T)field.get(owner);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new IllegalStateException("Failed to read field: " + field);
         }
     }
 
-    public static <T> T readField(Object owner, MethodHandle field) {
+    public static <T> T readField(final Object owner, final MethodHandle field) {
         try {
             if (owner == null) {
                 return (T)field.invoke();
             } else {
                 return (T)field.invoke(owner);
             }
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             throw new IllegalStateException("Failed to read field: " + field);
         }
     }
 
-    public static void writeField(Object owner, Field field, Object value) {
+    public static void writeField(final Object owner, final Field field, final Object value) {
         try {
             field.set(owner, value);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new IllegalStateException("Failed to write field: " + field);
         }
     }
 
-    public static void writeField(Object owner, MethodHandle field, Object value) {
+    public static void writeField(final Object owner, final MethodHandle field, final Object value) {
         try {
             if (owner == null) {
                 field.invoke(value);
             } else {
                 field.invoke(owner, value);
             }
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             throw new IllegalStateException("Failed to write field: " + field);
         }
     }
 
-    public static Container getCraftContainer(InventoryCrafting inv) {
+    public static Container getCraftContainer(final InventoryCrafting inv) {
         return Ae2Reflect.readField(inv, fGetInventory_container);
     }
 
-    public static void setItemSlotExtractable(ItemSlot slot, boolean extractable) {
+    public static void setItemSlotExtractable(final ItemSlot slot, final boolean extractable) {
         try {
             mItemSlot_setExtractable.invoke(slot, extractable);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             throw new IllegalStateException("Failed to invoke method: " + mItemSlot_setExtractable, e);
         }
     }
 
-    public static Map<IItemDefinition, IItemDefinition> getDisassemblyNonCellMap(DisassembleRecipe recipe) {
+    public static Map<IItemDefinition, IItemDefinition> getDisassemblyNonCellMap(final DisassembleRecipe recipe) {
         return readField(recipe, fGetDisassembleRecipe_nonCellMappings);
     }
 
-    public static AENetworkProxy getInterfaceProxy(DualityInterface owner) {
+    public static AENetworkProxy getInterfaceProxy(final DualityInterface owner) {
         return readField(owner, fGetDualInterface_gridProxy);
     }
 
-    public static AENetworkProxy getInterfaceProxy(DualityFluidInterface owner) {
+    public static AENetworkProxy getInterfaceProxy(final DualityFluidInterface owner) {
         return readField(owner, fGetDualityFluidInterface_gridProxy);
     }
 
-    public static IAEItemFilter getInventoryFilter(AppEngInternalInventory owner) {
+    public static IAEItemFilter getInventoryFilter(final AppEngInternalInventory owner) {
         return readField(owner, fGetAppEngInternalInventory_filter);
     }
 
-    public static World getContextWorld(ContainerOpenContext owner) {
+    public static World getContextWorld(final ContainerOpenContext owner) {
         return readField(owner, fGetContainerOpenContext_w);
     }
 
-    public static int getContextX(ContainerOpenContext owner) {
+    public static int getContextX(final ContainerOpenContext owner) {
         return readField(owner, fGetContainerOpenContext_x);
     }
 
-    public static int getContextY(ContainerOpenContext owner) {
+    public static int getContextY(final ContainerOpenContext owner) {
         return readField(owner, fGetContainerOpenContext_y);
     }
 
-    public static int getContextZ(ContainerOpenContext owner) {
+    public static int getContextZ(final ContainerOpenContext owner) {
         return readField(owner, fGetContainerOpenContext_z);
     }
 
-    public static ICraftingCPU getCraftingCPU(CraftingCPURecord owner) {
+    public static ICraftingCPU getCraftingCPU(final CraftingCPURecord owner) {
         return readField(owner, fGetCraftingCPURecord_cpu);
     }
 
-    public static AENetworkProxy getGasInterfaceGrid(Object owner) {
+    public static AENetworkProxy getGasInterfaceGrid(final Object owner) {
         return readField(owner, fGetDualityGasInterface_gridProxy);
     }
 

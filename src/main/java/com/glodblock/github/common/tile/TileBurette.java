@@ -39,15 +39,14 @@ public class TileBurette extends AEBaseInvTile implements IAEFluidInventory {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(final Capability<?> capability, final EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
                 || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
     }
 
-    @SuppressWarnings("unchecked")
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(final Capability<T> capability, @Nullable final EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T)invTarget;
         } else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
@@ -57,24 +56,24 @@ public class TileBurette extends AEBaseInvTile implements IAEFluidInventory {
     }
 
     @Override
-    public void onChangeInventory(IItemHandler inv, int slot, InvOperation mc, ItemStack removed, ItemStack added) {
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removed, final ItemStack added) {
         // NO-OP
     }
 
     @Override
-    public void onFluidInventoryChanged(IAEFluidTank inv, int slot) {
+    public void onFluidInventoryChanged(final IAEFluidTank inv, final int slot) {
         saveChanges();
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound data) {
+    public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
         invTarget.readFromNBT(data, "ItemInv");
         invFluid.readFromNBT(data, "FluidInv");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+    public NBTTagCompound writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
         invTarget.writeToNBT(data, "ItemInv");
         invFluid.writeToNBT(data, "FluidInv");

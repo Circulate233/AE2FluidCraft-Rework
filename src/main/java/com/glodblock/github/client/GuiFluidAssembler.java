@@ -21,7 +21,7 @@ public class GuiFluidAssembler extends AEBaseGui {
             FluidCraft.resource("textures/gui/fluid_assembler4.png"),
     };
 
-    public GuiFluidAssembler(InventoryPlayer ipl, TileFluidAssembler tile) {
+    public GuiFluidAssembler(final InventoryPlayer ipl, final TileFluidAssembler tile) {
         super(new ContainerFluidAssembler(ipl, tile));
         this.container = (ContainerFluidAssembler) inventorySlots;
         this.ySize = 249;
@@ -35,13 +35,13 @@ public class GuiFluidAssembler extends AEBaseGui {
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         fontRenderer.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_ASSEMBLER)), 8, 6, 0x404040);
         this.pb.setFullMsg((this.container.getCurrentProgress() * 100 / TileFluidAssembler.TIME) + "%");
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         mc.getTextureManager().bindTexture(TEX_BG[cap()]);
         this.pb.x = 148 + this.guiLeft;
         this.pb.y = 34 + this.guiTop;

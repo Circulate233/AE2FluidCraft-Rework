@@ -44,7 +44,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     @GuiSync(106)
     public boolean fluidFirst = false;
 
-    public ContainerExtendedFluidPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
+    public ContainerExtendedFluidPatternTerminal(final InventoryPlayer ip, final ITerminalHost monitorable) {
         super(ip, monitorable);
         part = (FCFluidPatternPart) monitorable;
         this.craftingMode = false;
@@ -87,15 +87,15 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
         return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
     }
 
-    private static IAEItemStack[] collectInventory(Slot[] slots) {
+    private static IAEItemStack[] collectInventory(final Slot[] slots) {
         // see note at top of DensePatternDetails
-        List<IAEItemStack> acc = new ArrayList<>();
-        for (Slot slot : slots) {
-            ItemStack stack = slot.getStack();
+        final List<IAEItemStack> acc = new ArrayList<>();
+        for (final Slot slot : slots) {
+            final ItemStack stack = slot.getStack();
             if (stack.isEmpty()) {
                 continue;
             }
-            IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
+            final IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
             if (aeStack == null) {
                 continue;
             }
@@ -105,8 +105,8 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     private void encodeFluidPattern() {
-        ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
-        FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
+        final ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
+        final FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
         pattern.setEncoder(this.getInventoryPlayer().player.getGameProfile());
@@ -115,7 +115,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
 
     private boolean checkHasFluidPattern() {
         boolean hasFluid = false, search = false;
-        for (Slot craftingSlot : this.craftingSlots) {
+        for (final Slot craftingSlot : this.craftingSlots) {
             final ItemStack crafting = craftingSlot.getStack();
             if (crafting.isEmpty()) {
                 continue;
@@ -134,7 +134,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
             return false;
         }
         // `search` should be true at this point
-        for (Slot outputSlot : this.outputSlots) {
+        for (final Slot outputSlot : this.outputSlots) {
             final ItemStack out = outputSlot.getStack();
             if (out.isEmpty()) {
                 continue;
@@ -154,13 +154,13 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
+    public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slotId, final long id) {
         if (id != 0 || slotId < 0 || slotId >= this.inventorySlots.size()) {
             super.doAction(player, action, slotId, id);
             return;
         }
-        Slot slot = getSlot(slotId);
-        ItemStack stack = player.inventory.getItemStack();
+        final Slot slot = getSlot(slotId);
+        final ItemStack stack = player.inventory.getItemStack();
         if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && !stack.isEmpty()
                 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && Util.getFluidFromItem(stack) != null) {
             FluidStack fluid = null;
@@ -171,7 +171,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
                     fluid = Util.getFluidFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    FluidStack origin = FakeItemRegister.getStack(slot.getStack());
+                    final FluidStack origin = FakeItemRegister.getStack(slot.getStack());
                     if (fluid != null && fluid.equals(origin)) {
                         fluid.amount += origin.amount;
                         if (fluid.amount <= 0) fluid = null;
@@ -195,7 +195,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
                     gas = Util.getGasFromItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                    GasStack origin = FakeItemRegister.getStack(slot.getStack());
+                    final GasStack origin = FakeItemRegister.getStack(slot.getStack());
                     if (gas != null && gas.equals(origin)) {
                         gas.amount += origin.amount;
                         if (gas.amount <= 0) gas = null;
@@ -213,7 +213,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void multiply(int multiple) {
+    public void multiply(final int multiple) {
         if (Util.multiplySlotCheck(this.craftingSlots, multiple) && Util.multiplySlotCheck(this.outputSlots, multiple)) {
             Util.multiplySlot(this.craftingSlots, multiple);
             Util.multiplySlot(this.outputSlots, multiple);
@@ -221,7 +221,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void divide(int divide) {
+    public void divide(final int divide) {
         if (Util.divideSlotCheck(this.craftingSlots, divide) && Util.divideSlotCheck(this.outputSlots, divide)) {
             Util.divideSlot(this.craftingSlots, divide);
             Util.divideSlot(this.outputSlots, divide);
@@ -229,7 +229,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void increase(int increase) {
+    public void increase(final int increase) {
         if (Util.increaseSlotCheck(this.craftingSlots, increase) && Util.increaseSlotCheck(this.outputSlots, increase)) {
             Util.increaseSlot(this.craftingSlots, increase);
             Util.increaseSlot(this.outputSlots, increase);
@@ -237,7 +237,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void decrease(int decrease) {
+    public void decrease(final int decrease) {
         if (Util.decreaseSlotCheck(this.craftingSlots, decrease) && Util.decreaseSlotCheck(this.outputSlots, decrease)) {
             Util.decreaseSlot(this.craftingSlots, decrease);
             Util.decreaseSlot(this.outputSlots, decrease);
@@ -245,7 +245,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void acceptPattern(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
+    public void acceptPattern(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
         this.part.onChangeCrafting(inputs, outputs, combine);
     }
 
@@ -264,7 +264,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void setCombineMode(boolean mode) {
+    public void setCombineMode(final boolean mode) {
         part.setCombineMode(mode);
     }
 
@@ -274,7 +274,7 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
     }
 
     @Override
-    public void setFluidPlaceMode(boolean mode) {
+    public void setFluidPlaceMode(final boolean mode) {
         part.setFluidPlaceMode(mode);
     }
 }

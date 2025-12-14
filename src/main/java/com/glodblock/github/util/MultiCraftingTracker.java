@@ -53,10 +53,10 @@ public class MultiCraftingTracker {
         }
     }
 
-    public boolean handleCrafting(int x, long itemToCraft, IAEItemStack ais, InventoryAdaptor d, World w, IGrid g, ICraftingGrid cg, IActionSource mySrc) {
+    public boolean handleCrafting(final int x, final long itemToCraft, final IAEItemStack ais, final InventoryAdaptor d, final World w, final IGrid g, final ICraftingGrid cg, final IActionSource mySrc) {
         if (ais != null) {
-            ItemStack inputStack = ais.getCachedItemStack(ais.getStackSize());
-            ItemStack remaining = d.simulateAdd(inputStack);
+            final ItemStack inputStack = ais.getCachedItemStack(ais.getStackSize());
+            final ItemStack remaining = d.simulateAdd(inputStack);
 
             if (remaining.isEmpty()) {
                 ais.setCachedItemStack(inputStack);
@@ -67,7 +67,7 @@ public class MultiCraftingTracker {
                 }
 
                 if (jobCalculation == null && this.getLink(x) == null) {
-                    IAEItemStack aisC = ais.copy();
+                    final IAEItemStack aisC = ais.copy();
                     aisC.setStackSize(itemToCraft);
                     this.setJob(x, cg.beginCraftingJob(w, g, mySrc, aisC, null));
                     jobCalculation = this.getJob(x);
@@ -79,10 +79,10 @@ public class MultiCraftingTracker {
 
                 try {
                     if (jobCalculation.isDone()) {
-                        ICraftingJob job = jobCalculation.get();
+                        final ICraftingJob job = jobCalculation.get();
 
                         if (job != null) {
-                            ICraftingLink link = cg.submitJob(job, this.owner, null, false, mySrc);
+                            final ICraftingLink link = cg.submitJob(job, this.owner, null, false, mySrc);
                             this.setJob(x, null);
                             if (link != null) {
                                 this.setLink(x, link);
@@ -92,7 +92,7 @@ public class MultiCraftingTracker {
                     } else {
                         ((TileGeneralLevelMaintainer) this.owner).forceNextTick = true;
                     }
-                } catch (InterruptedException | ExecutionException ignored) {
+                } catch (final InterruptedException | ExecutionException ignored) {
                 }
             } else {
                 ais.setCachedItemStack(remaining);

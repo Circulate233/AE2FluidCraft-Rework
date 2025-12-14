@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinGuiCraftingStatus {
 
     @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/CraftingCPUStatus;getCrafting()Lappeng/api/storage/data/IAEItemStack;"))
-    public IAEItemStack getItemDisplayNameR(CraftingCPUStatus instance, Operation<IAEItemStack> original) {
+    public IAEItemStack getItemDisplayNameR(final CraftingCPUStatus instance, final Operation<IAEItemStack> original) {
         return CoreModHooks.displayAEFluidAmount(original.call(instance));
     }
 

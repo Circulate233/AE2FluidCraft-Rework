@@ -13,12 +13,12 @@ public class FluidKey {
     @Nullable
     private final NBTTagCompound tag;
 
-    public FluidKey(Fluid fluid, @Nullable NBTTagCompound tag) {
+    public FluidKey(final Fluid fluid, @Nullable final NBTTagCompound tag) {
         this.fluid = fluid;
         this.tag = tag;
     }
 
-    public FluidKey(FluidStack fluid) {
+    public FluidKey(final FluidStack fluid) {
         this(fluid.getFluid(), fluid.tag);
     }
 
@@ -28,7 +28,7 @@ public class FluidKey {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (!(obj instanceof FluidKey)) {
             return false;
         }

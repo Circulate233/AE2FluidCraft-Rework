@@ -9,7 +9,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 public class ContainerFCCraftConfirm extends ContainerCraftConfirm {
 
-    public ContainerFCCraftConfirm(InventoryPlayer ip, ITerminalHost te) {
+    public ContainerFCCraftConfirm(final InventoryPlayer ip, final ITerminalHost te) {
         super(ip, te);
     }
 

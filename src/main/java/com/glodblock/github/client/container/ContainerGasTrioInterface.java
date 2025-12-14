@@ -13,14 +13,14 @@ public class ContainerGasTrioInterface extends ContainerGasInterface {
 
     private final DualityGasInterface dualityInterfaceCopy;
 
-    public ContainerGasTrioInterface(InventoryPlayer ip, IGasInterfaceHost te) {
+    public ContainerGasTrioInterface(final InventoryPlayer ip, final IGasInterfaceHost te) {
         super(ip, te);
         this.dualityInterfaceCopy = te.getDualityGasInterface();
     }
 
     @Override
     protected void setupUpgrades() {
-        IItemHandler upgrades = this.getUpgradeable().getInventoryByName("gas_upgrades");
+        final IItemHandler upgrades = this.getUpgradeable().getInventoryByName("gas_upgrades");
         if (this.availableUpgrades() > 0) {
             this.addSlotToContainer((new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 0, 187, 8, this.getInventoryPlayer())).setNotDraggable());
         }

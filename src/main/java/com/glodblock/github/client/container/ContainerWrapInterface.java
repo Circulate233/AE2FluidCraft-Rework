@@ -18,7 +18,7 @@ public class ContainerWrapInterface extends ContainerInterface {
     public int blockModeEx = 0;
     private final DualityInterface dualityInterfaceCopy;
 
-    public ContainerWrapInterface(InventoryPlayer ip, IInterfaceHost te) {
+    public ContainerWrapInterface(final InventoryPlayer ip, final IInterfaceHost te) {
         super(ip, te);
         this.dualityInterfaceCopy = te.getInterfaceDuality();
     }
@@ -33,17 +33,17 @@ public class ContainerWrapInterface extends ContainerInterface {
         }
     }
 
-    public void setFluidPacketInTile(boolean value) {
+    public void setFluidPacketInTile(final boolean value) {
         this.fluidPacket = value;
         ((FCDualityInterface) dualityInterfaceCopy).setFluidPacket(value);
     }
 
-    public void setAllowSplittingInTile(boolean value) {
+    public void setAllowSplittingInTile(final boolean value) {
         this.allowSplitting = value;
         ((FCDualityInterface) dualityInterfaceCopy).setAllowSplitting(value);
     }
 
-    public void setExtendedBlockMode(int value) {
+    public void setExtendedBlockMode(final int value) {
         this.blockModeEx = value;
         ((FCDualityInterface) dualityInterfaceCopy).setBlockModeEx(value);
     }

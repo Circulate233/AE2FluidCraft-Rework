@@ -47,7 +47,7 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
     private final DualityInterface itemDuality;
     private final DualityFluidInterface fluidDuality;
 
-    public DualityDualInterface(AENetworkProxy networkProxy, H host) {
+    public DualityDualInterface(final AENetworkProxy networkProxy, final H host) {
         this.itemDuality = new DualityInterface(networkProxy, host);
         this.fluidDuality = new DualityFluidInterface(networkProxy, host);
     }
@@ -78,14 +78,14 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
         return itemDuality.hasCapability(capability, facing) || fluidDuality.hasCapability(capability, facing);
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        T capInst = itemDuality.getCapability(capability, facing);
+    public <T> T getCapability(@Nonnull final Capability<T> capability, @Nullable final EnumFacing facing) {
+        final T capInst = itemDuality.getCapability(capability, facing);
         return capInst != null ? capInst : fluidDuality.getCapability(capability, facing);
     }
 
@@ -95,8 +95,9 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
         itemDuality.initialize();
     }
 
-    public TickingRequest getTickingRequest(IGridNode node) {
-        TickingRequest item = itemDuality.getTickingRequest(node), fluid = fluidDuality.getTickingRequest(node);
+    public TickingRequest getTickingRequest(final IGridNode node) {
+        final TickingRequest item = itemDuality.getTickingRequest(node);
+        final TickingRequest fluid = fluidDuality.getTickingRequest(node);
         return new TickingRequest(
                 Math.min(item.minTickRate, fluid.minTickRate),
                 Math.max(item.maxTickRate, fluid.maxTickRate),
@@ -104,9 +105,9 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
                 true);
     }
 
-    public TickRateModulation onTick(IGridNode node, int ticksSinceLastCall) {
-        TickRateModulation item = itemDuality.tickingRequest(node, ticksSinceLastCall);
-        TickRateModulation fluid = fluidDuality.tickingRequest(node, ticksSinceLastCall);
+    public TickRateModulation onTick(final IGridNode node, final int ticksSinceLastCall) {
+        final TickRateModulation item = itemDuality.tickingRequest(node, ticksSinceLastCall);
+        final TickRateModulation fluid = fluidDuality.tickingRequest(node, ticksSinceLastCall);
         if (item.ordinal() >= fluid.ordinal()) { // return whichever is most urgent
             return item;
         } else {
@@ -129,16 +130,16 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
         fluidDuality.gridChanged();
     }
 
-    public void addDrops(List<ItemStack> drops) {
+    public void addDrops(final List<ItemStack> drops) {
         itemDuality.addDrops(drops);
         fluidDuality.addDrops(drops);
     }
 
-    public boolean canInsertItem(ItemStack stack) {
+    public boolean canInsertItem(final ItemStack stack) {
         return itemDuality.canInsert(stack);
     }
 
-    public IItemHandler getItemInventoryByName(String name) {
+    public IItemHandler getItemInventoryByName(final String name) {
         if (name.startsWith("item_")) {
             return itemDuality.getInventoryByName(name.replace("item_", ""));
         }
@@ -152,13 +153,13 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
         return itemDuality.getInternalInventory();
     }
 
-    public void onItemInventoryChange(IItemHandler inv, int slot, InvOperation op, ItemStack removed, ItemStack added) {
+    public void onItemInventoryChange(final IItemHandler inv, final int slot, final InvOperation op, final ItemStack removed, final ItemStack added) {
         itemDuality.onChangeInventory(inv, slot, op, removed, added);
     }
 
     // autocrafting
 
-    public boolean pushPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table) {
+    public boolean pushPattern(final ICraftingPatternDetails patternDetails, final InventoryCrafting table) {
         return itemDuality.pushPattern(patternDetails, table);
     }
 
@@ -166,7 +167,7 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
         return itemDuality.isBusy();
     }
 
-    public void provideCrafting(ICraftingProviderHelper craftingTracker) {
+    public void provideCrafting(final ICraftingProviderHelper craftingTracker) {
         itemDuality.provideCrafting(craftingTracker);
     }
 
@@ -174,18 +175,19 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
         return itemDuality.getRequestedJobs();
     }
 
-    public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
+    public IAEItemStack injectCraftedItems(final ICraftingLink link, final IAEItemStack items, final Actionable mode) {
         return itemDuality.injectCraftedItems(link, items, mode);
     }
 
-    public void onCraftingJobStateChange(ICraftingLink link) {
+    public void onCraftingJobStateChange(final ICraftingLink link) {
         itemDuality.jobStateChange(link);
     }
 
     // serialization
 
     public void writeToNBT(final NBTTagCompound data) {
-        NBTTagCompound itemIfaceTag = new NBTTagCompound(), fluidIfaceTag = new NBTTagCompound();
+        final NBTTagCompound itemIfaceTag = new NBTTagCompound();
+        final NBTTagCompound fluidIfaceTag = new NBTTagCompound();
         itemDuality.writeToNBT(itemIfaceTag);
         fluidDuality.writeToNBT(fluidIfaceTag);
         data.setTag("itemDuality", itemIfaceTag);
@@ -197,8 +199,8 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
         fluidDuality.readFromNBT(data.getCompoundTag("fluidDuality"));
     }
 
-    public NBTTagCompound downloadSettings(SettingsFrom from) {
-        NBTTagCompound tag = new NBTTagCompound();
+    public NBTTagCompound downloadSettings(final SettingsFrom from) {
+        final NBTTagCompound tag = new NBTTagCompound();
         if (from == SettingsFrom.MEMORY_CARD) {
             final IItemHandler inv = this.getItemInventoryByName("item_patterns");
             if (inv instanceof AppEngInternalInventory) {
@@ -212,19 +214,18 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
         return tag;
     }
 
-    public void uploadSettings(NBTTagCompound compound, EntityPlayer player) {
+    public void uploadSettings(final NBTTagCompound compound, final EntityPlayer player) {
         final IItemHandler inv = this.getItemInventoryByName("item_patterns");
-        if (inv instanceof AppEngInternalInventory) {
-            final AppEngInternalInventory target = (AppEngInternalInventory) inv;
-            AppEngInternalInventory tmp = new AppEngInternalInventory(null, target.getSlots());
+        if (inv instanceof final AppEngInternalInventory target) {
+            final AppEngInternalInventory tmp = new AppEngInternalInventory(null, target.getSlots());
             tmp.readFromNBT(compound, "item_patterns");
-            PlayerMainInvWrapper playerInv = new PlayerMainInvWrapper(player.inventory);
+            final PlayerMainInvWrapper playerInv = new PlayerMainInvWrapper(player.inventory);
             final IMaterials materials = AEApi.instance().definitions().materials();
             int missingPatternsToEncode = 0;
 
             for (int i = 0; i < inv.getSlots(); i++) {
                 if (target.getStackInSlot(i).getItem() instanceof ItemEncodedPattern) {
-                    ItemStack blank = materials.blankPattern().maybeStack(target.getStackInSlot(i).getCount()).get();
+                    final ItemStack blank = materials.blankPattern().maybeStack(target.getStackInSlot(i).getCount()).orElse(ItemStack.EMPTY);
                     if (!player.addItemStackToInventory(blank)) {
                         player.dropItem(blank, true);
                     }
@@ -254,9 +255,8 @@ public class DualityDualInterface<H extends IInterfaceHost & IFluidInterfaceHost
             }
         }
         final IFluidHandler fluidInv = this.fluidDuality.getFluidInventoryByName("config");
-        if (fluidInv instanceof AEFluidInventory) {
-            AEFluidInventory target = (AEFluidInventory) fluidInv;
-            AEFluidInventory tmp = new AEFluidInventory(null, target.getSlots());
+        if (fluidInv instanceof final AEFluidInventory target) {
+            final AEFluidInventory tmp = new AEFluidInventory(null, target.getSlots());
             tmp.readFromNBT(compound, "fluid_config");
 
             for (int x = 0; x < tmp.getSlots(); x++) {

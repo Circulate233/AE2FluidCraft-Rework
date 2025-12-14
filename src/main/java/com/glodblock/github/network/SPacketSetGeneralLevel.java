@@ -19,19 +19,19 @@ public class SPacketSetGeneralLevel implements IMessage {
         //NO-OP
     }
 
-    public SPacketSetGeneralLevel(int id, int value) {
+    public SPacketSetGeneralLevel(final int id, final int value) {
         this.index = id;
         this.size = value;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         index = buf.readInt();
         size = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeInt(index);
         buf.writeInt(size);
     }
@@ -40,7 +40,7 @@ public class SPacketSetGeneralLevel implements IMessage {
 
         @Nullable
         @Override
-        public IMessage onMessage(SPacketSetGeneralLevel message, MessageContext ctx) {
+        public IMessage onMessage(final SPacketSetGeneralLevel message, final MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
                 if (gs instanceof GuiGeneralLevelMaintainer) {

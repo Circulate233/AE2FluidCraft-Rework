@@ -16,32 +16,32 @@ public class DummyInvAdaptor extends InventoryAdaptor {
     public static final DummyInvAdaptor INSTANCE = new DummyInvAdaptor();
 
     @Override
-    public ItemStack removeItems(int i, ItemStack itemStack, IInventoryDestination iInventoryDestination) {
+    public ItemStack removeItems(final int i, final ItemStack itemStack, final IInventoryDestination iInventoryDestination) {
         return itemStack;
     }
 
     @Override
-    public ItemStack simulateRemove(int i, ItemStack itemStack, IInventoryDestination iInventoryDestination) {
+    public ItemStack simulateRemove(final int i, final ItemStack itemStack, final IInventoryDestination iInventoryDestination) {
         return itemStack;
     }
 
     @Override
-    public ItemStack removeSimilarItems(int i, ItemStack itemStack, FuzzyMode fuzzyMode, IInventoryDestination iInventoryDestination) {
+    public ItemStack removeSimilarItems(final int i, final ItemStack itemStack, final FuzzyMode fuzzyMode, final IInventoryDestination iInventoryDestination) {
         return itemStack;
     }
 
     @Override
-    public ItemStack simulateSimilarRemove(int i, ItemStack itemStack, FuzzyMode fuzzyMode, IInventoryDestination iInventoryDestination) {
+    public ItemStack simulateSimilarRemove(final int i, final ItemStack itemStack, final FuzzyMode fuzzyMode, final IInventoryDestination iInventoryDestination) {
         return itemStack;
     }
 
     @Override
-    public ItemStack addItems(ItemStack itemStack) {
+    public ItemStack addItems(final ItemStack itemStack) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack simulateAdd(ItemStack itemStack) {
+    public ItemStack simulateAdd(final ItemStack itemStack) {
         return ItemStack.EMPTY;
     }
 

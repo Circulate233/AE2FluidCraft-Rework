@@ -14,12 +14,12 @@ import javax.annotation.Nullable;
 
 public class CubicFluidRender extends FluidStackRenderer {
 
-    public CubicFluidRender(int capacityMb, boolean showCapacity, int width, int height, @Nullable IDrawable overlay) {
+    public CubicFluidRender(final int capacityMb, final boolean showCapacity, final int width, final int height, @Nullable final IDrawable overlay) {
         super(capacityMb, showCapacity, width, height, overlay);
     }
 
     @Override
-    public void render(@Nonnull Minecraft minecraft, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
+    public void render(@Nonnull final Minecraft minecraft, final int xPosition, final int yPosition, @Nullable final FluidStack fluidStack) {
         if (fluidStack == null)
             return;
 
@@ -30,9 +30,9 @@ public class CubicFluidRender extends FluidStackRenderer {
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.5, 0.5, 1);
 
-        String s = ReadableNumberConverter.INSTANCE.toWideReadableForm(fluidStack.amount);
+        final String s = ReadableNumberConverter.INSTANCE.toWideReadableForm(fluidStack.amount);
 
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         fontRenderer.drawStringWithShadow(s, (xPosition + 6) * 2 - fontRenderer.getStringWidth(s) + 19, (yPosition + 11) * 2, 0xFFFFFF);
 
         GlStateManager.popMatrix();

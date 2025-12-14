@@ -17,7 +17,7 @@ public class ButtonMouseHandler implements MouseRegionManager.Handler {
     private final String tooltipKey;
     private final Runnable callback;
 
-    public ButtonMouseHandler(@Nullable String tooltipKey, Runnable callback) {
+    public ButtonMouseHandler(@Nullable final String tooltipKey, final Runnable callback) {
         this.tooltipKey = tooltipKey;
         this.callback = callback;
     }
@@ -29,7 +29,7 @@ public class ButtonMouseHandler implements MouseRegionManager.Handler {
     }
 
     @Override
-    public boolean onClick(int button) {
+    public boolean onClick(final int button) {
         if (button == 0) {
             callback.run();
             return true;
@@ -37,7 +37,7 @@ public class ButtonMouseHandler implements MouseRegionManager.Handler {
         return false;
     }
 
-    public static ButtonMouseHandler dumpTank(TankDumpable host, int index) {
+    public static ButtonMouseHandler dumpTank(final TankDumpable host, final int index) {
         return new ButtonMouseHandler(NameConst.TT_DUMP_TANK, () -> {
             if (host.canDumpTank(index)) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketDumpTank(index));

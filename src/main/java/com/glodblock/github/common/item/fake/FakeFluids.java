@@ -25,19 +25,19 @@ public final class FakeFluids {
                 new FakeItemHandler<FluidStack, IAEFluidStack>() {
 
                     @Override
-                    public FluidStack getStack(ItemStack stack) {
+                    public FluidStack getStack(final ItemStack stack) {
                         if (stack.isEmpty() || stack.getItem() != FCItems.FLUID_DROP || !stack.hasTagCompound()) {
                             return null;
                         }
-                        NBTTagCompound tag = Objects.requireNonNull(stack.getTagCompound());
+                        final NBTTagCompound tag = Objects.requireNonNull(stack.getTagCompound());
                         if (!tag.hasKey("Fluid", Constants.NBT.TAG_STRING)) {
                             return null;
                         }
-                        Fluid fluid = FluidRegistry.getFluid(tag.getString("Fluid"));
+                        final Fluid fluid = FluidRegistry.getFluid(tag.getString("Fluid"));
                         if (fluid == null) {
                             return null;
                         }
-                        FluidStack fluidStack = new FluidStack(fluid, stack.getCount());
+                        final FluidStack fluidStack = new FluidStack(fluid, stack.getCount());
                         if (tag.hasKey("FluidTag", Constants.NBT.TAG_COMPOUND)) {
                             fluidStack.tag = tag.getCompoundTag("FluidTag");
                         }
@@ -45,16 +45,16 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public FluidStack getStack(@Nullable IAEItemStack stack) {
+                    public FluidStack getStack(@Nullable final IAEItemStack stack) {
                         return stack == null ? null : getStack(stack.createItemStack());
                     }
 
                     @Override
-                    public IAEFluidStack getAEStack(ItemStack stack) {
+                    public IAEFluidStack getAEStack(final ItemStack stack) {
                         if (stack.isEmpty()) {
                             return null;
                         }
-                        IAEFluidStack fluidStack = AEFluidStack.fromFluidStack(getStack(stack));
+                        final IAEFluidStack fluidStack = AEFluidStack.fromFluidStack(getStack(stack));
                         if (fluidStack == null) {
                             return null;
                         }
@@ -63,11 +63,11 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public IAEFluidStack getAEStack(@Nullable IAEItemStack stack) {
+                    public IAEFluidStack getAEStack(@Nullable final IAEItemStack stack) {
                         if (stack == null) {
                             return null;
                         }
-                        IAEFluidStack fluidStack = AEFluidStack.fromFluidStack(getStack(stack.createItemStack()));
+                        final IAEFluidStack fluidStack = AEFluidStack.fromFluidStack(getStack(stack.createItemStack()));
                         if (fluidStack == null) {
                             return null;
                         }
@@ -76,12 +76,12 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public ItemStack packStack(FluidStack fluid) {
+                    public ItemStack packStack(final FluidStack fluid) {
                         if (fluid == null || fluid.amount <= 0) {
                             return ItemStack.EMPTY;
                         }
-                        ItemStack stack = new ItemStack(FCItems.FLUID_DROP, fluid.amount);
-                        NBTTagCompound tag = new NBTTagCompound();
+                        final ItemStack stack = new ItemStack(FCItems.FLUID_DROP, fluid.amount);
+                        final NBTTagCompound tag = new NBTTagCompound();
                         tag.setString("Fluid", fluid.getFluid().getName());
                         if (fluid.tag != null) {
                             tag.setTag("FluidTag", fluid.tag);
@@ -91,16 +91,16 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public ItemStack displayStack(FluidStack target) {
+                    public ItemStack displayStack(final FluidStack target) {
                         throw new UnsupportedOperationException();
                     }
 
                     @Override
-                    public IAEItemStack packAEStack(FluidStack fluid) {
+                    public IAEItemStack packAEStack(final FluidStack fluid) {
                         if (fluid == null || fluid.amount <= 0) {
                             return null;
                         }
-                        IAEItemStack stack = DropLookup.lookup(fluid, f -> AEItemStack.fromItemStack(packStack(f)));
+                        final IAEItemStack stack = DropLookup.lookup(fluid, f -> AEItemStack.fromItemStack(packStack(f)));
                         if (stack == null) {
                             return null;
                         }
@@ -109,11 +109,11 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public IAEItemStack packAEStackLong(IAEFluidStack fluid) {
+                    public IAEItemStack packAEStackLong(final IAEFluidStack fluid) {
                         if (fluid == null || fluid.getStackSize() <= 0) {
                             return null;
                         }
-                        IAEItemStack stack = DropLookup.lookup(fluid.getFluidStack(), f -> AEItemStack.fromItemStack(packStack(f)));
+                        final IAEItemStack stack = DropLookup.lookup(fluid.getFluidStack(), f -> AEItemStack.fromItemStack(packStack(f)));
                         if (stack == null) {
                             return null;
                         }
@@ -127,26 +127,26 @@ public final class FakeFluids {
                 new FakeItemHandler<FluidStack, IAEFluidStack>() {
 
                     @Override
-                    public FluidStack getStack(ItemStack stack) {
+                    public FluidStack getStack(final ItemStack stack) {
                         if (stack.isEmpty() || !stack.hasTagCompound()) {
                             return null;
                         }
-                        FluidStack fluid = FluidStack.loadFluidStackFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
+                        final FluidStack fluid = FluidStack.loadFluidStackFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
                         return (fluid != null && fluid.amount > 0) ? fluid : null;
                     }
 
                     @Override
-                    public FluidStack getStack(@Nullable IAEItemStack stack) {
+                    public FluidStack getStack(@Nullable final IAEItemStack stack) {
                         return stack != null ? getStack(stack.createItemStack()) : null;
                     }
 
                     @Override
-                    public IAEFluidStack getAEStack(ItemStack stack) {
+                    public IAEFluidStack getAEStack(final ItemStack stack) {
                         return getAEStack(AEItemStack.fromItemStack(stack));
                     }
 
                     @Override
-                    public IAEFluidStack getAEStack(@Nullable IAEItemStack stack) {
+                    public IAEFluidStack getAEStack(@Nullable final IAEItemStack stack) {
                         if (stack == null) {
                             return null;
                         }
@@ -154,13 +154,13 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public ItemStack packStack(FluidStack fluid) {
+                    public ItemStack packStack(final FluidStack fluid) {
                         if (fluid == null || fluid.amount == 0) {
                             return ItemStack.EMPTY;
                         }
-                        ItemStack stack = new ItemStack(FCItems.FLUID_PACKET);
-                        NBTTagCompound tag = new NBTTagCompound();
-                        NBTTagCompound fluidTag = new NBTTagCompound();
+                        final ItemStack stack = new ItemStack(FCItems.FLUID_PACKET);
+                        final NBTTagCompound tag = new NBTTagCompound();
+                        final NBTTagCompound fluidTag = new NBTTagCompound();
                         fluid.writeToNBT(fluidTag);
                         tag.setTag("FluidStack", fluidTag);
                         stack.setTagCompound(tag);
@@ -168,15 +168,15 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public ItemStack displayStack(FluidStack fluid) {
+                    public ItemStack displayStack(final FluidStack fluid) {
                         if (fluid == null) {
                             return ItemStack.EMPTY;
                         }
-                        FluidStack copy = fluid.copy();
+                        final FluidStack copy = fluid.copy();
                         copy.amount = 1000;
-                        ItemStack stack = new ItemStack(FCItems.FLUID_PACKET);
-                        NBTTagCompound tag = new NBTTagCompound();
-                        NBTTagCompound fluidTag = new NBTTagCompound();
+                        final ItemStack stack = new ItemStack(FCItems.FLUID_PACKET);
+                        final NBTTagCompound tag = new NBTTagCompound();
+                        final NBTTagCompound fluidTag = new NBTTagCompound();
                         copy.writeToNBT(fluidTag);
                         tag.setTag("FluidStack", fluidTag);
                         tag.setBoolean("DisplayOnly", true);
@@ -185,43 +185,43 @@ public final class FakeFluids {
                     }
 
                     @Override
-                    public IAEItemStack packAEStack(FluidStack target) {
+                    public IAEItemStack packAEStack(final FluidStack target) {
                         return AEItemStack.fromItemStack(packStack(target));
                     }
 
                     @Override
-                    public IAEItemStack packAEStackLong(IAEFluidStack target) {
+                    public IAEItemStack packAEStackLong(final IAEFluidStack target) {
                         return AEItemStack.fromItemStack(packStack(target.getFluidStack()));
                     }
                 }
         );
     }
 
-    public static boolean isFluidFakeItem(ItemStack stack) {
+    public static boolean isFluidFakeItem(final ItemStack stack) {
         return stack.getItem() == FCItems.FLUID_PACKET || stack.getItem() == FCItems.FLUID_DROP;
     }
 
-    public static ItemStack packFluid2Drops(@Nullable FluidStack stack) {
+    public static ItemStack packFluid2Drops(@Nullable final FluidStack stack) {
         return FakeItemRegister.packStack(stack, FCItems.FLUID_DROP);
     }
 
-    public static IAEItemStack packFluid2AEDrops(@Nullable FluidStack stack) {
+    public static IAEItemStack packFluid2AEDrops(@Nullable final FluidStack stack) {
         return FakeItemRegister.packAEStack(stack, FCItems.FLUID_DROP);
     }
 
-    public static IAEItemStack packFluid2AEDrops(@Nullable IAEFluidStack stack) {
+    public static IAEItemStack packFluid2AEDrops(@Nullable final IAEFluidStack stack) {
         return FakeItemRegister.packAEStackLong(stack, FCItems.FLUID_DROP);
     }
 
-    public static ItemStack packFluid2Packet(@Nullable FluidStack stack) {
+    public static ItemStack packFluid2Packet(@Nullable final FluidStack stack) {
         return FakeItemRegister.packStack(stack, FCItems.FLUID_PACKET);
     }
 
-    public static IAEItemStack packFluid2AEPacket(@Nullable FluidStack stack) {
+    public static IAEItemStack packFluid2AEPacket(@Nullable final FluidStack stack) {
         return FakeItemRegister.packAEStack(stack, FCItems.FLUID_PACKET);
     }
 
-    public static ItemStack displayFluid(@Nullable FluidStack stack) {
+    public static ItemStack displayFluid(@Nullable final FluidStack stack) {
         return FakeItemRegister.displayStack(stack, FCItems.FLUID_PACKET);
     }
 

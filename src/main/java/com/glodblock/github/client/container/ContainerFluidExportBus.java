@@ -10,12 +10,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 public class ContainerFluidExportBus extends ContainerFluidIO {
 
-    public ContainerFluidExportBus(InventoryPlayer ip, PartSharedFluidBus te) {
+    public ContainerFluidExportBus(final InventoryPlayer ip, final PartSharedFluidBus te) {
         super(ip, te);
     }
 
     @Override
-    protected void loadSettingsFromHost(IConfigManager cm) {
+    protected void loadSettingsFromHost(final IConfigManager cm) {
         super.loadSettingsFromHost(cm);
         if (this.getUpgradeable() instanceof PartFluidExportBus) {
             this.setCraftingMode((YesNo)cm.getSetting(Settings.CRAFT_ONLY));

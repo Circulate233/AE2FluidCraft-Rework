@@ -46,13 +46,13 @@ public class TileFluidPatternEncoder extends AEBaseTile implements IAEAppEngInve
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull final Capability<T> capability, @Nullable final EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) patternInv;
         } else {
@@ -61,13 +61,13 @@ public class TileFluidPatternEncoder extends AEBaseTile implements IAEAppEngInve
     }
 
     @Override
-    public void onChangeInventory(IItemHandler inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack) {
         // NO-OP
     }
 
     @Override
-    public void getDrops(World world, BlockPos pos, List<ItemStack> drops) {
-        for (ItemStack stack : patternInv) {
+    public void getDrops(final World world, final BlockPos pos, final List<ItemStack> drops) {
+        for (final ItemStack stack : patternInv) {
             if (!stack.isEmpty()) {
                 drops.add(stack);
             }
@@ -75,7 +75,7 @@ public class TileFluidPatternEncoder extends AEBaseTile implements IAEAppEngInve
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound data) {
+    public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
         patternInv.readFromNBT(data, "Inventory");
         crafting.readFromNbt(data, "CraftingSlots");
@@ -83,7 +83,7 @@ public class TileFluidPatternEncoder extends AEBaseTile implements IAEAppEngInve
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+    public NBTTagCompound writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
         patternInv.writeToNBT(data, "Inventory");
         crafting.writeToNbt(data, "CraftingSlots");

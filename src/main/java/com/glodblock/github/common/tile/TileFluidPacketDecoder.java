@@ -65,13 +65,13 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull final Capability<T> capability, @Nullable final EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T)inventory;
         } else {
@@ -81,26 +81,26 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
 
     @Override
     @Nonnull
-    public TickingRequest getTickingRequest(@Nonnull IGridNode node) {
+    public TickingRequest getTickingRequest(@Nonnull final IGridNode node) {
         return new TickingRequest(5, 120, false, true);
     }
 
     @Override
     @Nonnull
     @SuppressWarnings({"rawtypes"})
-    public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
-        ItemStack stack = inventory.getStackInSlot(0);
+    public TickRateModulation tickingRequest(@Nonnull final IGridNode node, final int ticksSinceLastCall) {
+        final ItemStack stack = inventory.getStackInSlot(0);
         if (stack.getItem() == FCItems.FLUID_PACKET) {
-            FluidStack fluid = FakeItemRegister.getStack(stack);
+            final FluidStack fluid = FakeItemRegister.getStack(stack);
             if (fluid == null || fluid.amount <= 0) {
                 inventory.setStackInSlot(0, ItemStack.EMPTY);
                 return TickRateModulation.SLEEP;
             }
-            IAEFluidStack aeFluid = AEFluidStack.fromFluidStack(fluid);
-            IEnergyGrid energyGrid = node.getGrid().getCache(IEnergyGrid.class);
-            IMEMonitor<IAEFluidStack> fluidGrid = node.getGrid().<IStorageGrid>getCache(IStorageGrid.class)
-                    .getInventory(Util.getFluidChannel());
-            IAEFluidStack remaining = Platform.poweredInsert(energyGrid, fluidGrid, aeFluid, ownActionSource);
+            final IAEFluidStack aeFluid = AEFluidStack.fromFluidStack(fluid);
+            final IEnergyGrid energyGrid = node.getGrid().getCache(IEnergyGrid.class);
+            final IMEMonitor<IAEFluidStack> fluidGrid = node.getGrid().<IStorageGrid>getCache(IStorageGrid.class)
+                                                            .getInventory(Util.getFluidChannel());
+            final IAEFluidStack remaining = Platform.poweredInsert(energyGrid, fluidGrid, aeFluid, ownActionSource);
             if (remaining != null) {
                 if (remaining.getStackSize() == aeFluid.getStackSize()) {
                     return TickRateModulation.SLOWER;
@@ -112,15 +112,15 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
                 return TickRateModulation.SLEEP;
             }
         } else if (ModAndClassUtil.GAS && stack.getItem() == FCGasItems.GAS_PACKET) {
-            GasStack gas = FakeItemRegister.getStack(stack);
+            final GasStack gas = FakeItemRegister.getStack(stack);
             if (gas == null || gas.getGas() == null || gas.amount <= 0) {
                 inventory.setStackInSlot(0, ItemStack.EMPTY);
                 return TickRateModulation.SLEEP;
             }
-            IAEStack aeGas = AEGasStack.of(gas);
-            IEnergyGrid energyGrid = node.getGrid().getCache(IEnergyGrid.class);
-            IMEMonitor gasGrid = node.getGrid().<IStorageGrid>getCache(IStorageGrid.class)
-                    .getInventory(AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class));
+            final IAEStack aeGas = AEGasStack.of(gas);
+            final IEnergyGrid energyGrid = node.getGrid().getCache(IEnergyGrid.class);
+            final IMEMonitor gasGrid = node.getGrid().<IStorageGrid>getCache(IStorageGrid.class)
+                                           .getInventory(AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class));
             IAEStack remaining = null;
             if (aeGas != null) {
                 remaining = Platform.poweredInsert(energyGrid, gasGrid, aeGas, ownActionSource);
@@ -140,23 +140,23 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
     }
 
     @Override
-    public void onChangeInventory(IItemHandler inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack) {
         try {
             getProxy().getTick().alertDevice(getProxy().getNode());
-        } catch (GridAccessException e) {
+        } catch (final GridAccessException e) {
             // NO-OP
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+    public NBTTagCompound writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
         inventory.writeToNBT(data, "Inventory");
         return data;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound data) {
+    public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
         inventory.readFromNBT(data, "Inventory");
     }

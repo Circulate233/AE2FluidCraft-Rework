@@ -16,7 +16,7 @@ public class TankMouseHandler implements MouseRegionManager.Handler {
     private final IAEFluidTank tank;
     private final int index;
 
-    public TankMouseHandler(IAEFluidTank tank, int index) {
+    public TankMouseHandler(final IAEFluidTank tank, final int index) {
         this.tank = tank;
         this.index = index;
     }
@@ -24,7 +24,7 @@ public class TankMouseHandler implements MouseRegionManager.Handler {
     @Nullable
     @Override
     public List<String> getTooltip() {
-        IAEFluidStack fluid = tank.getFluidInSlot(index);
+        final IAEFluidStack fluid = tank.getFluidInSlot(index);
         return Arrays.asList(
                 fluid != null ? fluid.getFluidStack().getLocalizedName() : I18n.format(NameConst.TT_EMPTY),
                 TextFormatting.GRAY + String.format("%,d / %,d mB",

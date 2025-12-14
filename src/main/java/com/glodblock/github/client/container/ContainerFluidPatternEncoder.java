@@ -38,11 +38,11 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
 
     private final TileFluidPatternEncoder tile;
 
-    public ContainerFluidPatternEncoder(InventoryPlayer ipl, TileFluidPatternEncoder tile) {
+    public ContainerFluidPatternEncoder(final InventoryPlayer ipl, final TileFluidPatternEncoder tile) {
         super(ipl, tile);
         this.tile = tile;
-        AeItemStackHandler crafting = new AeItemStackHandler(tile.getCraftingSlots());
-        AeItemStackHandler output = new AeItemStackHandler(tile.getOutputSlots());
+        final AeItemStackHandler crafting = new AeItemStackHandler(tile.getCraftingSlots());
+        final AeItemStackHandler output = new AeItemStackHandler(tile.getOutputSlots());
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 addSlotToContainer(new SlotFluidConvertingFake(crafting, y * 3 + x, 23 + x * 18, 17 + y * 18));
@@ -66,14 +66,14 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
         }
         find_input:
         {
-            for (IAEItemStack stack : tile.getCraftingSlots()) {
+            for (final IAEItemStack stack : tile.getCraftingSlots()) {
                 if (stack != null && stack.getStackSize() > 0) {
                     break find_input;
                 }
             }
             return false;
         }
-        for (IAEItemStack stack : tile.getOutputSlots()) {
+        for (final IAEItemStack stack : tile.getOutputSlots()) {
             if (stack != null && stack.getStackSize() > 0) {
                 return true;
             }
@@ -81,7 +81,7 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
         return false;
     }
 
-    private static boolean isNotPattern(ItemStack stack) {
+    private static boolean isNotPattern(final ItemStack stack) {
         return stack.isEmpty() || !(AEApi.instance().definitions().materials().blankPattern().isSameAs(stack)
             || (stack.getItem() instanceof ItemFluidEncodedPattern));
     }
@@ -92,8 +92,8 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
             if (tile.getInventory().getStackInSlot(1).isEmpty()) {
                 tile.getInventory().extractItem(0, 1, false); // this better work
             }
-            ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
-            FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
+            final ItemStack patternStack = new ItemStack(FCItems.DENSE_ENCODED_PATTERN);
+            final FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
             pattern.setInputs(collectAeInventory(tile.getCraftingSlots()));
             pattern.setOutputs(collectAeInventory(tile.getOutputSlots()));
             pattern.setEncoder(this.getInventoryPlayer().player.getGameProfile());
@@ -101,10 +101,10 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
         }
     }
 
-    private static IAEItemStack[] collectAeInventory(AeStackInventory<IAEItemStack> inv) {
+    private static IAEItemStack[] collectAeInventory(final AeStackInventory<IAEItemStack> inv) {
         // see note at top of DensePatternDetails
-        List<IAEItemStack> acc = new ArrayList<>();
-        for (IAEItemStack stack : inv) {
+        final List<IAEItemStack> acc = new ArrayList<>();
+        for (final IAEItemStack stack : inv) {
             if (stack != null) {
                 acc.add(stack);
             }
@@ -114,8 +114,8 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
 
     // adapted from ae2's AEBaseContainer#doAction
     @Override
-    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
-        Slot slot = getSlot(slotId);
+    public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slotId, final long id) {
+        final Slot slot = getSlot(slotId);
         if (slot instanceof SlotFluidConvertingFake) {
             final ItemStack stack = player.inventory.getItemStack();
             switch (action) {
@@ -132,7 +132,7 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
                     }
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
-                    ItemStack inSlot = slot.getStack();
+                    final ItemStack inSlot = slot.getStack();
                     if (!inSlot.isEmpty()) {
                         if (stack.isEmpty()) {
                             slot.putStack(ItemHandlerHelper.copyStackWithSize(inSlot, Math.max(1, inSlot.getCount() - 1)));
@@ -153,16 +153,16 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
     }
 
     @Override
-    public void acceptPattern(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
-        AeStackInventory<IAEItemStack> craftingSlot = tile.getCraftingSlots();
-        AeStackInventory<IAEItemStack> outputSlot = tile.getOutputSlots();
-        for (int index : inputs.keySet()) {
-            ItemStack[] items = inputs.get(index);
+    public void acceptPattern(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
+        final AeStackInventory<IAEItemStack> craftingSlot = tile.getCraftingSlots();
+        final AeStackInventory<IAEItemStack> outputSlot = tile.getOutputSlots();
+        for (final int index : inputs.keySet()) {
+            final ItemStack[] items = inputs.get(index);
             if (index < craftingSlot.getSlotCount() && items.length > 0) {
                 craftingSlot.setStack(index, AEItemStack.fromItemStack(items[0]));
             }
         }
-        int bound = Math.min(outputSlot.getSlotCount(), outputs.size());
+        final int bound = Math.min(outputSlot.getSlotCount(), outputs.size());
         for (int index = 0; index < bound; index++) {
             outputSlot.setStack(index, AEItemStack.fromItemStack(outputs.get(index)));
         }
@@ -172,42 +172,42 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
 
         private final AeStackInventory<IAEItemStack> inv;
 
-        public SlotFluidConvertingFake(AeItemStackHandler inv, int idx, int x, int y) {
+        public SlotFluidConvertingFake(final AeItemStackHandler inv, final int idx, final int x, final int y) {
             super(inv, idx, x, y);
             this.inv = inv.getAeInventory();
         }
 
         @Override
-        public void putStack(ItemStack stack) {
+        public void putStack(final ItemStack stack) {
             inv.setStack(getSlotIndex(), AEItemStack.fromItemStack(stack));
         }
 
         @Override
-        public void setAeStack(@Nullable IAEItemStack stack, boolean sync) {
+        public void setAeStack(@Nullable final IAEItemStack stack, final boolean sync) {
             inv.setStack(getSlotIndex(), stack);
         }
 
-        public void putConvertedStack(ItemStack stack) {
+        public void putConvertedStack(final ItemStack stack) {
             if (stack.isEmpty()) {
                 setAeStack(null, false);
                 return;
             } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-                IFluidTankProperties[] tanks = Objects.requireNonNull(
+                final IFluidTankProperties[] tanks = Objects.requireNonNull(
                                                           stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
-                                                      .getTankProperties();
-                for (IFluidTankProperties tank : tanks) {
-                    IAEItemStack aeStack = FakeFluids.packFluid2AEDrops(tank.getContents());
+                                                            .getTankProperties();
+                for (final IFluidTankProperties tank : tanks) {
+                    final IAEItemStack aeStack = FakeFluids.packFluid2AEDrops(tank.getContents());
                     if (aeStack != null) {
                         setAeStack(aeStack, false);
                         return;
                     }
                 }
             } else if (ModAndClassUtil.GAS && stack.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, null)) {
-                GasTankInfo[] tanks = Objects.requireNonNull(
+                final GasTankInfo[] tanks = Objects.requireNonNull(
                                                  stack.getCapability(Capabilities.GAS_HANDLER_CAPABILITY, null))
-                                             .getTankInfo();
-                for (GasTankInfo tank : tanks) {
-                    IAEItemStack aeStack = FakeGases.packGas2AEDrops(tank.getGas());
+                                                   .getTankInfo();
+                for (final GasTankInfo tank : tanks) {
+                    final IAEItemStack aeStack = FakeGases.packGas2AEDrops(tank.getGas());
                     if (aeStack != null) {
                         setAeStack(aeStack, false);
                         return;

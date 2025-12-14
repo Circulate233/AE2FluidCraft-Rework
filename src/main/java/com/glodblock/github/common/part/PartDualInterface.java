@@ -73,7 +73,6 @@ public class PartDualInterface extends PartBasicState
     public static final PartModel MODELS_ON = new PartModel(MODELS[0], MODELS[1]);
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS[0], MODELS[3]);
 
-    @SuppressWarnings("unchecked")
     protected final DualityDualInterface<PartDualInterface> duality = createDuality();
 
     @Reflected
@@ -136,7 +135,7 @@ public class PartDualInterface extends PartBasicState
     }
 
     @Override
-    public float getCableConnectionLength(AECableType cable) {
+    public float getCableConnectionLength(final AECableType cable) {
         return 4;
     }
 
@@ -153,7 +152,7 @@ public class PartDualInterface extends PartBasicState
     @Override
     public boolean onPartActivate(final EntityPlayer p, final EnumHand hand, final Vec3d pos) {
         if (Platform.isServer()) {
-            TileEntity tile = getTileEntity();
+            final TileEntity tile = getTileEntity();
             InventoryHandler.openGui(p, tile.getWorld(), tile.getPos(), getSide().getFacing(), GuiType.DUAL_ITEM_INTERFACE);
         }
         return true;
@@ -183,12 +182,12 @@ public class PartDualInterface extends PartBasicState
     }
 
     @Override
-    public void onStackReturnNetwork(IAEFluidStack stack) {
+    public void onStackReturnNetwork(final IAEFluidStack stack) {
         this.duality.getItemInterface().onStackReturnedToNetwork(FakeFluids.packFluid2AEDrops(stack));
     }
 
     @Override
-    public void onStackReturnNetwork(IAEItemStack stack) {
+    public void onStackReturnNetwork(final IAEItemStack stack) {
         this.duality.getItemInterface().onStackReturnedToNetwork(stack);
     }
 
@@ -253,13 +252,13 @@ public class PartDualInterface extends PartBasicState
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capabilityClass) {
+    public boolean hasCapability(final Capability<?> capabilityClass) {
         return duality.hasCapability(capabilityClass, getSide().getFacing());
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capabilityClass) {
+    public <T> T getCapability(final Capability<T> capabilityClass) {
         return duality.getCapability(capabilityClass, getSide().getFacing());
     }
 
@@ -286,15 +285,15 @@ public class PartDualInterface extends PartBasicState
     }
 
     @Override
-    public NBTTagCompound downloadSettings(SettingsFrom from) {
-        NBTTagCompound pre = super.downloadSettings(from);
-        NBTTagCompound tag = pre == null ? new NBTTagCompound() : pre;
+    public NBTTagCompound downloadSettings(final SettingsFrom from) {
+        final NBTTagCompound pre = super.downloadSettings(from);
+        final NBTTagCompound tag = pre == null ? new NBTTagCompound() : pre;
         tag.setTag("pattern", this.duality.downloadSettings(from));
         return tag.isEmpty() ? null : tag;
     }
 
     @Override
-    public void uploadSettings(SettingsFrom from, NBTTagCompound compound, EntityPlayer player) {
+    public void uploadSettings(final SettingsFrom from, final NBTTagCompound compound, final EntityPlayer player) {
         super.uploadSettings(from, compound, player);
         if (compound.hasKey("pattern")) {
             this.duality.uploadSettings(compound.getCompoundTag("pattern"), player);
@@ -302,8 +301,8 @@ public class PartDualInterface extends PartBasicState
     }
 
     @Override
-    public void onNeighborChanged(IBlockAccess w, BlockPos pos, BlockPos neighbor) {
-        TileEntity tileEntity = getTileEntity();
+    public void onNeighborChanged(final IBlockAccess w, final BlockPos pos, final BlockPos neighbor) {
+        final TileEntity tileEntity = getTileEntity();
         if (tileEntity instanceof IInterfaceHost) {
             ((IInterfaceHost) tileEntity).getInterfaceDuality().updateRedstoneState();
         }

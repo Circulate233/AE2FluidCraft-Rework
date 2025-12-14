@@ -21,14 +21,13 @@ import javax.annotation.Nonnull;
 import java.awt.Rectangle;
 import java.io.IOException;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class FluidPacketTarget implements IGhostIngredientHandler.Target<Object> {
 
     private final int left;
     private final int top;
     private final Slot slot;
 
-    public FluidPacketTarget(int guiLeft, int guiTop, Slot slot) {
+    public FluidPacketTarget(final int guiLeft, final int guiTop, final Slot slot) {
         this.left = guiLeft;
         this.top = guiTop;
         this.slot = slot;
@@ -41,7 +40,7 @@ public class FluidPacketTarget implements IGhostIngredientHandler.Target<Object>
     }
 
     @Override
-    public void accept(@Nonnull Object ingredient) {
+    public void accept(@Nonnull final Object ingredient) {
         IAEItemStack packet = null;
         if (Mouse.getEventButton() == 0 || !(ingredient instanceof ItemStack)) {
             final FluidStack fluid = covertFluid(ingredient);
@@ -54,9 +53,8 @@ public class FluidPacketTarget implements IGhostIngredientHandler.Target<Object>
                 }
             }
         }
-        if (ingredient instanceof ItemStack s) {
+        if (ingredient instanceof final ItemStack s) {
             if (packet == null) {
-                if (s.isEmpty()) return;
                 packet = AEItemStack.fromItemStack(s);
             }
         }
@@ -64,12 +62,12 @@ public class FluidPacketTarget implements IGhostIngredientHandler.Target<Object>
         if (packet == null) return;
         try {
             NetworkHandler.instance().sendToServer(new PacketInventoryAction(InventoryAction.PLACE_JEI_GHOST_ITEM, (SlotFake) slot, packet));
-        } catch (IOException ignored) {
+        } catch (final IOException ignored) {
 
         }
     }
 
-    public static FluidStack covertFluid(Object ingredient) {
+    public static FluidStack covertFluid(final Object ingredient) {
         if (ingredient instanceof FluidStack) {
             return (FluidStack) ingredient;
         } else if (ingredient instanceof ItemStack) {
@@ -78,7 +76,7 @@ public class FluidPacketTarget implements IGhostIngredientHandler.Target<Object>
         return null;
     }
 
-    public static Object covertGas(Object ingredient) {
+    public static Object covertGas(final Object ingredient) {
         if (ModAndClassUtil.GAS) {
             if (ingredient instanceof GasStack) {
                 return ingredient;

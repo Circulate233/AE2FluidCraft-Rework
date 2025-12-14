@@ -26,15 +26,15 @@ public class FakeGases {
                 new FakeItemHandler<GasStack, IAEGasStack>() {
 
                     @Override
-                    public GasStack getStack(ItemStack stack) {
+                    public GasStack getStack(final ItemStack stack) {
                         if (stack.isEmpty() || stack.getItem() != FCGasItems.GAS_DROP || !stack.hasTagCompound()) {
                             return null;
                         }
-                        NBTTagCompound tag = Objects.requireNonNull(stack.getTagCompound());
+                        final NBTTagCompound tag = Objects.requireNonNull(stack.getTagCompound());
                         if (!tag.hasKey("Gas", Constants.NBT.TAG_STRING)) {
                             return null;
                         }
-                        Gas gas = GasRegistry.getGas(tag.getString("Gas"));
+                        final Gas gas = GasRegistry.getGas(tag.getString("Gas"));
                         if (gas == null) {
                             return null;
                         }
@@ -42,52 +42,53 @@ public class FakeGases {
                     }
 
                     @Override
-                    public GasStack getStack(@Nullable IAEItemStack stack) {
+                    public GasStack getStack(@Nullable final IAEItemStack stack) {
                         return stack == null ? null : getStack(stack.createItemStack());
                     }
 
                     @Override
-                    public IAEGasStack getAEStack(ItemStack stack) {
+                    public IAEGasStack getAEStack(final ItemStack stack) {
                         return getAEStack(AEItemStack.fromItemStack(stack));
                     }
 
                     @Override
-                    public IAEGasStack getAEStack(@Nullable IAEItemStack stack) {
+                    public IAEGasStack getAEStack(@Nullable final IAEItemStack stack) {
                         if (stack == null) {
                             return null;
                         }
-                        GasStack gas = getStack(stack.createItemStack());
+                        final GasStack gas = getStack(stack.createItemStack());
                         if (gas == null || gas.getGas() == null) {
                             return null;
                         }
-                        IAEGasStack gasStack = AEGasStack.of(gas);
+                        final IAEGasStack gasStack = AEGasStack.of(gas);
+                        if (gasStack == null) return null;
                         gasStack.setStackSize(stack.getStackSize());
                         return gasStack;
                     }
 
                     @Override
-                    public ItemStack packStack(GasStack gas) {
+                    public ItemStack packStack(final GasStack gas) {
                         if (gas == null || gas.amount <= 0) {
                             return ItemStack.EMPTY;
                         }
-                        ItemStack stack = new ItemStack(FCGasItems.GAS_DROP, gas.amount);
-                        NBTTagCompound tag = new NBTTagCompound();
+                        final ItemStack stack = new ItemStack(FCGasItems.GAS_DROP, gas.amount);
+                        final NBTTagCompound tag = new NBTTagCompound();
                         tag.setString("Gas", gas.getGas().getName());
                         stack.setTagCompound(tag);
                         return stack;
                     }
 
                     @Override
-                    public ItemStack displayStack(GasStack target) {
+                    public ItemStack displayStack(final GasStack target) {
                         throw new UnsupportedOperationException();
                     }
 
                     @Override
-                    public IAEItemStack packAEStack(GasStack gas) {
+                    public IAEItemStack packAEStack(final GasStack gas) {
                         if (gas == null || gas.amount <= 0) {
                             return null;
                         }
-                        IAEItemStack stack = AEItemStack.fromItemStack(packStack(gas));
+                        final IAEItemStack stack = AEItemStack.fromItemStack(packStack(gas));
                         if (stack == null) {
                             return null;
                         }
@@ -96,11 +97,11 @@ public class FakeGases {
                     }
 
                     @Override
-                    public IAEItemStack packAEStackLong(IAEGasStack gas) {
+                    public IAEItemStack packAEStackLong(final IAEGasStack gas) {
                         if (gas == null || gas.getStackSize() <= 0) {
                             return null;
                         }
-                        IAEItemStack stack = AEItemStack.fromItemStack(packStack(new GasStack(gas.getGas(), 1)));
+                        final IAEItemStack stack = AEItemStack.fromItemStack(packStack(new GasStack(gas.getGas(), 1)));
                         if (stack == null) {
                             return null;
                         }
@@ -113,30 +114,30 @@ public class FakeGases {
                 ItemGasPacket.class,
                 new FakeItemHandler<GasStack, IAEGasStack>() {
                     @Override
-                    public GasStack getStack(ItemStack stack) {
+                    public GasStack getStack(final ItemStack stack) {
                         if (stack.isEmpty() || !stack.hasTagCompound()) {
                             return null;
                         }
-                        GasStack gas = GasStack.readFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("GasStack"));
+                        final GasStack gas = GasStack.readFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("GasStack"));
                         return (gas != null && gas.amount > 0) ? gas : null;
                     }
 
                     @Override
-                    public GasStack getStack(@Nullable IAEItemStack stack) {
+                    public GasStack getStack(@Nullable final IAEItemStack stack) {
                         return stack != null ? getStack(stack.createItemStack()) : null;
                     }
 
                     @Override
-                    public IAEGasStack getAEStack(ItemStack stack) {
+                    public IAEGasStack getAEStack(final ItemStack stack) {
                         return getAEStack(AEItemStack.fromItemStack(stack));
                     }
 
                     @Override
-                    public IAEGasStack getAEStack(@Nullable IAEItemStack stack) {
+                    public IAEGasStack getAEStack(@Nullable final IAEItemStack stack) {
                         if (stack == null) {
                             return null;
                         }
-                        GasStack gas = getStack(stack.createItemStack());
+                        final GasStack gas = getStack(stack.createItemStack());
                         if (gas == null || gas.getGas() == null) {
                             return null;
                         }
@@ -144,13 +145,13 @@ public class FakeGases {
                     }
 
                     @Override
-                    public ItemStack packStack(GasStack gas) {
+                    public ItemStack packStack(final GasStack gas) {
                         if (gas == null || gas.amount == 0) {
                             return ItemStack.EMPTY;
                         }
-                        ItemStack stack = new ItemStack(FCGasItems.GAS_PACKET);
-                        NBTTagCompound tag = new NBTTagCompound();
-                        NBTTagCompound fluidTag = new NBTTagCompound();
+                        final ItemStack stack = new ItemStack(FCGasItems.GAS_PACKET);
+                        final NBTTagCompound tag = new NBTTagCompound();
+                        final NBTTagCompound fluidTag = new NBTTagCompound();
                         gas.write(fluidTag);
                         tag.setTag("GasStack", fluidTag);
                         stack.setTagCompound(tag);
@@ -158,15 +159,15 @@ public class FakeGases {
                     }
 
                     @Override
-                    public ItemStack displayStack(GasStack gas) {
+                    public ItemStack displayStack(final GasStack gas) {
                         if (gas == null) {
                             return ItemStack.EMPTY;
                         }
-                        GasStack copy = gas.copy();
+                        final GasStack copy = gas.copy();
                         copy.amount = 1000;
-                        ItemStack stack = new ItemStack(FCGasItems.GAS_PACKET);
-                        NBTTagCompound tag = new NBTTagCompound();
-                        NBTTagCompound fluidTag = new NBTTagCompound();
+                        final ItemStack stack = new ItemStack(FCGasItems.GAS_PACKET);
+                        final NBTTagCompound tag = new NBTTagCompound();
+                        final NBTTagCompound fluidTag = new NBTTagCompound();
                         copy.write(fluidTag);
                         tag.setTag("GasStack", fluidTag);
                         tag.setBoolean("DisplayOnly", true);
@@ -175,43 +176,43 @@ public class FakeGases {
                     }
 
                     @Override
-                    public IAEItemStack packAEStack(GasStack target) {
+                    public IAEItemStack packAEStack(final GasStack target) {
                         return AEItemStack.fromItemStack(packStack(target));
                     }
 
                     @Override
-                    public IAEItemStack packAEStackLong(IAEGasStack target) {
+                    public IAEItemStack packAEStackLong(final IAEGasStack target) {
                         return AEItemStack.fromItemStack(packStack(target.getGasStack()));
                     }
                 }
         );
     }
 
-    public static boolean isGasFakeItem(ItemStack stack) {
+    public static boolean isGasFakeItem(final ItemStack stack) {
         return stack.getItem() == FCGasItems.GAS_DROP || stack.getItem() == FCGasItems.GAS_PACKET;
     }
 
-    public static ItemStack packGas2Drops(@Nullable GasStack stack) {
+    public static ItemStack packGas2Drops(@Nullable final GasStack stack) {
         return FakeItemRegister.packStack(stack, FCGasItems.GAS_DROP);
     }
 
-    public static IAEItemStack packGas2AEDrops(@Nullable GasStack stack) {
+    public static IAEItemStack packGas2AEDrops(@Nullable final GasStack stack) {
         return FakeItemRegister.packAEStack(stack, FCGasItems.GAS_DROP);
     }
 
-    public static IAEItemStack packGas2AEDrops(@Nullable IAEGasStack stack) {
+    public static IAEItemStack packGas2AEDrops(@Nullable final IAEGasStack stack) {
         return FakeItemRegister.packAEStackLong(stack, FCGasItems.GAS_DROP);
     }
 
-    public static ItemStack packGas2Packet(@Nullable GasStack stack) {
+    public static ItemStack packGas2Packet(@Nullable final GasStack stack) {
         return FakeItemRegister.packStack(stack, FCGasItems.GAS_PACKET);
     }
 
-    public static IAEItemStack packGas2AEPacket(@Nullable GasStack stack) {
+    public static IAEItemStack packGas2AEPacket(@Nullable final GasStack stack) {
         return FakeItemRegister.packAEStack(stack, FCGasItems.GAS_PACKET);
     }
 
-    public static ItemStack displayGas(@Nullable GasStack stack) {
+    public static ItemStack displayGas(@Nullable final GasStack stack) {
         return FakeItemRegister.displayStack(stack, FCGasItems.GAS_PACKET);
     }
 

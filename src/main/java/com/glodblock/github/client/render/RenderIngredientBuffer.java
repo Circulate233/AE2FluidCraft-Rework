@@ -21,7 +21,7 @@ public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngred
     private static final double d = 0.45D;
 
     @Override
-    public void render(TileIngredientBuffer tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(final TileIngredientBuffer tile, final double x, final double y, final double z, final float partialTicks, final int destroyStage, final float alpha) {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableLighting();
@@ -29,26 +29,26 @@ public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngred
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
         bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        IItemHandler inv = tile.getInternalInventory();
+        final IItemHandler inv = tile.getInternalInventory();
         for (int i = 0; i < inv.getSlots(); i++) {
-            ItemStack stack = inv.getStackInSlot(i);
+            final ItemStack stack = inv.getStackInSlot(i);
             if (!stack.isEmpty()) {
                 GlStateManager.pushMatrix();
-                float scale = stack.getItem() instanceof ItemBlock ? 0.36F : 0.64F;
+                final float scale = stack.getItem() instanceof ItemBlock ? 0.36F : 0.64F;
                 GlStateManager.scale(scale, scale, scale);
                 GlStateManager.rotate((getWorld().getTotalWorldTime() + partialTicks) * 6F, 0F, 1F, 0F);
-                RenderItem renderer = Minecraft.getMinecraft().getRenderItem();
+                final RenderItem renderer = Minecraft.getMinecraft().getRenderItem();
                 renderer.renderItem(stack, renderer.getItemModelWithOverrides(stack, getWorld(), null));
                 GlStateManager.popMatrix();
                 break;
             }
         }
 
-        for (IFluidTankProperties tank : tile.getFluidInventory().getTankProperties()) {
-            TextureAtlasSprite fluidSprite = FluidRenderUtils.prepareRender(tank.getContents());
+        for (final IFluidTankProperties tank : tile.getFluidInventory().getTankProperties()) {
+            final TextureAtlasSprite fluidSprite = FluidRenderUtils.prepareRender(tank.getContents());
             if (fluidSprite != null) {
-                Tessellator tess = Tessellator.getInstance();
-                BufferBuilder buf = tess.getBuffer();
+                final Tessellator tess = Tessellator.getInstance();
+                final BufferBuilder buf = tess.getBuffer();
                 // not necessarily the most efficient way to draw a cube, but probably the least tedious
                 GlStateManager.pushMatrix();
                 drawFace(tess, buf, fluidSprite);
@@ -69,7 +69,7 @@ public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngred
         GlStateManager.popMatrix();
     }
 
-    private static void drawFace(Tessellator tess, BufferBuilder buf, TextureAtlasSprite sprite) {
+    private static void drawFace(final Tessellator tess, final BufferBuilder buf, final TextureAtlasSprite sprite) {
         buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         buf.pos(-d, d, -d).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
         buf.pos(-d, d, d).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();

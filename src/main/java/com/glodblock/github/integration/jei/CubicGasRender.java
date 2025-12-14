@@ -14,12 +14,12 @@ import javax.annotation.Nullable;
 
 public class CubicGasRender extends GasStackRenderer {
 
-    public CubicGasRender(int capacityMb, boolean showCapacity, int width, int height, @Nullable IDrawable overlay) {
+    public CubicGasRender(final int capacityMb, final boolean showCapacity, final int width, final int height, @Nullable final IDrawable overlay) {
         super(capacityMb, showCapacity, width, height, overlay);
     }
 
     @Override
-    public void render(@Nonnull Minecraft minecraft, final int xPosition, final int yPosition, @Nullable GasStack gasStack) {
+    public void render(@Nonnull final Minecraft minecraft, final int xPosition, final int yPosition, @Nullable final GasStack gasStack) {
         if (gasStack == null)
             return;
 
@@ -30,9 +30,9 @@ public class CubicGasRender extends GasStackRenderer {
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.5, 0.5, 1);
 
-        String s = ReadableNumberConverter.INSTANCE.toWideReadableForm(gasStack.amount);
+        final String s = ReadableNumberConverter.INSTANCE.toWideReadableForm(gasStack.amount);
 
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         fontRenderer.drawStringWithShadow(s, (xPosition + 6) * 2 - fontRenderer.getStringWidth(s) + 19, (yPosition + 11) * 2, 0xFFFFFF);
 
         GlStateManager.popMatrix();

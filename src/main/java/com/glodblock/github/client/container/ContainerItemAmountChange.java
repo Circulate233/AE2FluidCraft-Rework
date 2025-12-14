@@ -30,11 +30,11 @@ public class ContainerItemAmountChange extends AEBaseContainer {
         return valueIndex;
     }
 
-    public void setValueIndex(int valueIndex) {
+    public void setValueIndex(final int valueIndex) {
         this.valueIndex = valueIndex;
     }
 
-    public void setInitValue(long value) {
+    public void setInitValue(final long value) {
         this.initValue = value;
     }
 

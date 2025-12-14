@@ -30,23 +30,23 @@ public class FluidCraft {
     public static Logger log;
 
     @Mod.EventHandler
-    public void onPreInit(FMLPreInitializationEvent event) {
+    public void onPreInit(final FMLPreInitializationEvent event) {
         log = event.getModLog();
         ModAndClassUtil.init();
         proxy.preInit(event);
     }
 
     @Mod.EventHandler
-    public void onInit(FMLInitializationEvent event) {
+    public void onInit(final FMLInitializationEvent event) {
         proxy.init(event);
     }
 
     @Mod.EventHandler
-    public void onPostInit(FMLPostInitializationEvent event) {
+    public void onPostInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
     }
 
-    public static ResourceLocation resource(String path) {
+    public static ResourceLocation resource(final String path) {
         return new ResourceLocation(MODID, path);
     }
 

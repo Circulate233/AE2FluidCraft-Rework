@@ -24,7 +24,7 @@ public class MixinContainerCraftConfirm {
     private ArrayList<CraftingCPURecord> cpus;
 
     @Inject(method = "startJob", at = @At("HEAD"), cancellable = true)
-    public void startJob(CallbackInfo ci) {
+    public void startJob(final CallbackInfo ci) {
         if (CoreModHooks.startJob((ContainerCraftConfirm) (Object) this, this.cpus, this.result)) {
             ci.cancel();
         }

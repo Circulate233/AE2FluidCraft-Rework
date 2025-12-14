@@ -25,7 +25,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     private String encoderName = "";
     private String encoderID = "";
 
-    public FluidPatternDetails(ItemStack stack) {
+    public FluidPatternDetails(final ItemStack stack) {
         this.patternStack = stack;
         this.patternStackAe = Objects.requireNonNull(AEItemStack.fromItemStack(stack)); // s2g
     }
@@ -41,7 +41,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     }
 
     @Override
-    public void setPriority(int priority) {
+    public void setPriority(final int priority) {
         this.priority = priority;
     }
 
@@ -65,13 +65,13 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         return checkInitialized(inputsCond);
     }
 
-    public boolean setInputs(IAEItemStack[] inputs) {
-        for (IAEItemStack stack : inputs) { // see note at top of class
+    public boolean setInputs(final IAEItemStack[] inputs) {
+        for (final IAEItemStack stack : inputs) { // see note at top of class
             if (stack == null) {
                 return false;
             }
         }
-        IAEItemStack[] condensed = condenseStacks(inputs);
+        final IAEItemStack[] condensed = condenseStacks(inputs);
         if (condensed.length == 0) {
             return false;
         }
@@ -80,7 +80,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         return true;
     }
 
-    public void setEncoder(GameProfile profile) {
+    public void setEncoder(final GameProfile profile) {
         this.encoderName = profile.getName();
         this.encoderID = profile.getId().toString();
     }
@@ -95,13 +95,13 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         return checkInitialized(outputsCond);
     }
 
-    public boolean setOutputs(IAEItemStack[] outputs) {
-        for (IAEItemStack stack : outputs) { // see note at top of class
+    public boolean setOutputs(final IAEItemStack[] outputs) {
+        for (final IAEItemStack stack : outputs) { // see note at top of class
             if (stack == null) {
                 return false;
             }
         }
-        IAEItemStack[] condensed = condenseStacks(outputs);
+        final IAEItemStack[] condensed = condenseStacks(outputs);
         if (condensed.length == 0) {
             return false;
         }
@@ -110,13 +110,13 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         return true;
     }
 
-    public static IAEItemStack[] condenseStacks(IAEItemStack[] stacks) {
+    public static IAEItemStack[] condenseStacks(final IAEItemStack[] stacks) {
         // AE item stacks are equivalent iff they are of the same item type (not accounting for stack size)
         // thus, it's not the semantically-correct definition of "equal" but it's useful for matching item types
-        Map<IAEItemStack, IAEItemStack> accMap = new HashMap<>();
-        for (IAEItemStack stack : stacks) {
+        final Map<IAEItemStack, IAEItemStack> accMap = new HashMap<>();
+        for (final IAEItemStack stack : stacks) {
             if (stack != null) {
-                IAEItemStack acc = accMap.get(stack);
+                final IAEItemStack acc = accMap.get(stack);
                 if (acc == null) {
                     accMap.put(stack, stack.copy());
                 } else {
@@ -128,16 +128,16 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     }
 
     @Override
-    public ItemStack getOutput(InventoryCrafting craftingInv, World world) {
+    public ItemStack getOutput(final InventoryCrafting craftingInv, final World world) {
         throw new IllegalStateException("Not a crafting recipe!");
     }
 
     @Override
-    public boolean isValidItemForSlot(int slotIndex, ItemStack itemStack, World world) {
+    public boolean isValidItemForSlot(final int slotIndex, final ItemStack itemStack, final World world) {
         throw new IllegalStateException("Not a crafting recipe!");
     }
 
-    private static <T> T checkInitialized(@Nullable T value) {
+    private static <T> T checkInitialized(@Nullable final T value) {
         if (value == null) {
             throw new IllegalStateException("Pattern is not initialized!");
         }
@@ -150,7 +150,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         // ae2 null-checks the pattern stack here for some reason, but doesn't null-check in hashCode()
         // this is inconsistent, so i've just decided to assert non-null in the constructor, which is to say that
         // the pattern stack can never be null here
@@ -158,12 +158,12 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     }
 
     @Override
-    public int compareTo(ICraftingPatternDetails o) {
+    public int compareTo(final ICraftingPatternDetails o) {
         return Integer.compare(o.getPriority(), this.priority);
     }
 
     public ItemStack writeToStack() {
-        NBTTagCompound tag = new NBTTagCompound();
+        final NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("Inputs", writeStackArray(checkInitialized(inputs)));
         tag.setTag("Outputs", writeStackArray(checkInitialized(outputs)));
         //horrible shit.
@@ -182,12 +182,12 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         return patternStack;
     }
 
-    public static NBTTagList writeStackArray(IAEItemStack[] stacks) {
-        NBTTagList listTag = new NBTTagList();
-        for (IAEItemStack stack : stacks) {
+    public static NBTTagList writeStackArray(final IAEItemStack[] stacks) {
+        final NBTTagList listTag = new NBTTagList();
+        for (final IAEItemStack stack : stacks) {
             if (stack != null) {
                 // see note at top of class
-                NBTTagCompound stackTag = new NBTTagCompound();
+                final NBTTagCompound stackTag = new NBTTagCompound();
                 stack.writeToNBT(stackTag);
                 listTag.appendTag(stackTag);
             }
@@ -199,7 +199,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         if (!patternStack.hasTagCompound()) {
             return false;
         }
-        NBTTagCompound tag = Objects.requireNonNull(patternStack.getTagCompound());
+        final NBTTagCompound tag = Objects.requireNonNull(patternStack.getTagCompound());
         this.encoderName = tag.getString("encoderName");
         this.encoderName = tag.getString("encoderID");
         // may be possible to enter a partially-correct state if setInputs succeeds but setOutputs failed
@@ -208,9 +208,9 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
                 && setOutputs(readStackArray(tag.getTagList("Outputs", Constants.NBT.TAG_COMPOUND), 100));
     }
 
-    public static IAEItemStack[] readStackArray(NBTTagList listTag, int maxCount) {
+    public static IAEItemStack[] readStackArray(final NBTTagList listTag, final int maxCount) {
         // see note at top of class
-        IAEItemStack[] stacks = new IAEItemStack[Math.min(listTag.tagCount(), maxCount)];
+        final IAEItemStack[] stacks = new IAEItemStack[Math.min(listTag.tagCount(), maxCount)];
         for (int i = 0; i < stacks.length; i++) {
             stacks[i] = AEItemStack.fromNBT(listTag.getCompoundTagAt(i));
         }

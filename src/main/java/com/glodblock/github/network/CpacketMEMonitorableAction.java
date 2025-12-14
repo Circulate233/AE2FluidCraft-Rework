@@ -51,19 +51,19 @@ public class CpacketMEMonitorableAction implements IMessage {
     public CpacketMEMonitorableAction() {
     }
 
-    public CpacketMEMonitorableAction(byte b, NBTTagCompound s) {
+    public CpacketMEMonitorableAction(final byte b, final NBTTagCompound s) {
         type = b;
         obj = s;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         type = buf.readByte();
         obj = ByteBufUtils.readTag(buf);
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeByte(type);
         ByteBufUtils.writeTag(buf, obj);
     }
@@ -71,23 +71,23 @@ public class CpacketMEMonitorableAction implements IMessage {
     public static class Handler implements IMessageHandler<CpacketMEMonitorableAction, IMessage> {
 
         @Override
-        public IMessage onMessage(CpacketMEMonitorableAction message, MessageContext ctx) {
+        public IMessage onMessage(final CpacketMEMonitorableAction message, final MessageContext ctx) {
             final var player = ctx.getServerHandler().player;
             final var c = player.openContainer;
             final IStorageGrid grid;
             final IActionSource source;
-            if (c instanceof ContainerMEMonitorable cme) {
+            if (c instanceof final ContainerMEMonitorable cme) {
                 grid = cme.getNetworkNode().getGrid().getCache(IStorageGrid.class);
                 source = new PlayerSource(player, (IActionHost) cme.getTarget());
-            } else if (ModAndClassUtil.TCE && c instanceof ContainerBaseTerminal cbt) {
+            } else if (ModAndClassUtil.TCE && c instanceof final ContainerBaseTerminal cbt) {
                 grid = cbt.getPart().getGridNode().getGrid().getCache(IStorageGrid.class);
                 source = new PlayerSource(player, cbt.getPart());
             } else return null;
 
             boolean drain = false;
-            var h = player.inventory.getItemStack();
+            final var h = player.inventory.getItemStack();
             if (!h.isEmpty()) {
-                ItemStack ch = h.copy();
+                final ItemStack ch = h.copy();
                 ch.setCount(1);
                 if (message.type == FLUID) {
                     final IFluidHandlerItem fh = FluidUtil.getFluidHandler(ch);
@@ -126,7 +126,7 @@ public class CpacketMEMonitorableAction implements IMessage {
                         player.inventory.placeItemBackInInventory(player.world, cc);
                     } else player.inventory.setItemStack(fh.getContainer());
                     updateHeld(player);
-                } else if (ModAndClassUtil.GAS && message.type == GAS && h.getItem() instanceof IGasItem ig) {
+                } else if (ModAndClassUtil.GAS && message.type == GAS && h.getItem() instanceof final IGasItem ig) {
                     mek$Work(message, ig, ch, grid, source, h, player);
                 }
             } else if (message.type == FLUID_OPERATE) {
@@ -135,25 +135,25 @@ public class CpacketMEMonitorableAction implements IMessage {
                 }
                 final FluidStack fluid;
                 if (!message.obj.isEmpty()) {
-                    var i = new ItemStack(message.obj);
+                    final var i = new ItemStack(message.obj);
                     fluid = FakeItemRegister.getStack(i);
                     if (fluid == null) return null;
                     fluid.amount = 1000;
                 } else return null;
-                boolean shift = message.obj.getBoolean("shift");
+                final boolean shift = message.obj.getBoolean("shift");
                 final var itemStorage = grid.getInventory(Util.getItemChannel());
                 final var fluidStorage = grid.getInventory(Util.getFluidChannel());
-                var b = itemStorage.extractItems(bucket, Actionable.SIMULATE, source);
+                final var b = itemStorage.extractItems(bucket, Actionable.SIMULATE, source);
                 if (b == null) return null;
                 final var aeFluid = fluidStorage.extractItems(AEFluidStack.fromFluidStack(fluid), Actionable.SIMULATE, source);
                 if (aeFluid == null || aeFluid.getStackSize() < 1000) return null;
                 final IFluidHandlerItem fh = FluidUtil.getFluidHandler(b.createItemStack());
                 if (fh == null) return null;
-                var s = fh.fill(aeFluid.getFluidStack(), true);
+                final var s = fh.fill(aeFluid.getFluidStack(), true);
                 if (s != 1000) return null;
-                var out = fh.getContainer();
+                final var out = fh.getContainer();
                 if (shift) {
-                    var slot = player.inventory.getFirstEmptyStack();
+                    final var slot = player.inventory.getFirstEmptyStack();
                     if (slot == -1) return null;
                     player.inventory.setInventorySlotContents(slot, out);
                 } else {
@@ -168,7 +168,7 @@ public class CpacketMEMonitorableAction implements IMessage {
 
         @Unique
         @Optional.Method(modid = "mekeng")
-        private void mek$Work(CpacketMEMonitorableAction message, IGasItem ig, ItemStack ch, IStorageGrid grid, IActionSource source, ItemStack h, EntityPlayerMP player) {
+        private void mek$Work(final CpacketMEMonitorableAction message, final IGasItem ig, final ItemStack ch, final IStorageGrid grid, final IActionSource source, final ItemStack h, final EntityPlayerMP player) {
             boolean drain = false;
             final var allGas = ig.getGas(ch);
             final var allAmount = allGas == null ? 0 : allGas.amount;
@@ -182,7 +182,7 @@ public class CpacketMEMonitorableAction implements IMessage {
                 } else drain = true;
             } else drain = true;
             final var gasStorage = grid.getInventory(Util.getGasChannel());
-            AEGasStack allAEGas;
+            final AEGasStack allAEGas;
             if (drain) {
                 allAEGas = AEGasStack.of(allGas);
                 if (allAEGas == null) return;
@@ -208,11 +208,11 @@ public class CpacketMEMonitorableAction implements IMessage {
             updateHeld(player);
         }
 
-        private void updateHeld(EntityPlayerMP p) {
+        private void updateHeld(final EntityPlayerMP p) {
             if (Platform.isServer()) {
                 try {
                     NetworkHandler.instance().sendTo(new PacketInventoryAction(InventoryAction.UPDATE_HAND, 0, AEItemStack.fromItemStack(p.inventory.getItemStack())), p);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     AELog.debug(e);
                 }
             }

@@ -2,8 +2,6 @@ package com.glodblock.github.integration.jei;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.container.ContainerUltimateEncoder;
-import com.glodblock.github.common.part.PartExtendedFluidPatternTerminal;
-import com.glodblock.github.common.tile.TileUltimateEncoder;
 import com.glodblock.github.network.CPacketLoadPattern;
 import com.glodblock.github.util.NameConst;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -28,14 +26,14 @@ public class UltimateEncoderRecipeTransferHandler implements IRecipeTransferHand
 
     @Nullable
     @Override
-    public IRecipeTransferError transferRecipe(@Nonnull ContainerUltimateEncoder container, @Nonnull IRecipeLayout recipeLayout,
-                                               @Nonnull EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
+    public IRecipeTransferError transferRecipe(@Nonnull final ContainerUltimateEncoder container, @Nonnull final IRecipeLayout recipeLayout,
+                                               @Nonnull final EntityPlayer player, final boolean maxTransfer, final boolean doTransfer) {
         if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
             return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_CRAFTING_RECIPE_ONLY));
         }
 
         if (doTransfer && container.getEncoder() != null) {
-            RecipeTransferBuilder transfer = new RecipeTransferBuilder(
+            final RecipeTransferBuilder transfer = new RecipeTransferBuilder(
                     recipeLayout)
                     .putFluidFirst(container.fluidFirst)
                     .clearEmptySlot(true)

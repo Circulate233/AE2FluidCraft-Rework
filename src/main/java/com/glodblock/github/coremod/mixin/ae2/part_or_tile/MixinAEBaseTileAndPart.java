@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinAEBaseTileAndPart {
 
     @Inject(method = "uploadSettings", at = @At("HEAD"))
-    public void onUploadSettings(SettingsFrom from, NBTTagCompound compound, EntityPlayer player, CallbackInfo ci) {
+    public void onUploadSettings(final SettingsFrom from, final NBTTagCompound compound, final EntityPlayer player, final CallbackInfo ci) {
         if (this instanceof IInterfaceHost && compound != null && compound.hasKey("extraNBTData")) {
-            FCDualityInterface dual = (FCDualityInterface) ((IInterfaceHost) this).getInterfaceDuality();
-            NBTTagCompound extra = compound.getCompoundTag("extraNBTData");
+            final FCDualityInterface dual = (FCDualityInterface) ((IInterfaceHost) this).getInterfaceDuality();
+            final NBTTagCompound extra = compound.getCompoundTag("extraNBTData");
             dual.setAllowSplitting(extra.getBoolean("allowSplitting"));
             dual.setBlockModeEx(extra.getInteger("blockModeEx"));
             dual.setFluidPacket(extra.getBoolean("fluidPacket"));
@@ -29,10 +29,10 @@ public class MixinAEBaseTileAndPart {
     }
 
     @Inject(method = "downloadSettings", at = @At(value = "RETURN"))
-    public void onDownloadSettings(SettingsFrom from, CallbackInfoReturnable<NBTTagCompound> cir, @Local(name = "output") NBTTagCompound output) {
+    public void onDownloadSettings(final SettingsFrom from, final CallbackInfoReturnable<NBTTagCompound> cir, @Local(name = "output") final NBTTagCompound output) {
         if (this instanceof IInterfaceHost) {
-            FCDualityInterface dual = (FCDualityInterface) ((IInterfaceHost) this).getInterfaceDuality();
-            NBTTagCompound extra = new NBTTagCompound();
+            final FCDualityInterface dual = (FCDualityInterface) ((IInterfaceHost) this).getInterfaceDuality();
+            final NBTTagCompound extra = new NBTTagCompound();
             extra.setBoolean("fluidPacket", dual.isFluidPacket());
             extra.setBoolean("allowSplitting", dual.isAllowSplitting());
             extra.setInteger("blockModeEx", dual.getBlockModeEx());

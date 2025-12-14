@@ -22,9 +22,9 @@ import javax.annotation.Nonnull;
 public class FCJeiPlugin implements IModPlugin {
 
     @Override
-    public void registerCategories(@Nonnull IRecipeCategoryRegistration registry) {
+    public void registerCategories(@Nonnull final IRecipeCategoryRegistration registry) {
         if (ModAndClassUtil.DY) {
-            IJeiHelpers helpers = registry.getJeiHelpers();
+            final IJeiHelpers helpers = registry.getJeiHelpers();
             JeiHelper.makeSlotDrawable(helpers.getGuiHelper());
             registry.addRecipeCategories(
                     new FluidPatternCategory(helpers),
@@ -34,7 +34,7 @@ public class FCJeiPlugin implements IModPlugin {
     }
 
     @Override
-    public void register(@Nonnull IModRegistry registry) {
+    public void register(@Nonnull final IModRegistry registry) {
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(
                 new FluidPatternEncoderRecipeTransferHandler(), Constants.UNIVERSAL_RECIPE_TRANSFER_UID);
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(

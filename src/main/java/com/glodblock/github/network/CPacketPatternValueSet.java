@@ -29,7 +29,7 @@ public class CPacketPatternValueSet implements IMessage {
         //NO-OP
     }
 
-    public CPacketPatternValueSet(Enum<?> originalGui, int amount, int valueIndex, boolean isFC) {
+    public CPacketPatternValueSet(final Enum<?> originalGui, final int amount, final int valueIndex, final boolean isFC) {
         this.originGui = originalGui;
         this.amount = amount;
         this.valueIndex = valueIndex;
@@ -37,7 +37,7 @@ public class CPacketPatternValueSet implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeBoolean(isFC);
         buf.writeInt(originGui.ordinal());
         buf.writeInt(amount);
@@ -45,7 +45,7 @@ public class CPacketPatternValueSet implements IMessage {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         this.isFC = buf.readBoolean();
         this.originGui = isFC ? GuiType.getByOrdinal(buf.readInt()) : GuiBridge.values()[buf.readInt()];
         this.amount = buf.readInt();
@@ -55,10 +55,10 @@ public class CPacketPatternValueSet implements IMessage {
     public static class Handler implements IMessageHandler<CPacketPatternValueSet, IMessage> {
 
         @Override
-        public IMessage onMessage(CPacketPatternValueSet message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
+        public IMessage onMessage(final CPacketPatternValueSet message, final MessageContext ctx) {
+            final EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
-                if (player.openContainer instanceof ContainerItemAmountChange cpv) {
+                if (player.openContainer instanceof final ContainerItemAmountChange cpv) {
                     final ContainerOpenContext context = cpv.getOpenContext();
                     if (context != null) {
                         if (message.isFC) {
@@ -78,10 +78,10 @@ public class CPacketPatternValueSet implements IMessage {
                             );
                         }
                         if (player.openContainer instanceof FCFluidPatternContainer) {
-                            Slot slot = player.openContainer.getSlot(message.valueIndex);
+                            final Slot slot = player.openContainer.getSlot(message.valueIndex);
                             if (slot instanceof SlotFake) {
                                 if (slot.getHasStack()) {
-                                    ItemStack stack = slot.getStack().copy();
+                                    final ItemStack stack = slot.getStack().copy();
                                     stack.setCount(message.amount);
                                     slot.putStack(stack);
                                 }

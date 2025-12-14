@@ -20,7 +20,7 @@ public class ContainerItemDualInterface extends ContainerInterface {
     public int blockModeEx = 0;
     private final DualityInterface dualityInterfaceCopy;
 
-    public ContainerItemDualInterface(InventoryPlayer ip, IInterfaceHost te) {
+    public ContainerItemDualInterface(final InventoryPlayer ip, final IInterfaceHost te) {
         super(ip, te);
         this.dualityInterfaceCopy = te.getInterfaceDuality();
     }
@@ -35,24 +35,24 @@ public class ContainerItemDualInterface extends ContainerInterface {
         }
     }
 
-    public void setFluidPacketInTile(boolean value) {
+    public void setFluidPacketInTile(final boolean value) {
         this.fluidPacket = value;
         ((FCDualityInterface) dualityInterfaceCopy).setFluidPacket(value);
     }
 
-    public void setAllowSplittingInTile(boolean value) {
+    public void setAllowSplittingInTile(final boolean value) {
         this.allowSplitting = value;
         ((FCDualityInterface) dualityInterfaceCopy).setAllowSplitting(value);
     }
 
-    public void setExtendedBlockMode(int value) {
+    public void setExtendedBlockMode(final int value) {
         this.blockModeEx = value;
         ((FCDualityInterface) dualityInterfaceCopy).setBlockModeEx(value);
     }
 
     @Override
     protected void setupUpgrades() {
-        IItemHandler upgrades = this.getUpgradeable().getInventoryByName("item_upgrades");
+        final IItemHandler upgrades = this.getUpgradeable().getInventoryByName("item_upgrades");
         if (this.availableUpgrades() > 0) {
             this.addSlotToContainer((new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 0, 187, 8, this.getInventoryPlayer())).setNotDraggable());
         }

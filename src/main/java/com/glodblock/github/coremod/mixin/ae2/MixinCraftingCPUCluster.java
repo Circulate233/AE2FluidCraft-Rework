@@ -49,7 +49,7 @@ public abstract class MixinCraftingCPUCluster {
     protected abstract IGrid getGrid();
 
     @Redirect(method = "executeCrafting", at = @At(value = "INVOKE", target = "Lappeng/api/storage/data/IAEItemStack;getStackSize()J", ordinal = 0))
-    private long getFluidSize(IAEItemStack instance) {
+    private long getFluidSize(final IAEItemStack instance) {
         if (instance.getDefinition() != null && !instance.getDefinition().isEmpty()) {
             if (instance.getDefinition().getItem() == FCItems.FLUID_DROP) {
                 return (long) Math.max(instance.getStackSize() / 1000D, 1);
@@ -68,7 +68,7 @@ public abstract class MixinCraftingCPUCluster {
             remap = true
         )
     )
-    private InventoryCrafting wrapInventoryCrafting(Container container, int i, int ii, Operation<InventoryCrafting> original) {
+    private InventoryCrafting wrapInventoryCrafting(final Container container, final int i, final int ii, final Operation<InventoryCrafting> original) {
         return CoreModHooks.wrapCraftingBuffer(container, i, ii);
     }
 
@@ -80,7 +80,7 @@ public abstract class MixinCraftingCPUCluster {
             remap = true
         )
     )
-    private ItemStack redirectGetStackInSlot(InventoryCrafting inventory, int slot) {
+    private ItemStack redirectGetStackInSlot(final InventoryCrafting inventory, final int slot) {
         return CoreModHooks.removeFluidPackets(inventory, slot);
     }
 
@@ -91,7 +91,7 @@ public abstract class MixinCraftingCPUCluster {
             target = "Lappeng/crafting/MECraftingInventory;injectItems(Lappeng/api/storage/data/IAEItemStack;Lappeng/api/config/Actionable;Lappeng/api/networking/security/IActionSource;)Lappeng/api/storage/data/IAEItemStack;"
         )
     )
-    private IAEItemStack wrapFromItemStack(MECraftingInventory instance, IAEItemStack input, Actionable mode, IActionSource src, Operation<IAEItemStack> original) {
+    private IAEItemStack wrapFromItemStack(final MECraftingInventory instance, final IAEItemStack input, final Actionable mode, final IActionSource src, final Operation<IAEItemStack> original) {
         return original.call(instance, CoreModHooks.wrapFluidPacketStack(input), mode, src);
     }
 
@@ -102,7 +102,7 @@ public abstract class MixinCraftingCPUCluster {
             target = "Lappeng/me/cluster/implementations/CraftingCPUCluster;storeItems()V"
         )
     )
-    private void redirectStoreItems(CraftingCPUCluster instance) {
+    private void redirectStoreItems(final CraftingCPUCluster instance) {
         Preconditions.checkState(this.isComplete, "CPU should be complete to prevent re-insertion when dumping items");
         final IGrid g = this.getGrid();
 
@@ -121,27 +121,27 @@ public abstract class MixinCraftingCPUCluster {
             kk = null;
         }
 
-        for (IAEItemStack is : inventory.getItemList()) {
+        for (final IAEItemStack is : inventory.getItemList()) {
             this.postChange(is, this.machineSrc);
 
             if (is.getItem() == FCItems.FLUID_DROP) {
-                IAEFluidStack drop = FakeItemRegister.getAEStack(is);
-                IAEFluidStack fluidRemainder = jj.injectItems(drop, Actionable.MODULATE, this.machineSrc);
+                final IAEFluidStack drop = FakeItemRegister.getAEStack(is);
+                final IAEFluidStack fluidRemainder = jj.injectItems(drop, Actionable.MODULATE, this.machineSrc);
                 if (fluidRemainder != null) {
                     is.setStackSize(fluidRemainder.getStackSize());
                 } else {
                     is.reset();
                 }
             } else if (ModAndClassUtil.GAS && is.getItem() == FCGasItems.GAS_DROP && kk != null) {
-                IAEStack drop = FakeItemRegister.getAEStack(is);
-                IAEStack gasRemainder = kk.injectItems(drop, Actionable.MODULATE, this.machineSrc);
+                final IAEStack drop = FakeItemRegister.getAEStack(is);
+                final IAEStack gasRemainder = kk.injectItems(drop, Actionable.MODULATE, this.machineSrc);
                 if (gasRemainder != null) {
                     is.setStackSize(gasRemainder.getStackSize());
                 } else {
                     is.reset();
                 }
             } else {
-                IAEItemStack remainder = ii.injectItems(is.copy(), Actionable.MODULATE, this.machineSrc);
+                final IAEItemStack remainder = ii.injectItems(is.copy(), Actionable.MODULATE, this.machineSrc);
                 if (remainder != null) {
                     is.setStackSize(remainder.getStackSize());
                 } else {

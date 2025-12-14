@@ -25,14 +25,14 @@ import javax.annotation.Nullable;
 public class FluidRenderUtils {
 
     @Nullable
-    public static TextureAtlasSprite prepareRender(@Nullable FluidStack fluidStack) {
+    public static TextureAtlasSprite prepareRender(@Nullable final FluidStack fluidStack) {
         if (fluidStack == null) {
             return null;
         }
-        Fluid fluid = fluidStack.getFluid();
-        TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks()
-                .getAtlasSprite(fluid.getStill(fluidStack).toString());
-        int colour = fluid.getColor(fluidStack);
+        final Fluid fluid = fluidStack.getFluid();
+        final TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks()
+                                                   .getAtlasSprite(fluid.getStill(fluidStack).toString());
+        final int colour = fluid.getColor(fluidStack);
         GlStateManager.color(
                 ((colour >> 16) & 0xFF) / 255F,
                 ((colour >> 8) & 0xFF) / 255F,
@@ -41,17 +41,21 @@ public class FluidRenderUtils {
         return sprite;
     }
 
-    public static void doRenderFluid(Tessellator tess, BufferBuilder buf, int x, int y, int width, int height,
-                                      TextureAtlasSprite sprite, double fraction) {
+    public static void doRenderFluid(final Tessellator tess, final BufferBuilder buf, final int x, final int y, final int width, final int height,
+                                     final TextureAtlasSprite sprite, final double fraction) {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(
                 GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         int fluidHeight = Math.round(height * (float)Math.min(1D, Math.max(0D, fraction)));
-        double x2 = x + width;
+        final double x2 = x + width;
         while (fluidHeight > 0) {
             buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            double y1 = y + height - fluidHeight, y2 = y1 + Math.min(fluidHeight, width);
-            double u1 = sprite.getMinU(), v1 = sprite.getMinV(), u2 = sprite.getMaxU(), v2 = sprite.getMaxV();
+            final double y1 = y + height - fluidHeight;
+            final double y2 = y1 + Math.min(fluidHeight, width);
+            final double u1 = sprite.getMinU();
+            final double v1 = sprite.getMinV();
+            final double u2 = sprite.getMaxU();
+            double v2 = sprite.getMaxV();
             if (fluidHeight < width) {
                 v2 = v1 + (v2 - v1) * (fluidHeight / (double)width);
                 fluidHeight = 0;
@@ -68,44 +72,44 @@ public class FluidRenderUtils {
         GlStateManager.disableBlend();
     }
 
-    public static void renderFluidIntoGui(Tessellator tess, BufferBuilder buf, int x, int y, int width, int height,
-                                          @Nullable IAEFluidStack aeFluidStack, int capacity) {
+    public static void renderFluidIntoGui(final Tessellator tess, final BufferBuilder buf, final int x, final int y, final int width, final int height,
+                                          @Nullable final IAEFluidStack aeFluidStack, final int capacity) {
         if (aeFluidStack != null) {
-            TextureAtlasSprite sprite = FluidRenderUtils.prepareRender(aeFluidStack.getFluidStack());
+            final TextureAtlasSprite sprite = FluidRenderUtils.prepareRender(aeFluidStack.getFluidStack());
             if (sprite != null) {
                 doRenderFluid(tess, buf, x, y, width, height, sprite, aeFluidStack.getStackSize() / (double)capacity);
             }
         }
     }
 
-    public static void renderFluidIntoGui(Tessellator tess, BufferBuilder buf, int x, int y, int width, int height,
-                                          @Nullable FluidStack fluidStack, int capacity) {
+    public static void renderFluidIntoGui(final Tessellator tess, final BufferBuilder buf, final int x, final int y, final int width, final int height,
+                                          @Nullable final FluidStack fluidStack, final int capacity) {
         if (fluidStack != null) {
-            TextureAtlasSprite sprite = FluidRenderUtils.prepareRender(fluidStack);
+            final TextureAtlasSprite sprite = FluidRenderUtils.prepareRender(fluidStack);
             if (sprite != null) {
                 doRenderFluid(tess, buf, x, y, width, height, sprite, fluidStack.amount / (double)capacity);
             }
         }
     }
 
-    public static void renderFluidIntoGuiCleanly(int x, int y, int width, int height,
-                                                 @Nullable IAEFluidStack aeFluidStack, int capacity) {
+    public static void renderFluidIntoGuiCleanly(final int x, final int y, final int width, final int height,
+                                                 @Nullable final IAEFluidStack aeFluidStack, final int capacity) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Tessellator tess = Tessellator.getInstance();
+        final Tessellator tess = Tessellator.getInstance();
         renderFluidIntoGui(tess, tess.getBuffer(), x, y, width, height, aeFluidStack, capacity);
         GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
-    public static void renderFluidIntoGuiCleanly(int x, int y, int width, int height,
-                                                 @Nullable FluidStack fluidStack, int capacity) {
+    public static void renderFluidIntoGuiCleanly(final int x, final int y, final int width, final int height,
+                                                 @Nullable final FluidStack fluidStack, final int capacity) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Tessellator tess = Tessellator.getInstance();
+        final Tessellator tess = Tessellator.getInstance();
         renderFluidIntoGui(tess, tess.getBuffer(), x, y, width, height, fluidStack, capacity);
         GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
-    public static boolean renderFluidIntoGuiSlot(Slot slot, @Nullable FluidStack fluid,
-                                                 StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+    public static boolean renderFluidIntoGuiSlot(final Slot slot, @Nullable final FluidStack fluid,
+                                                 final StackSizeRenderer stackSizeRenderer, final FontRenderer fontRenderer) {
         if (fluid == null || fluid.amount <= 0) {
             return false;
         }
@@ -114,14 +118,14 @@ public class FluidRenderUtils {
         return true;
     }
 
-    public static boolean renderFluidPacketIntoGuiSlot(Slot slot, @Nullable IAEItemStack stack,
-                                                       StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+    public static boolean renderFluidPacketIntoGuiSlot(final Slot slot, @Nullable final IAEItemStack stack,
+                                                       final StackSizeRenderer stackSizeRenderer, final FontRenderer fontRenderer) {
         return stack != null && stack.getItem() instanceof ItemFluidPacket
                 && renderFluidIntoGuiSlot(slot, FakeItemRegister.getStack(stack), stackSizeRenderer, fontRenderer);
     }
 
-    public static boolean renderFluidPacketIntoGuiSlot(Slot slot, ItemStack stack,
-                                                       StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+    public static boolean renderFluidPacketIntoGuiSlot(final Slot slot, final ItemStack stack,
+                                                       final StackSizeRenderer stackSizeRenderer, final FontRenderer fontRenderer) {
         return !stack.isEmpty() && stack.getItem() instanceof ItemFluidPacket
                 && renderFluidIntoGuiSlot(slot, FakeItemRegister.getStack(stack), stackSizeRenderer, fontRenderer);
     }

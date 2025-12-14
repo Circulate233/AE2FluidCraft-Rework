@@ -23,11 +23,11 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
     private GuiTabButton originalGuiBtn;
     private final ITerminalHost part;
 
-    public GuiFluidPatternTerminalCraftingStatus(InventoryPlayer inventoryPlayer, ITerminalHost te) {
+    public GuiFluidPatternTerminalCraftingStatus(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te);
         this.part = te;
         if (te instanceof WirelessTerminalGuiObject) {
-            ItemStack tool = ((WirelessTerminalGuiObject) te).getItemStack();
+            final ItemStack tool = ((WirelessTerminalGuiObject) te).getItemStack();
             if (tool.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                 Ae2ReflectClient.setIconItem(this, new ItemStack(FCItems.WIRELESS_FLUID_PATTERN_TERMINAL));
             }
@@ -50,7 +50,7 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
     protected void actionPerformed(final GuiButton btn) throws IOException {
         if (btn == originalGuiBtn) {
             if (part instanceof WirelessTerminalGuiObject) {
-                ItemStack tool = ((WirelessTerminalGuiObject) part).getItemStack();
+                final ItemStack tool = ((WirelessTerminalGuiObject) part).getItemStack();
                 if (tool.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                     InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
                 } else super.actionPerformed(btn);

@@ -23,10 +23,10 @@ public class GuiFCCraftConfirm extends GuiCraftConfirm {
     private GuiButton cancel;
     private GuiType originGui;
 
-    public GuiFCCraftConfirm(InventoryPlayer inventoryPlayer, ITerminalHost te) {
+    public GuiFCCraftConfirm(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te);
         this.inventorySlots = new ContainerFCCraftConfirm(inventoryPlayer, te);
-        ContainerCraftConfirm ccc = (ContainerCraftConfirm) this.inventorySlots;
+        final ContainerCraftConfirm ccc = (ContainerCraftConfirm) this.inventorySlots;
         ccc.setGui(this);
         Ae2ReflectClient.writeCraftConfirmContainer(this, ccc);
     }
@@ -35,9 +35,9 @@ public class GuiFCCraftConfirm extends GuiCraftConfirm {
     public void initGui() {
         super.initGui();
         this.cancel = Ae2ReflectClient.getCraftConfirmBackButton(this);
-        Object te = ((AEBaseContainer)this.inventorySlots).getTarget();
+        final Object te = ((AEBaseContainer)this.inventorySlots).getTarget();
         if (te instanceof WirelessTerminalGuiObject) {
-            ItemStack tool = ((WirelessTerminalGuiObject) te).getItemStack();
+            final ItemStack tool = ((WirelessTerminalGuiObject) te).getItemStack();
             if (tool.getItem() == FCItems.WIRELESS_FLUID_PATTERN_TERMINAL) {
                 this.originGui = GuiType.WIRELESS_FLUID_PATTERN_TERMINAL;
             }
@@ -51,7 +51,7 @@ public class GuiFCCraftConfirm extends GuiCraftConfirm {
     }
 
     @Override
-    protected void actionPerformed(GuiButton btn) throws IOException {
+    protected void actionPerformed(final GuiButton btn) throws IOException {
         if (btn == this.cancel && this.originGui != null) {
             InventoryHandler.switchGui(this.originGui);
             return;

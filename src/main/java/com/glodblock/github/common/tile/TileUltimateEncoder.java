@@ -47,7 +47,7 @@ public class TileUltimateEncoder extends AEBaseInvTile implements ITerminalHost 
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound data) {
+    public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
         this.craft.readFromNBT(data.getCompoundTag("craft"));
         this.output.readFromNBT(data.getCompoundTag("output"));
@@ -65,11 +65,11 @@ public class TileUltimateEncoder extends AEBaseInvTile implements ITerminalHost 
         return data;
     }
 
-    public void onChangeCrafting(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
+    public void onChangeCrafting(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
         Util.clearItemInventory(this.craft);
         Util.clearItemInventory(this.output);
         ItemStack[] fuzzyFind = new ItemStack[Util.findMax(inputs.keySet()) + 1];
-        for (int index : inputs.keySet()) {
+        for (final int index : inputs.keySet()) {
             Util.fuzzyTransferItems(index, inputs.get(index), fuzzyFind, Util.getItemChannel().createList());
         }
         if (combine) {
@@ -88,11 +88,11 @@ public class TileUltimateEncoder extends AEBaseInvTile implements ITerminalHost 
     }
 
     @Override
-    public void onChangeInventory(IItemHandler inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack) {
         if (slot == 1) {
             final ItemStack is = inv.getStackInSlot(1);
             if (!is.isEmpty()) {
-                if (is.getItem() instanceof ItemEncodedPattern patterns) {
+                if (is.getItem() instanceof final ItemEncodedPattern patterns) {
                     final ICraftingPatternDetails details = patterns.getPatternForItem(is, this.getWorld());
                     if(details != null) {
                         Util.clearItemInventory(this.craft);
@@ -113,7 +113,7 @@ public class TileUltimateEncoder extends AEBaseInvTile implements ITerminalHost 
     }
 
     @Override
-    public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> iStorageChannel) {
+    public <T extends IAEStack<T>> IMEMonitor<T> getInventory(final IStorageChannel<T> iStorageChannel) {
         return null;
     }
 

@@ -20,14 +20,14 @@ import java.util.List;
 public class ItemFluidEncodedPattern extends ItemEncodedPattern implements HasCustomModel {
 
     @Override
-    protected void getCheckedSubItems(CreativeTabs creativeTab, NonNullList<ItemStack> itemStacks) {
+    protected void getCheckedSubItems(final CreativeTabs creativeTab, final NonNullList<ItemStack> itemStacks) {
         // NO-OP
     }
 
     @Nullable
     @Override
-    public ICraftingPatternDetails getPatternForItem(ItemStack is, World w) {
-        FluidPatternDetails pattern = new FluidPatternDetails(is);
+    public ICraftingPatternDetails getPatternForItem(final ItemStack is, final World w) {
+        final FluidPatternDetails pattern = new FluidPatternDetails(is);
         return pattern.readFromStack() ? pattern : null;
     }
 
@@ -37,9 +37,9 @@ public class ItemFluidEncodedPattern extends ItemEncodedPattern implements HasCu
     }
 
     @Override
-    public void addCheckedInformation(ItemStack stack, World world, List<String> lines, ITooltipFlag advancedTooltips) {
+    public void addCheckedInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
         super.addCheckedInformation(stack, world, lines, advancedTooltips);
-        NBTTagCompound tag = stack.getTagCompound();
+        final NBTTagCompound tag = stack.getTagCompound();
         if (tag != null && tag.hasKey("encoderName")) {
             lines.add(I18n.format("ae2fc.tooltip.pattern_encoder.name", tag.getString("encoderName")));
         }

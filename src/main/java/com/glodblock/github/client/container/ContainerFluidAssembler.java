@@ -28,7 +28,7 @@ public class ContainerFluidAssembler extends AEBaseContainer implements IOptiona
     @GuiSync(2)
     public int progress = 0;
 
-    public ContainerFluidAssembler(InventoryPlayer ipl, TileFluidAssembler tile) {
+    public ContainerFluidAssembler(final InventoryPlayer ipl, final TileFluidAssembler tile) {
         super(ipl, tile);
         this.tile = tile;
         for (int row = 0; row < 4; ++row) {
@@ -43,13 +43,13 @@ public class ContainerFluidAssembler extends AEBaseContainer implements IOptiona
             }
         }
         this.addSlotToContainer(new FakeDisplaySlot(tile.output, 0, 126, 35));
-        this.addSlotToContainer(new FilterSlot(AEApi.instance().definitions().materials().cardSpeed().maybeStack(1).get(), tile.upgrade, 0, 134, 61));
-        this.addSlotToContainer(new FilterSlot(AEApi.instance().definitions().materials().cardPatternExpansion().maybeStack(1).get(), tile.upgrade, 1, 152, 61));
+        this.addSlotToContainer(new FilterSlot(AEApi.instance().definitions().materials().cardSpeed().maybeStack(1).orElse(ItemStack.EMPTY), tile.upgrade, 0, 134, 61));
+        this.addSlotToContainer(new FilterSlot(AEApi.instance().definitions().materials().cardPatternExpansion().maybeStack(1).orElse(ItemStack.EMPTY), tile.upgrade, 1, 152, 61));
         bindPlayerInventory(ipl, 0, 167);
     }
 
     @Override
-    public boolean isSlotEnabled(int i) {
+    public boolean isSlotEnabled(final int i) {
         return tile.getPatternCap() >= i;
     }
 
@@ -85,12 +85,12 @@ public class ContainerFluidAssembler extends AEBaseContainer implements IOptiona
 
     static class CraftPattern extends OptionalSlotRestrictedInput {
 
-        public CraftPattern(IItemHandler i, IOptionalSlotHost host, int slotIndex, int x, int y, int grpNum, InventoryPlayer invPlayer) {
+        public CraftPattern(final IItemHandler i, final IOptionalSlotHost host, final int slotIndex, final int x, final int y, final int grpNum, final InventoryPlayer invPlayer) {
             super(SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN, i, host, slotIndex, x, y, grpNum, invPlayer);
         }
 
         @Override
-        public boolean isItemValid(ItemStack i) {
+        public boolean isItemValid(final ItemStack i) {
             if (!this.getContainer().isValidForSlot(this, i)) {
                 return false;
             } else if (i.isEmpty()) {
@@ -108,13 +108,13 @@ public class ContainerFluidAssembler extends AEBaseContainer implements IOptiona
 
         final private ItemStack filter;
 
-        public FilterSlot(ItemStack filter, IItemHandler i, int slotIndex, int x, int y) {
+        public FilterSlot(final ItemStack filter, final IItemHandler i, final int slotIndex, final int x, final int y) {
             super(i, slotIndex, x, y);
             this.filter = filter;
         }
 
         @Override
-        public boolean isItemValid(@Nonnull ItemStack i) {
+        public boolean isItemValid(@Nonnull final ItemStack i) {
             if (!this.getContainer().isValidForSlot(this, i)) {
                 return false;
             } else if (i.isEmpty()) {
@@ -129,24 +129,24 @@ public class ContainerFluidAssembler extends AEBaseContainer implements IOptiona
     }
 
     static class FakeDisplaySlot extends AppEngSlot {
-        public FakeDisplaySlot(IItemHandler inv, int idx, int x, int y) {
+        public FakeDisplaySlot(final IItemHandler inv, final int idx, final int x, final int y) {
             super(inv, idx, x, y);
         }
 
         @Nonnull
         @Override
-        public ItemStack onTake(@Nonnull EntityPlayer par1EntityPlayer, @Nonnull ItemStack par2ItemStack) {
+        public ItemStack onTake(@Nonnull final EntityPlayer par1EntityPlayer, @Nonnull final ItemStack par2ItemStack) {
             return par2ItemStack;
         }
 
         @Nonnull
         @Override
-        public ItemStack decrStackSize(int par1) {
+        public ItemStack decrStackSize(final int par1) {
             return ItemStack.EMPTY;
         }
 
         @Override
-        public boolean isItemValid(@Nonnull ItemStack par1ItemStack) {
+        public boolean isItemValid(@Nonnull final ItemStack par1ItemStack) {
             return false;
         }
 
@@ -160,7 +160,7 @@ public class ContainerFluidAssembler extends AEBaseContainer implements IOptiona
         }
 
         @Override
-        public boolean canTakeStack(EntityPlayer par1EntityPlayer) {
+        public boolean canTakeStack(final EntityPlayer par1EntityPlayer) {
             return false;
         }
     }

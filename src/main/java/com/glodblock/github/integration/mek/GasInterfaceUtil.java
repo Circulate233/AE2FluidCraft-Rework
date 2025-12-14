@@ -21,19 +21,19 @@ public class GasInterfaceUtil {
         Upgrades.CAPACITY.registerItem(new ItemStack(FCGasItems.PART_TRIO_INTERFACE), 4);
     }
 
-    public static IMachineSet getGasInterface(IGrid grid) {
+    public static IMachineSet getGasInterface(final IGrid grid) {
         return grid.getMachines(TileTrioInterface.class);
     }
 
-    public static IMachineSet getGasPartInterface(IGrid grid) {
+    public static IMachineSet getGasPartInterface(final IGrid grid) {
         return grid.getMachines(PartTrioInterface.class);
     }
 
-    public static boolean isGasInterfaceTile(Class<? extends IGridHost> clazz) {
+    public static boolean isGasInterfaceTile(final Class<? extends IGridHost> clazz) {
         return clazz == TileGasInterface.class;
     }
 
-    public static boolean isGasInterfacePart(Class<? extends IGridHost> clazz) {
+    public static boolean isGasInterfacePart(final Class<? extends IGridHost> clazz) {
         return clazz == PartGasInterface.class;
     }
 

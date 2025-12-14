@@ -37,7 +37,7 @@ public class GuiItemDualInterface extends GuiInterface {
     @Override
     protected void addButtons() {
         super.addButtons();
-        ItemStack icon = AEApi.instance().definitions().blocks().fluidIface().maybeStack(1).orElse(ItemStack.EMPTY);
+        final ItemStack icon = AEApi.instance().definitions().blocks().fluidIface().maybeStack(1).orElse(ItemStack.EMPTY);
         switchInterface = new GuiTabButton(guiLeft + 133, guiTop, icon, icon.getDisplayName(), itemRender);
         buttonList.add(switchInterface);
         fluidPacketBtn = new GuiFCImgButton(this.guiLeft - 18, this.guiTop + 62, "SEND_MODE", "REAL_FLUID");
@@ -67,7 +67,7 @@ public class GuiItemDualInterface extends GuiInterface {
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fluidPacketBtn.set(this.container.fluidPacket ? "FLUID_PACKET" : "REAL_FLUID");
         this.splittingBtn.set(this.container.allowSplitting ? "ALLOW" : "PREVENT");
         this.blockingBtn.set(this.container.blockModeEx == 0 ? "ALL" : this.container.blockModeEx == 1 ? "ITEM" : "FLUID");

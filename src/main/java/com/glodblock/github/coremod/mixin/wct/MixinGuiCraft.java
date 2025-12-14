@@ -14,7 +14,7 @@ import p455w0rd.wct.client.gui.GuiCraftingCPU;
 public class MixinGuiCraft {
 
     @WrapOperation(method = "drawFG", at = @At(value = "INVOKE", target = "Lappeng/api/storage/data/IAEItemStack;createItemStack()Lnet/minecraft/item/ItemStack;"))
-    public ItemStack packItemStack(IAEItemStack instance, Operation<ItemStack> original) {
+    public ItemStack packItemStack(final IAEItemStack instance, final Operation<ItemStack> original) {
         return CoreModHooks.displayFluid(original.call(instance));
     }
 

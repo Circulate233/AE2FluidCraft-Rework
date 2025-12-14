@@ -11,7 +11,7 @@ public class AeItemStackHandler implements IItemHandler {
 
     private final AeStackInventory<IAEItemStack> inv;
 
-    public AeItemStackHandler(AeStackInventory<IAEItemStack> inv) {
+    public AeItemStackHandler(final AeStackInventory<IAEItemStack> inv) {
         this.inv = inv;
     }
 
@@ -26,25 +26,25 @@ public class AeItemStackHandler implements IItemHandler {
 
     @Nonnull
     @Override
-    public ItemStack getStackInSlot(int slot) {
-        IAEItemStack stack = inv.getStack(slot);
+    public ItemStack getStackInSlot(final int slot) {
+        final IAEItemStack stack = inv.getStack(slot);
         return stack != null ? stack.createItemStack() : ItemStack.EMPTY;
     }
 
     @Nonnull
     @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(final int slot, @Nonnull final ItemStack stack, final boolean simulate) {
         return ItemStack.EMPTY;
     }
 
     @Nonnull
     @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+    public ItemStack extractItem(final int slot, final int amount, final boolean simulate) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public int getSlotLimit(int slot) {
+    public int getSlotLimit(final int slot) {
         return 64;
     }
 

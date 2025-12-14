@@ -8,7 +8,7 @@ public class WrappedIngredient<T> {
     private final T ingredient;
     private final boolean isInput;
 
-    public WrappedIngredient(@Nullable T ingredient, boolean isInput) {
+    public WrappedIngredient(@Nullable final T ingredient, final boolean isInput) {
         this.ingredient = ingredient;
         this.isInput = isInput;
     }

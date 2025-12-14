@@ -30,7 +30,7 @@ public class GuiIngredientBuffer extends AEBaseGui {
     private final ContainerIngredientBuffer cont;
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
 
-    public GuiIngredientBuffer(InventoryPlayer ipl, TileIngredientBuffer tile) {
+    public GuiIngredientBuffer(final InventoryPlayer ipl, final TileIngredientBuffer tile) {
         super(new ContainerIngredientBuffer(ipl, tile));
         this.cont = (ContainerIngredientBuffer) inventorySlots;
         this.ySize = 222;
@@ -43,28 +43,28 @@ public class GuiIngredientBuffer extends AEBaseGui {
     }
 
     @Override
-    protected void mouseClicked(int xCoord, int yCoord, int btn) throws IOException {
+    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) throws IOException {
         if (mouseRegions.onClick(xCoord, yCoord, btn)) {
             super.mouseClicked(xCoord, yCoord, btn);
         }
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         mc.getTextureManager().bindTexture(TEX_BG);
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, ySize);
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         fontRenderer.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_INGREDIENT_BUFFER)), 8, 6, 0x404040);
         fontRenderer.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        IAEFluidTank fluidInv = cont.getTile().getFluidInventory();
+        final IAEFluidTank fluidInv = cont.getTile().getFluidInventory();
         mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buf = tess.getBuffer();
+        final Tessellator tess = Tessellator.getInstance();
+        final BufferBuilder buf = tess.getBuffer();
         for (int i = 0; i < 4; i++) {
             FluidRenderUtils.renderFluidIntoGui(tess, buf, TANK_X + i * TANK_X_OFF, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
                     fluidInv.getFluidInSlot(i), fluidInv.getTankProperties()[i].getCapacity());

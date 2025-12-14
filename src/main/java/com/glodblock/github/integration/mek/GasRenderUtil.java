@@ -23,9 +23,9 @@ import javax.annotation.Nullable;
 
 public class GasRenderUtil {
 
-    private static TextureAtlasSprite getStillGasSprite(Gas gas) {
-        TextureMap textureMapBlocks = Minecraft.getMinecraft().getTextureMapBlocks();
-        ResourceLocation gasStill = gas.getIcon();
+    private static TextureAtlasSprite getStillGasSprite(final Gas gas) {
+        final TextureMap textureMapBlocks = Minecraft.getMinecraft().getTextureMapBlocks();
+        final ResourceLocation gasStill = gas.getIcon();
         TextureAtlasSprite gasStillSprite = null;
         if (gasStill != null) {
             gasStillSprite = textureMapBlocks.getTextureExtry(gasStill.toString());
@@ -36,20 +36,20 @@ public class GasRenderUtil {
         return gasStillSprite;
     }
 
-    public static void renderGasIntoGuiCleanly(int x, int y, int width, int height, @Nullable GasStack gasStack, int capacity) {
+    public static void renderGasIntoGuiCleanly(final int x, final int y, final int width, final int height, @Nullable final GasStack gasStack, final int capacity) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         if (gasStack != null && gasStack.getGas() != null) {
-            TextureAtlasSprite sprite = getStillGasSprite(gasStack.getGas());
-            Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buf = tess.getBuffer();
+            final TextureAtlasSprite sprite = getStillGasSprite(gasStack.getGas());
+            final Tessellator tess = Tessellator.getInstance();
+            final BufferBuilder buf = tess.getBuffer();
             MekanismRenderer.color(gasStack.getGas());
             FluidRenderUtils.doRenderFluid(tess, buf, x, y, width, height, sprite, gasStack.amount / (double)capacity);
         }
         GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
-    public static boolean renderGasIntoGuiSlot(Slot slot, @Nullable GasStack gas,
-                                                 StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+    public static boolean renderGasIntoGuiSlot(final Slot slot, @Nullable final GasStack gas,
+                                               final StackSizeRenderer stackSizeRenderer, final FontRenderer fontRenderer) {
         if (gas == null || gas.amount <= 0) {
             return false;
         }
@@ -58,14 +58,14 @@ public class GasRenderUtil {
         return true;
     }
 
-    public static boolean renderGasPacketIntoGuiSlot(Slot slot, @Nullable IAEItemStack stack,
-                                                       StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+    public static boolean renderGasPacketIntoGuiSlot(final Slot slot, @Nullable final IAEItemStack stack,
+                                                     final StackSizeRenderer stackSizeRenderer, final FontRenderer fontRenderer) {
         return stack != null && stack.getItem() instanceof ItemGasPacket
                 && renderGasIntoGuiSlot(slot, FakeItemRegister.getStack(stack), stackSizeRenderer, fontRenderer);
     }
 
-    public static boolean renderGasPacketIntoGuiSlot(Slot slot, ItemStack stack,
-                                                       StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+    public static boolean renderGasPacketIntoGuiSlot(final Slot slot, final ItemStack stack,
+                                                     final StackSizeRenderer stackSizeRenderer, final FontRenderer fontRenderer) {
         return !stack.isEmpty() && stack.getItem() instanceof ItemGasPacket
                 && renderGasIntoGuiSlot(slot, FakeItemRegister.getStack(stack), stackSizeRenderer, fontRenderer);
     }

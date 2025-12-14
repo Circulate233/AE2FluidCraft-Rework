@@ -48,15 +48,15 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
     protected abstract boolean diveList(NetworkInventoryHandler<T> networkInventoryHandler, Actionable type);
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void onInit(IStorageChannel<?> chan, SecurityCache security, CallbackInfo ci) {
+    public void onInit(final IStorageChannel<?> chan, final SecurityCache security, final CallbackInfo ci) {
         monitor = security.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getInventory(Util.getItemChannel());
     }
 
     @Inject(method = "injectItems", at = @At(value = "INVOKE", target = "Ljava/util/NavigableMap;values()Ljava/util/Collection;", ordinal = 1), cancellable = true)
-    private void notItemInject(T input, Actionable mode, IActionSource src, CallbackInfoReturnable<T> cir) {
+    private void notItemInject(final T input, final Actionable mode, final IActionSource src, final CallbackInfoReturnable<T> cir) {
         if (input == null || input instanceof IAEItemStack) return;
         if (src instanceof FakeMonitor.FakeMonitorSource || mode == Actionable.SIMULATE) return;
-        var drop = Util.packAEStackToDrop(input);
+        final var drop = Util.packAEStackToDrop(input);
         if (drop != null) {
             this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
             cir.setReturnValue(FakeItemRegister.getAEStack(monitor.injectItems(drop, mode, src)));
@@ -66,9 +66,9 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
     }
 
     @Inject(method = "injectItems", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", ordinal = 2), cancellable = true)
-    private void injectItems(T input, Actionable mode, IActionSource src, CallbackInfoReturnable<T> cir, @Share("fc$fakeInput") LocalBooleanRef fakeInput) {
+    private void injectItems(final T input, final Actionable mode, final IActionSource src, final CallbackInfoReturnable<T> cir, @Share("fc$fakeInput") final LocalBooleanRef fakeInput) {
         if (input == null || fakeInput.get()) return;
-        if (input instanceof IAEItemStack i) {
+        if (input instanceof final IAEItemStack i) {
             if (i.getItem() == FCItems.FLUID_DROP) {
                 cir.setReturnValue((T) fluidMonitor.injectItems(i, mode, src));
             } else if (ModAndClassUtil.GAS && i.getItem() == FCGasItems.GAS_DROP) {
@@ -85,10 +85,10 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
     }
 
     @Inject(method = "extractItems", at = @At(value = "FIELD", target = "Lappeng/me/storage/NetworkInventoryHandler;priorityInventory:Ljava/util/NavigableMap;", opcode = Opcodes.GETFIELD), cancellable = true)
-    public void extractItems(T request, Actionable mode, IActionSource src, CallbackInfoReturnable<T> cir) {
+    public void extractItems(final T request, final Actionable mode, final IActionSource src, final CallbackInfoReturnable<T> cir) {
         if (request == null) return;
         boolean work = false;
-        if (request instanceof IAEItemStack i) {
+        if (request instanceof final IAEItemStack i) {
             if (i.getItem() == FCItems.FLUID_DROP) {
                 cir.setReturnValue((T) fluidMonitor.extractItems(i, mode, src));
                 work = true;
@@ -98,7 +98,7 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
             }
         } else {
             if (src instanceof FakeMonitor.FakeMonitorSource || mode == Actionable.SIMULATE) return;
-            var drop = Util.packAEStackToDrop(request);
+            final var drop = Util.packAEStackToDrop(request);
             if (drop != null) {
                 this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
                 cir.setReturnValue(FakeItemRegister.getAEStack(monitor.extractItems(drop, mode, src)));
@@ -110,7 +110,7 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
     }
 
     @Override
-    public void init(FCNetworkMonitor monitor) {
+    public void init(final FCNetworkMonitor monitor) {
         fluidMonitor = monitor.getFluidMonitor();
         gasMonitor = monitor.getGasMonitor();
     }

@@ -31,7 +31,7 @@ public class FCCoreMod implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {
+    public void injectData(final Map<String, Object> data) {
         // NO-OP
     }
 

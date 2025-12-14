@@ -16,13 +16,13 @@ import javax.annotation.Nullable;
 public class ItemFluidCraftEncodedPattern extends ItemEncodedPattern implements HasCustomModel {
 
     @Override
-    protected void getCheckedSubItems(CreativeTabs creativeTab, NonNullList<ItemStack> itemStacks) {
+    protected void getCheckedSubItems(final CreativeTabs creativeTab, final NonNullList<ItemStack> itemStacks) {
         // NO-OP
     }
 
     @Nullable
     @Override
-    public ICraftingPatternDetails getPatternForItem(ItemStack is, World w) {
+    public ICraftingPatternDetails getPatternForItem(final ItemStack is, final World w) {
         try {
             return FluidCraftingPatternDetails.GetFluidPattern(is, w);
         } catch (final Throwable t) {

@@ -15,7 +15,7 @@ public interface FCFluidPatternPart {
 
     void setFluidPlaceMode(boolean mode);
 
-    default void onChangeCrafting(Int2ObjectMap<ItemStack[]> inputs, List<ItemStack> outputs, boolean combine) {
+    default void onChangeCrafting(final Int2ObjectMap<ItemStack[]> inputs, final List<ItemStack> outputs, final boolean combine) {
 
     }
 }

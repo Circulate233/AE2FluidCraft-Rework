@@ -53,7 +53,7 @@ public class GuiWrapInterface extends GuiInterface {
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fluidPacketBtn.set(this.container.fluidPacket ? "FLUID_PACKET" : "REAL_FLUID");
         this.splittingBtn.set(this.container.allowSplitting ? "ALLOW" : "PREVENT");
         this.blockingBtn.set(this.container.blockModeEx == 0 ? "ALL" : this.container.blockModeEx == 1 ? "ITEM" : "FLUID");

@@ -38,7 +38,7 @@ public class FCBlocks {
     @GameRegistry.ObjectHolder(FluidCraft.MODID + ":" + NameConst.BLOCK_ULTIMATE_ENCODER)
     public static BlockUltimateEncoder ULTIMATE_ENCODER;
 
-    public static void init(RegistryHandler regHandler) {
+    public static void init(final RegistryHandler regHandler) {
         regHandler.block(NameConst.BLOCK_FLUID_DISCRETIZER, new BlockFluidDiscretizer());
         regHandler.block(NameConst.BLOCK_FLUID_PATTERN_ENCODER, new BlockFluidPatternEncoder());
         regHandler.block(NameConst.BLOCK_FLUID_PACKET_DECODER, new BlockFluidPacketDecoder());

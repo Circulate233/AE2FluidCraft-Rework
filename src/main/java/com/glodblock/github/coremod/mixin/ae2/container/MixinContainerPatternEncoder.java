@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinContainerPatternEncoder {
 
     @WrapOperation(method = "encode", at = @At(value = "INVOKE", target = "Lappeng/container/implementations/ContainerPatternEncoder;isPattern(Lnet/minecraft/item/ItemStack;)Z"))
-    public boolean chanceOutput(ContainerPatternEncoder instance, ItemStack output, Operation<Boolean> original) {
+    public boolean chanceOutput(final ContainerPatternEncoder instance, final ItemStack output, final Operation<Boolean> original) {
         return original.call(instance, CoreModHooks.transformPattern(instance, output));
     }
 }

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinTileIOPort {
 
     @Redirect(method = "transferContents", at = @At(value = "INVOKE", target = "Lappeng/api/storage/data/IAEStack;getStackSize()J", ordinal = 0))
-    private long removeDropSize(IAEStack<?> instance, @Local(name = "src") IMEInventory<?> src) {
+    private long removeDropSize(final IAEStack<?> instance, @Local(name = "src") final IMEInventory<?> src) {
         if (src instanceof IMEMonitor<?>) {
             return 0;
         }

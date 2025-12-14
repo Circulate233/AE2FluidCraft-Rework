@@ -2,7 +2,6 @@ package com.glodblock.github.integration.dynamistics;
 
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.items.misc.ItemEncodedPattern;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.item.ItemFluidCraftEncodedPattern;
 import com.glodblock.github.loader.FCBlocks;
@@ -41,8 +40,8 @@ public class FluidCraftPatternCategory implements IRecipeCategory<SingletonRecip
     private final int guiStartX;
     private final int guiStartY;
 
-    public FluidCraftPatternCategory(IJeiHelpers helpers) {
-        IGuiHelper guiHelper = helpers.getGuiHelper();
+    public FluidCraftPatternCategory(final IJeiHelpers helpers) {
+        final IGuiHelper guiHelper = helpers.getGuiHelper();
         this.slot = JeiHelper.getSlotDrawable();
         this.craftingBackground = guiHelper.createDrawable(new ResourceLocation("appliedenergistics2", "textures/guis/pattern.png"), 9, 85, 126, 68);
         this.background = guiHelper.createBlankDrawable(WIDTH, HEIGHT);
@@ -84,8 +83,8 @@ public class FluidCraftPatternCategory implements IRecipeCategory<SingletonRecip
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull SingletonRecipe recipe, @Nonnull IIngredients ingredients) {
-        IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
+    public void setRecipe(final IRecipeLayout recipeLayout, @Nonnull final SingletonRecipe recipe, @Nonnull final IIngredients ingredients) {
+        final IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
 
         ItemStack patternStack = recipe.stack;
 
@@ -99,19 +98,18 @@ public class FluidCraftPatternCategory implements IRecipeCategory<SingletonRecip
         stacks.init(14, true, WIDTH / 2 - 8, 29);
         stacks.set(14, this.interfaceStack);
 
-        if (patternStack.getItem() instanceof ItemFluidCraftEncodedPattern) {
-            final ItemEncodedPattern pattern = (ItemEncodedPattern) patternStack.getItem();
+        if (patternStack.getItem() instanceof final ItemFluidCraftEncodedPattern pattern) {
             final ICraftingPatternDetails details = pattern.getPatternForItem(patternStack, null);
             if (!(details instanceof FluidCraftingPatternDetails)) {
                 return;
             }
 
-            IAEItemStack[] inputs = ((FluidCraftingPatternDetails) details).getOriginInputs();
-            IAEItemStack[] outputs = details.getOutputs();
+            final IAEItemStack[] inputs = ((FluidCraftingPatternDetails) details).getOriginInputs();
+            final IAEItemStack[] outputs = details.getOutputs();
 
-            int gridStartY = 7;
-            int gridStartX = 8;
-            int gridSize = 18;
+            final int gridStartY = 7;
+            final int gridStartX = 8;
+            final int gridSize = 18;
             for(int i = 0; i < inputs.length; i++) {
                 if (inputs[i] != null) {
                     stacks.init(i, true, this.guiStartX + gridStartX + (gridSize * (i % 3)), this.guiStartY + gridStartY + (gridSize * (i / 3)));
@@ -119,7 +117,7 @@ public class FluidCraftPatternCategory implements IRecipeCategory<SingletonRecip
                 }
             }
 
-            int outStartX = 100;
+            final int outStartX = 100;
             if (outputs.length > 0 && outputs[0] != null ) {
                 stacks.init(9, false, guiStartX + outStartX, guiStartY + gridStartY + gridSize);
                 stacks.set(9, outputs[0].createItemStack());
@@ -128,7 +126,7 @@ public class FluidCraftPatternCategory implements IRecipeCategory<SingletonRecip
     }
 
     @Override
-    public void drawExtras(@Nonnull Minecraft minecraft) {
+    public void drawExtras(@Nonnull final Minecraft minecraft) {
         this.arrow.draw(minecraft,
                 (WIDTH - this.arrow.getWidth()) / 2,
                 27);

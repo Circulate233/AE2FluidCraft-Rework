@@ -15,19 +15,19 @@ import javax.annotation.Nonnull;
 public class ItemGasDrop extends Item implements HasCustomModel {
 
     @Override
-    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
+    public void getSubItems(@Nonnull final CreativeTabs tab, @Nonnull final NonNullList<ItemStack> items) {
 
     }
 
     @Override
-    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+    protected boolean isInCreativeTab(final CreativeTabs targetTab) {
         return false;
     }
 
     @Override
     @Nonnull
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
-        GasStack gas = FakeItemRegister.getStack(stack);
+    public String getItemStackDisplayName(@Nonnull final ItemStack stack) {
+        final GasStack gas = FakeItemRegister.getStack(stack);
         return gas != null ? gas.getGas().getLocalizedName() : "???";
     }
 

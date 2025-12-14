@@ -35,7 +35,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(final FMLPreInitializationEvent event) {
         super.preInit(event);
         MinecraftForge.EVENT_BUS.register(dropColourHandler);
         MinecraftForge.EVENT_BUS.register(WarnMessage.INSTANCE);
@@ -50,13 +50,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(final FMLInitializationEvent event) {
         super.init(event);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler((s, i) -> {
             if (i == 0) {
                 return 0xFFFFFFFF;
             }
-            FluidStack fluid = FakeItemRegister.getStack(s);
+            final FluidStack fluid = FakeItemRegister.getStack(s);
             return fluid != null ? fluid.getFluid().getColor(fluid) : 0xFFFFFFFF;
         }, FCItems.FLUID_PACKET, FCItems.FLUID_DROP);
         if (ModAndClassUtil.GAS) {
@@ -64,7 +64,7 @@ public class ClientProxy extends CommonProxy {
                 if (i == 0) {
                     return 0xFFFFFFFF;
                 }
-                GasStack gas = FakeItemRegister.getStack(s);
+                final GasStack gas = FakeItemRegister.getStack(s);
                 return gas != null ? gas.getGas().getTint() | 0xFF000000 : 0xFFFFFFFF;
             }, FCGasItems.GAS_DROP, FCGasItems.GAS_PACKET);
         }
@@ -77,7 +77,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(final FMLPostInitializationEvent event) {
         super.postInit(event);
     }
 

@@ -13,7 +13,7 @@ public class CPacketDumpTank implements IMessage {
 
     private int index;
 
-    public CPacketDumpTank(int index) {
+    public CPacketDumpTank(final int index) {
         this.index = index;
     }
 
@@ -22,12 +22,12 @@ public class CPacketDumpTank implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeShort(index);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         index = buf.readShort();
     }
 
@@ -35,8 +35,8 @@ public class CPacketDumpTank implements IMessage {
 
         @Nullable
         @Override
-        public IMessage onMessage(CPacketDumpTank message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
+        public IMessage onMessage(final CPacketDumpTank message, final MessageContext ctx) {
+            final EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 if (player.openContainer instanceof TankDumpable) {
                     ((TankDumpable)player.openContainer).dumpTank(message.index);

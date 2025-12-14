@@ -16,7 +16,7 @@ import thelm.packagedauto.tile.TileUnpackager;
 public abstract class MixinTileUnpackager extends TileBase {
 
     @WrapOperation(method = "emptyTrackers()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/tileentity/TileEntity;hasCapability(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/util/EnumFacing;)Z"))
-    public boolean packHasCapability(TileEntity instance, Capability<?> capability, EnumFacing facing, Operation<Boolean> original) {
+    public boolean packHasCapability(final TileEntity instance, final Capability<?> capability, final EnumFacing facing, final Operation<Boolean> original) {
         if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
             return CoreModHooks.checkForItemHandler(this, capability, facing);
         }
@@ -24,7 +24,7 @@ public abstract class MixinTileUnpackager extends TileBase {
     }
 
     @WrapOperation(method = "emptyTrackers()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/tileentity/TileEntity;getCapability(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/util/EnumFacing;)Ljava/lang/Object;"))
-    public Object packGetCapability(TileEntity instance, Capability<?> capability, EnumFacing facing, Operation<Boolean> original) {
+    public Object packGetCapability(final TileEntity instance, final Capability<?> capability, final EnumFacing facing, final Operation<Boolean> original) {
         if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
             return CoreModHooks.wrapItemHandler(this, capability, facing);
         }

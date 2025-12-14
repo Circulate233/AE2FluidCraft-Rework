@@ -28,17 +28,17 @@ public class MixinCraftingTreeNode {
         @At(value = "FIELD", target = "Lappeng/crafting/CraftingTreeNode;bytes:I", opcode = Opcodes.PUTFIELD, ordinal = 3),
         @At(value = "FIELD", target = "Lappeng/crafting/CraftingTreeNode;bytes:I", opcode = Opcodes.PUTFIELD, ordinal = 4)
     })
-    public void changeFluidByte(CraftingTreeNode instance, int value, Operation<Void> original, @Local(name = "available") IAEItemStack available) {
+    public void changeFluidByte(final CraftingTreeNode instance, final int value, final Operation<Void> original, @Local(name = "available") final IAEItemStack available) {
         original.call(instance, (int) ((long) this.bytes + CoreModHooks.getCraftingByteCost(available)));
     }
 
     @WrapOperation(method = "request", at = @At(value = "FIELD", target = "Lappeng/crafting/CraftingTreeNode;bytes:I", opcode = Opcodes.PUTFIELD, ordinal = 2))
-    public void changeFluidByteT(CraftingTreeNode instance, int value, Operation<Void> original, @Local(name = "wat") IAEItemStack available) {
+    public void changeFluidByteT(final CraftingTreeNode instance, final int value, final Operation<Void> original, @Local(name = "wat") final IAEItemStack available) {
         original.call(instance, (int) ((long) this.bytes + CoreModHooks.getCraftingByteCost(available)));
     }
 
     @WrapOperation(method = "request", at = @At(value = "FIELD", target = "Lappeng/crafting/CraftingTreeNode;bytes:I", opcode = Opcodes.PUTFIELD, ordinal = 5))
-    public void changeFluidByte(CraftingTreeNode instance, int value, Operation<Void> original, @Local(name = "l") long l) {
+    public void changeFluidByte(final CraftingTreeNode instance, final int value, final Operation<Void> original, @Local(name = "l") final long l) {
         original.call(instance, (int) CoreModHooks.getCraftingByteCost(this.bytes, l, this.what));
     }
 }

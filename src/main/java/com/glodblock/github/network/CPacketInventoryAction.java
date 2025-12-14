@@ -40,7 +40,7 @@ public class CPacketInventoryAction implements IMessage {
         //NO-OP
     }
 
-    public CPacketInventoryAction(final Action action, final int slot, final int id, IAEItemStack stack) {
+    public CPacketInventoryAction(final Action action, final int slot, final int id, final IAEItemStack stack) {
         this.action = action;
         this.slot = slot;
         this.id = id;
@@ -49,7 +49,7 @@ public class CPacketInventoryAction implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeInt(action.ordinal());
         buf.writeInt(slot);
         buf.writeLong(id);
@@ -57,14 +57,14 @@ public class CPacketInventoryAction implements IMessage {
         if (!isEmpty) {
             try {
                 stack.writeToPacket(buf);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         action = Action.values()[buf.readInt()];
         slot = buf.readInt();
         id = buf.readLong();
@@ -77,10 +77,10 @@ public class CPacketInventoryAction implements IMessage {
     public static class Handler implements IMessageHandler<CPacketInventoryAction, IMessage> {
         @Nullable
         @Override
-        public IMessage onMessage(CPacketInventoryAction message, MessageContext ctx) {
+        public IMessage onMessage(final CPacketInventoryAction message, final MessageContext ctx) {
             final EntityPlayerMP sender = ctx.getServerHandler().player;
             sender.getServerWorld().addScheduledTask(() -> {
-                if (sender.openContainer instanceof AEBaseContainer baseContainer) {
+                if (sender.openContainer instanceof final AEBaseContainer baseContainer) {
                     final ContainerOpenContext context = baseContainer.getOpenContext();
                     if (message.action == Action.CHANGE_AMOUNT) {
                         if (context != null) {
@@ -90,9 +90,9 @@ public class CPacketInventoryAction implements IMessage {
                                 new BlockPos(Ae2Reflect.getContextX(context), Ae2Reflect.getContextY(context), Ae2Reflect.getContextZ(context)),
                                 context.getSide().getFacing(),
                                 GuiType.ITEM_AMOUNT_SET);
-                            int amt = (int) message.stack.getStackSize();
+                            final int amt = (int) message.stack.getStackSize();
                             FluidCraft.proxy.netHandler.sendTo(new SPacketSetItemAmount(amt), sender);
-                            if (sender.openContainer instanceof ContainerItemAmountChange iac) {
+                            if (sender.openContainer instanceof final ContainerItemAmountChange iac) {
                                 if (message.stack != null) {
                                     iac.getPatternValue().putStack(message.stack.getDefinition());
                                     iac.setValueIndex(message.slot);
@@ -111,7 +111,7 @@ public class CPacketInventoryAction implements IMessage {
                                 context.getSide().getFacing(),
                                 GuiType.FLUID_CRAFT_AMOUNT
                             );
-                            if (sender.openContainer instanceof ContainerCraftAmount cca) {
+                            if (sender.openContainer instanceof final ContainerCraftAmount cca) {
                                 if (message.stack != null) {
                                     cca.getCraftingItem().putStack(message.stack.getDefinition());
                                     cca.setItemToCraft(message.stack);
@@ -121,8 +121,8 @@ public class CPacketInventoryAction implements IMessage {
                         }
                     }
                     if (message.action == Action.REQUEST_JOB) {
-                        Object target = baseContainer.getTarget();
-                        if (context != null && target instanceof IActionHost ah && baseContainer instanceof ContainerCraftAmount cca) {
+                        final Object target = baseContainer.getTarget();
+                        if (context != null && target instanceof final IActionHost ah && baseContainer instanceof final ContainerCraftAmount cca) {
                             final IGridNode gn = ah.getActionableNode();
                             final IGrid g = gn.getGrid();
                             if (cca.getItemToCraft() == null) {
@@ -140,7 +140,7 @@ public class CPacketInventoryAction implements IMessage {
                                     context.getSide().getFacing(),
                                     GuiType.FLUID_CRAFT_CONFIRM
                                 );
-                                if (sender.openContainer instanceof ContainerFCCraftConfirm ccc) {
+                                if (sender.openContainer instanceof final ContainerFCCraftConfirm ccc) {
                                     ccc.setAutoStart(message.slot == 1);
                                     ccc.setJob(futureJob);
                                     cca.detectAndSendChanges();

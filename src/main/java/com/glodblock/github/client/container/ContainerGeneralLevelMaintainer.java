@@ -23,10 +23,10 @@ public class ContainerGeneralLevelMaintainer extends AEBaseContainer {
 
     private final TileGeneralLevelMaintainer tile;
 
-    public ContainerGeneralLevelMaintainer(InventoryPlayer ip, TileGeneralLevelMaintainer tile) {
+    public ContainerGeneralLevelMaintainer(final InventoryPlayer ip, final TileGeneralLevelMaintainer tile) {
         super(ip, tile);
         this.tile = tile;
-        AppEngInternalAEInventory inv = tile.getInventoryHandler();
+        final AppEngInternalAEInventory inv = tile.getInventoryHandler();
         for (int i = 0; i < 5; i++) {
             addSlotToContainer(new SlotFake(inv, i, 17, 28 + i * 20));
         }
@@ -34,7 +34,7 @@ public class ContainerGeneralLevelMaintainer extends AEBaseContainer {
     }
 
     @Optional.Method(modid = "mekeng")
-    public static int mek$doAction(Slot slot, Object obj) {
+    public static int mek$doAction(final Slot slot, final Object obj) {
         slot.putStack(FakeGases.packGas2Drops((GasStack) obj));
         return ((GasStack) obj).amount;
     }
@@ -44,14 +44,14 @@ public class ContainerGeneralLevelMaintainer extends AEBaseContainer {
     }
 
     @Override
-    public void doAction(EntityPlayerMP player, InventoryAction action, int slotId, long id) {
-        Slot slot = getSlot(slotId);
+    public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slotId, final long id) {
+        final Slot slot = getSlot(slotId);
         if (slot instanceof SlotFake) {
             final ItemStack stack = player.inventory.getItemStack();
             final int size;
             if (id == 0) {
-                FluidStack s = Util.getFluidFromItem(stack);
-                Object g;
+                final FluidStack s = Util.getFluidFromItem(stack);
+                final Object g;
                 if (s != null) {
                     slot.putStack(FakeFluids.packFluid2Drops(s));
                     size = s.amount;

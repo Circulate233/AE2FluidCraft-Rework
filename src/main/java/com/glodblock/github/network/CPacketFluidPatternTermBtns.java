@@ -26,9 +26,9 @@ public class CPacketFluidPatternTermBtns implements IMessage {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        int leName = buf.readInt();
-        int leVal = buf.readInt();
+    public void fromBytes(final ByteBuf buf) {
+        final int leName = buf.readInt();
+        final int leVal = buf.readInt();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < leName; i++) {
             sb.append(buf.readChar());
@@ -42,7 +42,7 @@ public class CPacketFluidPatternTermBtns implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeInt(Name.length());
         buf.writeInt(Value.length());
         for (int i = 0; i < Name.length(); i++) {
@@ -56,14 +56,14 @@ public class CPacketFluidPatternTermBtns implements IMessage {
     public static class Handler implements IMessageHandler<CPacketFluidPatternTermBtns, IMessage> {
 
         @Override
-        public IMessage onMessage(CPacketFluidPatternTermBtns message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
+        public IMessage onMessage(final CPacketFluidPatternTermBtns message, final MessageContext ctx) {
+            final EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
-                String Name = message.Name;
-                String Value = message.Value;
+                final String Name = message.Name;
+                final String Value = message.Value;
                 final Container c = player.openContainer;
-                if (c instanceof FCFluidPatternContainer cpt) {
-                    if (c instanceof ContainerUltimateEncoder cue) {
+                if (c instanceof final FCFluidPatternContainer cpt) {
+                    if (c instanceof final ContainerUltimateEncoder cue) {
                         switch (Name) {
                             case "UltimateEncoder.Encode" -> {
                                 if (Value.equals("0"))
@@ -87,13 +87,13 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                             case "PatternTerminal.Craft" -> cpt.encodeFluidCraftPattern();
                         }
                     }
-                } else if (c instanceof ContainerItemDualInterface cdi) {
+                } else if (c instanceof final ContainerItemDualInterface cdi) {
                     switch (Name) {
                         case "DualInterface.FluidPacket" -> cdi.setFluidPacketInTile(Value.equals("1"));
                         case "DualInterface.AllowSplitting" -> cdi.setAllowSplittingInTile(Value.equals("1"));
                         case "DualInterface.ExtendedBlockMode" -> cdi.setExtendedBlockMode(Integer.parseInt(Value));
                     }
-                } else if (c instanceof ContainerWrapInterface cdi) {
+                } else if (c instanceof final ContainerWrapInterface cdi) {
                     switch (Name) {
                         case "WrapDualInterface.FluidPacket" -> cdi.setFluidPacketInTile(Value.equals("1"));
                         case "WrapDualInterface.AllowSplitting" -> cdi.setAllowSplittingInTile(Value.equals("1"));

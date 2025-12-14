@@ -93,102 +93,102 @@ public class Ae2ReflectClient {
             } else {
                 fGetInternal_inputHandler = null;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
     }
 
-    public static StackSizeRenderer getStackSizeRenderer(AEBaseGui gui) {
+    public static StackSizeRenderer getStackSizeRenderer(final AEBaseGui gui) {
         return Ae2Reflect.readField(gui, fGetAEBaseGui_stackSizeRenderer);
     }
 
-    public static IBakedModel bakeEncodedPatternModel(IBakedModel baseModel,
-                                                      ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms) {
+    public static IBakedModel bakeEncodedPatternModel(final IBakedModel baseModel,
+                                                      final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms) {
         try {
             return (IBakedModel) cItemEncodedPatternBakedModel.invoke(baseModel, transforms);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             throw new IllegalStateException("Failed to invoke constructor: " + cItemEncodedPatternBakedModel, e);
         }
     }
 
-    public static GuiTabButton getOriginalGuiButton(GuiPriority gui) {
+    public static GuiTabButton getOriginalGuiButton(final GuiPriority gui) {
         return Ae2Reflect.readField(gui, fGetGuiPriority_originalGuiBtn);
     }
 
-    public static GuiTabButton getOriginalGuiButton(GuiCraftingStatus gui) {
+    public static GuiTabButton getOriginalGuiButton(final GuiCraftingStatus gui) {
         return Ae2Reflect.readField(gui, fGetGuiCraftingStatus_originalGuiBtn);
     }
 
-    public static void setIconItem(GuiCraftingStatus gui, ItemStack icon) {
+    public static void setIconItem(final GuiCraftingStatus gui, final ItemStack icon) {
         Ae2Reflect.writeField(gui, fSetGuiCraftingStatus_myIcon, icon);
     }
 
-    public static void setGuiContainer(GuiPatternTerm instance, ContainerPatternEncoder container) {
+    public static void setGuiContainer(final GuiPatternTerm instance, final ContainerPatternEncoder container) {
         Ae2Reflect.writeField(instance, fSetGuiPatternTerm_container, container);
         Ae2Reflect.writeField(instance, fSetGuiMEMonitorable_monitorableContainer, container);
         Ae2Reflect.writeField(instance, fSetGuiMEMonitorable_configSrc, container.getConfigManager());
     }
 
-    public static void setGuiExContainer(GuiExpandedProcessingPatternTerm instance, ContainerExtendedFluidPatternTerminal container) {
+    public static void setGuiExContainer(final GuiExpandedProcessingPatternTerm instance, final ContainerExtendedFluidPatternTerminal container) {
         Ae2Reflect.writeField(instance, fSetGuiMEMonitorable_monitorableContainer, container);
         Ae2Reflect.writeField(instance, fSetGuiMEMonitorable_configSrc, container.getConfigManager());
     }
 
-    public static GuiTabButton getCraftingStatusButton(GuiMEMonitorable gui) {
+    public static GuiTabButton getCraftingStatusButton(final GuiMEMonitorable gui) {
         return Ae2Reflect.readField(gui, fGetGuiMEMonitorable_craftingStatusBtn);
     }
 
-    public static GuiTabButton getPriorityButton(GuiInterface gui) {
+    public static GuiTabButton getPriorityButton(final GuiInterface gui) {
         return Ae2Reflect.readField(gui, fGetGuiInterface_priority);
     }
 
-    public static GuiTabButton getPriorityButton(GuiFluidInterface gui) {
+    public static GuiTabButton getPriorityButton(final GuiFluidInterface gui) {
         return Ae2Reflect.readField(gui, fGetGuiFluidInterface_priority);
     }
 
-    public static GuiTabButton getPriorityButtonGas(Object gui) {
+    public static GuiTabButton getPriorityButtonGas(final Object gui) {
         return Ae2Reflect.readField(gui, fGetGuiGasInterface_priority);
     }
 
-    public static void setInterfaceContainer(GuiUpgradeable instance, ContainerUpgradeable container) {
+    public static void setInterfaceContainer(final GuiUpgradeable instance, final ContainerUpgradeable container) {
         Ae2Reflect.writeField(instance, fSetGuiUpgradeable_cvb, container);
     }
 
-    public static GuiButton getGuiCraftAmountNextButton(GuiCraftAmount gui) {
+    public static GuiButton getGuiCraftAmountNextButton(final GuiCraftAmount gui) {
         return Ae2Reflect.readField(gui, fGetGuiCraftAmount_next);
     }
 
-    public static GuiTextField getGuiCraftAmountTextBox(GuiCraftAmount gui) {
+    public static GuiTextField getGuiCraftAmountTextBox(final GuiCraftAmount gui) {
         return Ae2Reflect.readField(gui, fGetGuiCraftAmount_amountToCraft);
     }
 
-    public static GuiButton getGuiCraftAmountAddButton(GuiCraftAmount gui, int index) {
+    public static GuiButton getGuiCraftAmountAddButton(final GuiCraftAmount gui, final int index) {
         return index < 0 ?
             Ae2Reflect.readField(gui, fGetGuiCraftAmount_minus[-index - 1]) :
             Ae2Reflect.readField(gui, fGetGuiCraftAmount_plus[index - 1]);
     }
 
-    public static void setGuiCraftAmountAddQty(GuiCraftAmount gui, int amount) {
+    public static void setGuiCraftAmountAddQty(final GuiCraftAmount gui, final int amount) {
         try {
             mGuiCraftAmount_addQty.invoke(gui, amount);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             throw new IllegalStateException("Failed to invoke method: " + mGuiCraftAmount_addQty, e);
         }
     }
 
-    public static GuiTabButton getGuiCraftAmountBackButton(GuiCraftAmount gui) {
+    public static GuiTabButton getGuiCraftAmountBackButton(final GuiCraftAmount gui) {
         return Ae2Reflect.readField(gui, fGetGuiCraftAmount_originalGuiBtn);
     }
 
-    public static GuiBridge getGuiCraftAmountOriginalGui(GuiCraftAmount gui) {
+    public static GuiBridge getGuiCraftAmountOriginalGui(final GuiCraftAmount gui) {
         return Ae2Reflect.readField(gui, fGetGuiCraftAmount_originalGui);
     }
 
-    public static void writeCraftConfirmContainer(GuiCraftConfirm gui, ContainerCraftConfirm ccc) {
+    public static void writeCraftConfirmContainer(final GuiCraftConfirm gui, final ContainerCraftConfirm ccc) {
         Ae2Reflect.writeField(gui, fSetGuiCraftConfirm_ccc, ccc);
     }
 
-    public static GuiButton getCraftConfirmBackButton(GuiCraftConfirm gui) {
+    public static GuiButton getCraftConfirmBackButton(final GuiCraftConfirm gui) {
         return Ae2Reflect.readField(gui, fGetGuiCraftConfirm_cancel);
     }
 

@@ -17,7 +17,7 @@ public class SlotSingleItem extends Slot {
 
     private final Slot delegate;
 
-    public SlotSingleItem(Slot delegate) {
+    public SlotSingleItem(final Slot delegate) {
         super(delegate.inventory, delegate.getSlotIndex(), delegate.xPos, delegate.yPos);
         this.delegate = delegate;
     }
@@ -25,25 +25,25 @@ public class SlotSingleItem extends Slot {
     @Override
     @Nonnull
     public ItemStack getStack() {
-        ItemStack stack = delegate.getStack();
+        final ItemStack stack = delegate.getStack();
         return stack.isEmpty() ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(stack, 1);
     }
 
     // delegated
 
     @Override
-    public void onSlotChange(@Nonnull ItemStack p_75220_1_, @Nonnull ItemStack p_75220_2_) {
+    public void onSlotChange(@Nonnull final ItemStack p_75220_1_, @Nonnull final ItemStack p_75220_2_) {
         delegate.onSlotChange(p_75220_1_, p_75220_2_);
     }
 
     @Override
     @Nonnull
-    public ItemStack onTake(@Nonnull EntityPlayer thePlayer, @Nonnull ItemStack stack) {
+    public ItemStack onTake(@Nonnull final EntityPlayer thePlayer, @Nonnull final ItemStack stack) {
         return delegate.onTake(thePlayer, stack);
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
+    public boolean isItemValid(@Nonnull final ItemStack stack) {
         return delegate.isItemValid(stack);
     }
 
@@ -53,7 +53,7 @@ public class SlotSingleItem extends Slot {
     }
 
     @Override
-    public void putStack(@Nonnull ItemStack stack) {
+    public void putStack(@Nonnull final ItemStack stack) {
         delegate.putStack(stack);
     }
 
@@ -68,7 +68,7 @@ public class SlotSingleItem extends Slot {
     }
 
     @Override
-    public int getItemStackLimit(@Nonnull ItemStack stack) {
+    public int getItemStackLimit(@Nonnull final ItemStack stack) {
         return delegate.getItemStackLimit(stack);
     }
 
@@ -81,17 +81,17 @@ public class SlotSingleItem extends Slot {
 
     @Override
     @Nonnull
-    public ItemStack decrStackSize(int amount) {
+    public ItemStack decrStackSize(final int amount) {
         return delegate.decrStackSize(amount);
     }
 
     @Override
-    public boolean isHere(@Nonnull IInventory inv, int slotIn) {
+    public boolean isHere(@Nonnull final IInventory inv, final int slotIn) {
         return delegate.isHere(inv, slotIn);
     }
 
     @Override
-    public boolean canTakeStack(@Nonnull EntityPlayer playerIn) {
+    public boolean canTakeStack(@Nonnull final EntityPlayer playerIn) {
         return delegate.canTakeStack(playerIn);
     }
 
@@ -110,12 +110,12 @@ public class SlotSingleItem extends Slot {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void setBackgroundLocation(@Nonnull ResourceLocation texture) {
+    public void setBackgroundLocation(@Nonnull final ResourceLocation texture) {
         delegate.setBackgroundLocation(texture);
     }
 
     @Override
-    public void setBackgroundName(@Nullable String name) {
+    public void setBackgroundName(@Nullable final String name) {
         delegate.setBackgroundName(name);
     }
 
@@ -132,7 +132,7 @@ public class SlotSingleItem extends Slot {
     }
 
     @Override
-    public boolean isSameInventory(@Nonnull Slot other) {
+    public boolean isSameInventory(@Nonnull final Slot other) {
         return delegate.isSameInventory(other);
     }
 

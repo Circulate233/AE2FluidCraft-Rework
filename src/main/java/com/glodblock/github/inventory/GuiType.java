@@ -82,144 +82,144 @@ public enum GuiType {
 
     ULTIMATE_ENCODER(new TileGuiFactory<>(TileUltimateEncoder.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileUltimateEncoder inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileUltimateEncoder inv) {
             return new ContainerUltimateEncoder(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileUltimateEncoder inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileUltimateEncoder inv) {
             return new GuiUltimateEncoder(player.inventory, inv);
         }
     }),
 
     FLUID_ASSEMBLER(new TileGuiFactory<>(TileFluidAssembler.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileFluidAssembler inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileFluidAssembler inv) {
             return new ContainerFluidAssembler(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileFluidAssembler inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileFluidAssembler inv) {
             return new GuiFluidAssembler(player.inventory, inv);
         }
     }),
 
     ITEM_AMOUNT_SET(new AllGuiFactory<>(ITerminalHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final ITerminalHost inv) {
             return new ContainerItemAmountChange(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final ITerminalHost inv) {
             return new GuiItemAmountChange(player.inventory, inv);
         }
     }),
 
     GENERAL_LEVEL_MAINTAINER(new PartOrTileGuiFactory<>(TileGeneralLevelMaintainer.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileGeneralLevelMaintainer inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileGeneralLevelMaintainer inv) {
             return new ContainerGeneralLevelMaintainer(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileGeneralLevelMaintainer inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileGeneralLevelMaintainer inv) {
             return new GuiGeneralLevelMaintainer(player.inventory, inv);
         }
     }),
 
     FLUID_EXPORT_BUS(new PartOrTileGuiFactory<>(PartFluidExportBus.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, PartFluidExportBus inv) {
+        protected Object createServerGui(final EntityPlayer player, final PartFluidExportBus inv) {
             return new ContainerFluidExportBus(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, PartFluidExportBus inv) {
+        protected Object createClientGui(final EntityPlayer player, final PartFluidExportBus inv) {
             return new GuiFluidExportBus(player.inventory, inv);
         }
     }),
 
     INGREDIENT_BUFFER(new TileGuiFactory<>(TileIngredientBuffer.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileIngredientBuffer inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileIngredientBuffer inv) {
             return new ContainerIngredientBuffer(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileIngredientBuffer inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileIngredientBuffer inv) {
             return new GuiIngredientBuffer(player.inventory, inv);
         }
     }),
 
     LARGE_INGREDIENT_BUFFER(new TileGuiFactory<>(TileLargeIngredientBuffer.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileLargeIngredientBuffer inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileLargeIngredientBuffer inv) {
             return new ContainerLargeIngredientBuffer(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileLargeIngredientBuffer inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileLargeIngredientBuffer inv) {
             return new GuiLargeIngredientBuffer(player.inventory, inv);
         }
     }),
 
     FLUID_PATTERN_ENCODER(new TileGuiFactory<>(TileFluidPatternEncoder.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileFluidPatternEncoder inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileFluidPatternEncoder inv) {
             return new ContainerFluidPatternEncoder(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileFluidPatternEncoder inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileFluidPatternEncoder inv) {
             return new GuiFluidPatternEncoder(player.inventory, inv);
         }
     }),
 
     FLUID_PACKET_DECODER(new TileGuiFactory<>(TileFluidPacketDecoder.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileFluidPacketDecoder inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileFluidPacketDecoder inv) {
             return new ContainerFluidPacketDecoder(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileFluidPacketDecoder inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileFluidPacketDecoder inv) {
             return new GuiFluidPacketDecoder(player.inventory, inv);
         }
     }),
 
     PRECISION_BURETTE(new TileGuiFactory<>(TileBurette.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileBurette inv) {
+        protected Object createServerGui(final EntityPlayer player, final TileBurette inv) {
             return new ContainerBurette(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileBurette inv) {
+        protected Object createClientGui(final EntityPlayer player, final TileBurette inv) {
             return new GuiBurette(player.inventory, inv);
         }
     }),
 
     DUAL_ITEM_INTERFACE(new PartOrTileGuiFactory<>(IInterfaceHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, IInterfaceHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final IInterfaceHost inv) {
             return new ContainerItemDualInterface(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, IInterfaceHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final IInterfaceHost inv) {
             return new GuiItemDualInterface(player.inventory, inv);
         }
     }),
 
     DUAL_FLUID_INTERFACE(new PartOrTileGuiFactory<>(IFluidInterfaceHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, IFluidInterfaceHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final IFluidInterfaceHost inv) {
             return new ContainerFluidDualInterface(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, IFluidInterfaceHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final IFluidInterfaceHost inv) {
             return new GuiFluidDualInterface(player.inventory, inv);
         }
     }),
@@ -230,84 +230,84 @@ public enum GuiType {
 
     FLUID_PAT_TERM_CRAFTING_STATUS(new ItemOrPartGuiFactory<>(ITerminalHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final ITerminalHost inv) {
             return new ContainerCraftingStatus(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final ITerminalHost inv) {
             return new GuiFluidPatternTerminalCraftingStatus(player.inventory, inv);
         }
     }),
 
     FLUID_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final ITerminalHost inv) {
             return new ContainerFluidPatternTerminal(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final ITerminalHost inv) {
             return new GuiFluidPatternTerminal(player.inventory, inv);
         }
     }),
 
     FLUID_EXTENDED_PATTERN_TERMINAL(new PartGuiFactory<>(ITerminalHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final ITerminalHost inv) {
             return new ContainerExtendedFluidPatternTerminal(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final ITerminalHost inv) {
             return new GuiExtendedFluidPatternTerminal(player.inventory, inv);
         }
     }),
 
     WIRELESS_FLUID_PATTERN_TERMINAL(new ItemGuiFactory<>(WirelessTerminalGuiObject.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, WirelessTerminalGuiObject inv) {
+        protected Object createServerGui(final EntityPlayer player, final WirelessTerminalGuiObject inv) {
             return new ContainerWirelessFluidPatternTerminal(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, WirelessTerminalGuiObject inv) {
+        protected Object createClientGui(final EntityPlayer player, final WirelessTerminalGuiObject inv) {
             return new GuiWirelessFluidPatternTerminal(player.inventory, inv);
         }
     }),
 
     FLUID_CRAFT_AMOUNT(new ItemOrPartGuiFactory<>(ITerminalHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final ITerminalHost inv) {
             return new ContainerCraftAmount(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final ITerminalHost inv) {
             return new GuiFCCraftAmount(player.inventory, inv);
         }
     }),
 
     FLUID_CRAFT_CONFIRM(new ItemOrPartGuiFactory<>(ITerminalHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final ITerminalHost inv) {
             return new ContainerFCCraftConfirm(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final ITerminalHost inv) {
             return new GuiFCCraftConfirm(player.inventory, inv);
         }
     }),
 
     PRIORITY(new PartOrTileGuiFactory<>(FCPriorityHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCPriorityHost inv) {
+        protected Object createServerGui(final EntityPlayer player, final FCPriorityHost inv) {
             return new ContainerPriority(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCPriorityHost inv) {
+        protected Object createClientGui(final EntityPlayer player, final FCPriorityHost inv) {
             return new GuiFCPriority(player.inventory, inv);
         }
     });
@@ -315,18 +315,18 @@ public enum GuiType {
     public static final List<GuiType> VALUES = ImmutableList.copyOf(values());
 
     @Nullable
-    public static GuiType getByOrdinal(int ordinal) {
+    public static GuiType getByOrdinal(final int ordinal) {
         return ordinal < 0 || ordinal >= VALUES.size() ? null : VALUES.get(ordinal);
     }
 
     private GuiFactory guiFactory;
     private Supplier<GuiFactory> supplier;
 
-    GuiType(GuiFactory guiFactory) {
+    GuiType(final GuiFactory guiFactory) {
         this.guiFactory = guiFactory;
     }
 
-    GuiType(Supplier<GuiFactory> lazyFactory) {
+    GuiType(final Supplier<GuiFactory> lazyFactory) {
         this.supplier = lazyFactory;
     }
 
@@ -352,26 +352,26 @@ public enum GuiType {
 
         protected final Class<T> invClass;
 
-        public TileGuiFactory(Class<T> invClass) {
+        public TileGuiFactory(final Class<T> invClass) {
             this.invClass = invClass;
         }
 
         @Nullable
-        protected T getInventory(@Nullable TileEntity tile, EntityPlayer player, EnumFacing face, BlockPos pos) {
+        protected T getInventory(@Nullable final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
             return invClass.isInstance(tile) ? invClass.cast(tile) : null;
         }
 
         @Nullable
         @Override
-        public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, EnumFacing face) {
-            TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-            T inv = getInventory(tile, player, face, new BlockPos(x, y, z));
+        public Object createServerGui(final EntityPlayer player, final World world, final int x, final int y, final int z, final EnumFacing face) {
+            final TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+            final T inv = getInventory(tile, player, face, new BlockPos(x, y, z));
             if (inv == null) {
                 return null;
             }
-            Object gui = createServerGui(player, inv);
+            final Object gui = createServerGui(player, inv);
             if (gui instanceof AEBaseContainer) {
-                ContainerOpenContext ctx = new ContainerOpenContext(inv);
+                final ContainerOpenContext ctx = new ContainerOpenContext(inv);
                 ctx.setWorld(world);
                 ctx.setX(x);
                 ctx.setY(y);
@@ -387,9 +387,9 @@ public enum GuiType {
 
         @Nullable
         @Override
-        public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, EnumFacing face) {
-            TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-            T inv = getInventory(tile, player, face, new BlockPos(x, y, z));
+        public Object createClientGui(final EntityPlayer player, final World world, final int x, final int y, final int z, final EnumFacing face) {
+            final TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+            final T inv = getInventory(tile, player, face, new BlockPos(x, y, z));
             if (inv == null) {
                 return null;
             }
@@ -403,15 +403,15 @@ public enum GuiType {
 
     public static abstract class PartOrTileGuiFactory<T> extends TileGuiFactory<T> {
 
-        public PartOrTileGuiFactory(Class<T> invClass) {
+        public PartOrTileGuiFactory(final Class<T> invClass) {
             super(invClass);
         }
 
         @Nullable
         @Override
-        protected T getInventory(TileEntity tile, EntityPlayer player, EnumFacing face, BlockPos pos) {
+        protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
             if (pos.getZ() != Integer.MIN_VALUE && tile instanceof IPartHost) {
-                IPart part = ((IPartHost)tile).getPart(face);
+                final IPart part = ((IPartHost)tile).getPart(face);
                 if (invClass.isInstance(part)) {
                     return invClass.cast(part);
                 }
@@ -423,15 +423,15 @@ public enum GuiType {
 
     public static abstract class PartGuiFactory<T> extends TileGuiFactory<T> {
 
-        public PartGuiFactory(Class<T> invClass) {
+        public PartGuiFactory(final Class<T> invClass) {
             super(invClass);
         }
 
         @Nullable
         @Override
-        protected T getInventory(TileEntity tile, EntityPlayer player, EnumFacing face, BlockPos pos) {
+        protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
             if (pos.getZ() != Integer.MIN_VALUE && tile instanceof IPartHost) {
-                IPart part = ((IPartHost)tile).getPart(face);
+                final IPart part = ((IPartHost)tile).getPart(face);
                 if (invClass.isInstance(part)) {
                     return invClass.cast(part);
                 }
@@ -443,13 +443,13 @@ public enum GuiType {
 
     public static abstract class ItemGuiFactory<T> extends TileGuiFactory<T> {
 
-        public ItemGuiFactory(Class<T> invClass) {
+        public ItemGuiFactory(final Class<T> invClass) {
             super(invClass);
         }
 
         @Nullable
         @Override
-        protected T getInventory(TileEntity tile, EntityPlayer player, EnumFacing face, BlockPos pos) {
+        protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
             if (pos.getZ() == Integer.MIN_VALUE) {
                 ItemStack terminal = ItemStack.EMPTY;
                 if (pos.getY() == 0) { // main inventory
@@ -460,7 +460,7 @@ public enum GuiType {
                 if (terminal == null || terminal.isEmpty()) {
                     return null;
                 }
-                Object holder = getItemGuiObject(terminal, player, player.world, pos.getX(), pos.getY(), pos.getZ());
+                final Object holder = getItemGuiObject(terminal, player, player.world, pos.getX(), pos.getY(), pos.getZ());
                 if (invClass.isInstance(holder)) {
                     return invClass.cast(holder);
                 }
@@ -469,7 +469,7 @@ public enum GuiType {
         }
 
         @Optional.Method(modid = "baubles")
-        private static ItemStack getStackInBaubleSlot(EntityPlayer player, int slot) {
+        private static ItemStack getStackInBaubleSlot(final EntityPlayer player, final int slot) {
             if (slot >= 0 && slot < BaublesApi.getBaublesHandler(player).getSlots()) {
                 return BaublesApi.getBaublesHandler(player).getStackInSlot(slot);
             }
@@ -480,13 +480,13 @@ public enum GuiType {
 
     public static abstract class ItemOrPartGuiFactory<T> extends PartGuiFactory<T> {
 
-        public ItemOrPartGuiFactory(Class<T> invClass) {
+        public ItemOrPartGuiFactory(final Class<T> invClass) {
             super(invClass);
         }
 
         @Nullable
         @Override
-        protected T getInventory(TileEntity tile, EntityPlayer player, EnumFacing face, BlockPos pos) {
+        protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
             if (pos.getZ() == Integer.MIN_VALUE) {
                 ItemStack terminal = ItemStack.EMPTY;
                 if (pos.getY() == 0) { // main inventory
@@ -497,7 +497,7 @@ public enum GuiType {
                 if (terminal == null || terminal.isEmpty()) {
                     return null;
                 }
-                Object holder = getItemGuiObject(terminal, player, player.world, pos.getX(), pos.getY(), pos.getZ());
+                final Object holder = getItemGuiObject(terminal, player, player.world, pos.getX(), pos.getY(), pos.getZ());
                 if (invClass.isInstance(holder)) {
                     return invClass.cast(holder);
                 }
@@ -506,7 +506,7 @@ public enum GuiType {
         }
 
         @Optional.Method(modid = "baubles")
-        private static ItemStack getStackInBaubleSlot(EntityPlayer player, int slot) {
+        private static ItemStack getStackInBaubleSlot(final EntityPlayer player, final int slot) {
             if (slot >= 0 && slot < BaublesApi.getBaublesHandler(player).getSlots()) {
                 return BaublesApi.getBaublesHandler(player).getStackInSlot(slot);
             }
@@ -517,13 +517,13 @@ public enum GuiType {
 
     public static abstract class AllGuiFactory<T> extends PartOrTileGuiFactory<T> {
 
-        public AllGuiFactory(Class<T> invClass) {
+        public AllGuiFactory(final Class<T> invClass) {
             super(invClass);
         }
 
         @Nullable
         @Override
-        protected T getInventory(TileEntity tile, EntityPlayer player, EnumFacing face, BlockPos pos) {
+        protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
             if (pos.getZ() == Integer.MIN_VALUE) {
                 ItemStack terminal = ItemStack.EMPTY;
                 if (pos.getY() == 0) {
@@ -536,7 +536,7 @@ public enum GuiType {
                     return null;
                 }
 
-                Object holder = GuiType.getItemGuiObject(terminal, player, player.world, pos.getX(), pos.getY(), pos.getZ());
+                final Object holder = GuiType.getItemGuiObject(terminal, player, player.world, pos.getX(), pos.getY(), pos.getZ());
                 if (this.invClass.isInstance(holder)) {
                     return this.invClass.cast(holder);
                 }
@@ -546,18 +546,18 @@ public enum GuiType {
         }
 
         @Optional.Method(modid = "baubles")
-        private static ItemStack getStackInBaubleSlot(EntityPlayer player, int slot) {
+        private static ItemStack getStackInBaubleSlot(final EntityPlayer player, final int slot) {
             return slot >= 0 && slot < BaublesApi.getBaublesHandler(player).getSlots() ? BaublesApi.getBaublesHandler(player).getStackInSlot(slot) : null;
         }
 
     }
 
-    public static Object getItemGuiObject(ItemStack it, EntityPlayer player, World w, int x, int y, int z) {
+    public static Object getItemGuiObject(final ItemStack it, final EntityPlayer player, final World w, final int x, final int y, final int z) {
         if (!it.isEmpty()) {
             if (it.getItem() instanceof IGuiItem) {
                 return ((IGuiItem)it.getItem()).getGuiObject(it, w, new BlockPos(x, y, z));
             }
-            IWirelessTermHandler wh = AEApi.instance().registries().wireless().getWirelessTerminalHandler(it);
+            final IWirelessTermHandler wh = AEApi.instance().registries().wireless().getWirelessTerminalHandler(it);
             if (wh != null) {
                 return new WirelessTerminalGuiObject(wh, it, player, w, x, y, z);
             }

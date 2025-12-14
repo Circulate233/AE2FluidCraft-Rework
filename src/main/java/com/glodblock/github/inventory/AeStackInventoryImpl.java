@@ -22,14 +22,13 @@ public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInve
     @Nullable
     private final IAEAppEngInventory owner;
 
-    @SuppressWarnings("unchecked")
-    public AeStackInventoryImpl(IStorageChannel<T> channel, int slotCount, @Nullable IAEAppEngInventory owner) {
+    public AeStackInventoryImpl(final IStorageChannel<T> channel, final int slotCount, @Nullable final IAEAppEngInventory owner) {
         this.channel = channel;
         this.inv = (T[])new IAEStack[slotCount];
         this.owner = owner;
     }
 
-    public AeStackInventoryImpl(IStorageChannel<T> channel, int slotCount) {
+    public AeStackInventoryImpl(final IStorageChannel<T> channel, final int slotCount) {
         this(channel, slotCount, null);
     }
 
@@ -40,12 +39,12 @@ public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInve
 
     @Override
     @Nullable
-    public T getStack(int slot) {
+    public T getStack(final int slot) {
         return inv[slot];
     }
 
     @Override
-    public void setStack(int slot, @Nullable T stack) {
+    public void setStack(final int slot, @Nullable final T stack) {
         inv[slot] = stack;
         if (owner != null) {
             owner.saveChanges();
@@ -63,13 +62,13 @@ public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInve
         return Arrays.stream(inv);
     }
 
-    public void writeToNbt(NBTTagCompound tag) {
-        NBTTagList stacksTag = new NBTTagList();
-        for (T stack : inv) {
+    public void writeToNbt(final NBTTagCompound tag) {
+        final NBTTagList stacksTag = new NBTTagList();
+        for (final T stack : inv) {
             if (stack == null) {
                 stacksTag.appendTag(new NBTTagCompound());
             } else {
-                NBTTagCompound stackTag = new NBTTagCompound();
+                final NBTTagCompound stackTag = new NBTTagCompound();
                 stack.writeToNBT(stackTag);
                 stacksTag.appendTag(stackTag);
             }
@@ -77,21 +76,21 @@ public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInve
         tag.setTag("Contents", stacksTag);
     }
 
-    public void writeToNbt(NBTTagCompound parentTag, String key) {
-        NBTTagCompound tag = new NBTTagCompound();
+    public void writeToNbt(final NBTTagCompound parentTag, final String key) {
+        final NBTTagCompound tag = new NBTTagCompound();
         writeToNbt(tag);
         parentTag.setTag(key, tag);
     }
 
-    public void readFromNbt(NBTTagCompound tag) {
-        NBTTagList stacksTag = tag.getTagList("Contents", Constants.NBT.TAG_COMPOUND);
+    public void readFromNbt(final NBTTagCompound tag) {
+        final NBTTagList stacksTag = tag.getTagList("Contents", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < inv.length; i++) {
-            NBTTagCompound stackTag = stacksTag.getCompoundTagAt(i);
+            final NBTTagCompound stackTag = stacksTag.getCompoundTagAt(i);
             inv[i] = stackTag.isEmpty() ? null : channel.createFromNBT(stackTag);
         }
     }
 
-    public void readFromNbt(NBTTagCompound parentTag, String key) {
+    public void readFromNbt(final NBTTagCompound parentTag, final String key) {
         readFromNbt(parentTag.getCompoundTag(key));
     }
 

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinGuiScreenHelper {
 
     @WrapOperation(method = "getPluginsIngredientUnderMouse", at = @At(value = "INVOKE", target = "Lmezz/jei/gui/GuiScreenHelper;createClickedIngredient(Ljava/lang/Object;Lnet/minecraft/client/gui/inventory/GuiContainer;)Lmezz/jei/input/IClickedIngredient;"))
-    private IClickedIngredient<Object> wrapFluidPacket(GuiScreenHelper instance, Object slotUnderMouse, GuiContainer guiContainer, Operation<IClickedIngredient<Object>> original) {
+    private IClickedIngredient<Object> wrapFluidPacket(final GuiScreenHelper instance, final Object slotUnderMouse, final GuiContainer guiContainer, final Operation<IClickedIngredient<Object>> original) {
         return original.call(instance, CoreModHooks.wrapFluidPacket(slotUnderMouse), guiContainer);
     }
 }

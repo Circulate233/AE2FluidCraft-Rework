@@ -66,8 +66,8 @@ public class BlockDualInterface extends AEBaseTileBlock {
     @SuppressWarnings("deprecation")
     @Override
     @Nonnull
-    public IBlockState getActualState(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-        TileDualInterface te = this.getTileEntity(world, pos);
+    public IBlockState getActualState(@Nonnull final IBlockState state, @Nonnull final IBlockAccess world, @Nonnull final BlockPos pos) {
+        final TileDualInterface te = this.getTileEntity(world, pos);
         return te == null ? state
                 : state.withProperty(OMNIDIRECTIONAL, te.isOmniDirectional()).withProperty(FACING, te.getForward());
     }
@@ -85,8 +85,8 @@ public class BlockDualInterface extends AEBaseTileBlock {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        TileEntity tileEntity = this.getTileEntity(worldIn, pos);
+    public void neighborChanged(final IBlockState state, final World worldIn, final BlockPos pos, final Block blockIn, final BlockPos fromPos) {
+        final TileEntity tileEntity = this.getTileEntity(worldIn, pos);
         if (tileEntity instanceof TileDualInterface) {
             ((TileDualInterface) tileEntity).getInterfaceDuality().updateRedstoneState();
         }

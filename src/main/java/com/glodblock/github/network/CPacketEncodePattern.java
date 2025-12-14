@@ -12,12 +12,12 @@ import javax.annotation.Nullable;
 public class CPacketEncodePattern implements IMessage {
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         // NO-OP
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         // NO-OP
     }
 
@@ -25,8 +25,8 @@ public class CPacketEncodePattern implements IMessage {
 
         @Nullable
         @Override
-        public IMessage onMessage(CPacketEncodePattern message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
+        public IMessage onMessage(final CPacketEncodePattern message, final MessageContext ctx) {
+            final EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 if (player.openContainer instanceof ContainerFluidPatternEncoder) {
                     ((ContainerFluidPatternEncoder)player.openContainer).encodePattern();

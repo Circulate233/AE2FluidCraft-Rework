@@ -14,15 +14,15 @@ public class GuiFluidExportBus extends GuiUpgradeable {
 
     private final PartSharedFluidBus bus;
 
-    public GuiFluidExportBus(InventoryPlayer inventoryPlayer, PartSharedFluidBus te) {
+    public GuiFluidExportBus(final InventoryPlayer inventoryPlayer, final PartSharedFluidBus te) {
         super(new ContainerFluidExportBus(inventoryPlayer, te));
         this.bus = te;
     }
 
     public void initGui() {
         super.initGui();
-        ContainerFluidIO container = (ContainerFluidIO)this.inventorySlots;
-        IAEFluidTank inv = this.bus.getConfig();
+        final ContainerFluidIO container = (ContainerFluidIO)this.inventorySlots;
+        final IAEFluidTank inv = this.bus.getConfig();
         this.guiSlots.add(new GuiFluidSlot(inv, 0, 0, 80, 40));
         this.guiSlots.add(new GuiOptionalFluidSlot(inv, container, 1, 1, 1, 80, 40, -1, 0));
         this.guiSlots.add(new GuiOptionalFluidSlot(inv, container, 2, 2, 1, 80, 40, 1, 0));

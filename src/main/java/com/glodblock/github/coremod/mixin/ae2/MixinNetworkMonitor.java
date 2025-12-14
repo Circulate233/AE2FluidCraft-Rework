@@ -56,14 +56,14 @@ public abstract class MixinNetworkMonitor<T extends IAEStack<T>> implements FCNe
             fluidMonitor = new FakeMonitor<>(this.myGridCache, Util.getFluidChannel()) {
 
                 @Override
-                public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> list) {
+                public IItemList<IAEItemStack> getAvailableItems(final IItemList<IAEItemStack> list) {
                     list.findFuzzy(
                         drop.computeIfAbsent(Util.getFluidChannel(), s -> AEItemStack.fromItemStack(new ItemStack(FCItems.FLUID_DROP, 1))),
                         FuzzyMode.IGNORE_ALL
                     ).forEach(i -> i.setStackSize(0));
 
-                    for (var t : monitor.getStorageList()) {
-                        var i = cacheMap.computeIfAbsent(t, ti -> FakeItemRegister.packAEStackLong(ti, FCItems.FLUID_DROP));
+                    for (final var t : monitor.getStorageList()) {
+                        final var i = cacheMap.computeIfAbsent(t, ti -> FakeItemRegister.packAEStackLong(ti, FCItems.FLUID_DROP));
                         if (i != null) {
                             i.setStackSize(t.getStackSize());
                             list.addStorage(i);
@@ -77,14 +77,14 @@ public abstract class MixinNetworkMonitor<T extends IAEStack<T>> implements FCNe
                 gasMonitor = new FakeMonitor<>(this.myGridCache, Util.getGasChannel()) {
 
                     @Override
-                    public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> list) {
+                    public IItemList<IAEItemStack> getAvailableItems(final IItemList<IAEItemStack> list) {
                         list.findFuzzy(
                             drop.computeIfAbsent(Util.getGasChannel(), s -> AEItemStack.fromItemStack(new ItemStack(FCGasItems.GAS_DROP, 1))),
                             FuzzyMode.IGNORE_ALL
                         ).forEach(i -> i.setStackSize(0));
 
-                        for (var t : monitor.getStorageList()) {
-                            var i = cacheMap.computeIfAbsent(t, ti -> FakeItemRegister.packAEStackLong(ti, FCGasItems.GAS_DROP));
+                        for (final var t : monitor.getStorageList()) {
+                            final var i = cacheMap.computeIfAbsent(t, ti -> FakeItemRegister.packAEStackLong(ti, FCGasItems.GAS_DROP));
                             if (i != null) {
                                 i.setStackSize(t.getStackSize());
                                 list.addStorage(i);
@@ -109,12 +109,12 @@ public abstract class MixinNetworkMonitor<T extends IAEStack<T>> implements FCNe
     }
 
     @Override
-    public void fc$postChange(boolean add, Iterable<T> changes, IActionSource src) {
+    public void fc$postChange(final boolean add, final Iterable<T> changes, final IActionSource src) {
         this.postChange(add, changes, src);
     }
 
     @Inject(method = "getAvailableItems", at = @At("TAIL"))
-    public void getAvailableItems(IItemList<T> out, CallbackInfoReturnable<IItemList<T>> cir) {
+    public void getAvailableItems(final IItemList<T> out, final CallbackInfoReturnable<IItemList<T>> cir) {
         if (this.myChannel == Util.getItemChannel()) {
             fluidMonitor.getAvailableItems((IItemList<IAEItemStack>) out);
             if (ModAndClassUtil.GAS && gasMonitor != null) {

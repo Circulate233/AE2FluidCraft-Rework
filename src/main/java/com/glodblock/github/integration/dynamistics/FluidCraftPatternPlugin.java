@@ -28,9 +28,8 @@ public class FluidCraftPatternPlugin implements IRecipeRegistryPlugin {
     }
 
     @Override
-    public <V> List<String> getRecipeCategoryUids(IFocus<V> focus) {
-        if(focus.getValue() instanceof ItemStack) {
-            ItemStack stack = (ItemStack) focus.getValue();
+    public <V> List<String> getRecipeCategoryUids(final IFocus<V> focus) {
+        if(focus.getValue() instanceof final ItemStack stack) {
             if(stack.getItem() == FCItems.DENSE_CRAFT_ENCODED_PATTERN && stack.hasTagCompound()) {
                 return Collections.singletonList(FluidCraftPatternCategory.UID);
             }
@@ -39,7 +38,7 @@ public class FluidCraftPatternPlugin implements IRecipeRegistryPlugin {
     }
 
     @Override
-    public <T extends IRecipeWrapper, V> List<T> getRecipeWrappers(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
+    public <T extends IRecipeWrapper, V> List<T> getRecipeWrappers(final IRecipeCategory<T> recipeCategory, final IFocus<V> focus) {
         if(recipeCategory instanceof FluidCraftPatternCategory && ((ItemStack) focus.getValue()).getItem() == FCItems.DENSE_CRAFT_ENCODED_PATTERN) {
             return Collections.singletonList(new SingletonRecipe((ItemStack) focus.getValue(), focus.getMode() == IFocus.Mode.INPUT).cast());
         }
@@ -47,7 +46,7 @@ public class FluidCraftPatternPlugin implements IRecipeRegistryPlugin {
     }
 
     @Override
-    public <T extends IRecipeWrapper> List<T> getRecipeWrappers(IRecipeCategory<T> recipeCategory) {
+    public <T extends IRecipeWrapper> List<T> getRecipeWrappers(final IRecipeCategory<T> recipeCategory) {
         if (recipeCategory instanceof FluidCraftPatternCategory) {
             return Collections.singletonList(new SingletonRecipe(getExampleItem(), true).cast());
         }
@@ -60,9 +59,9 @@ public class FluidCraftPatternPlugin implements IRecipeRegistryPlugin {
             final NBTTagCompound encodedValue = new NBTTagCompound();
             final NBTTagList tagIn = new NBTTagList();
             final NBTTagList tagOut = new NBTTagList();
-            ItemStack wool = new ItemStack(Blocks.WOOL, 1, 2);
-            ItemStack water = new ItemStack(Items.WATER_BUCKET);
-            ItemStack clear = new ItemStack(Blocks.WOOL);
+            final ItemStack wool = new ItemStack(Blocks.WOOL, 1, 2);
+            final ItemStack water = new ItemStack(Items.WATER_BUCKET);
+            final ItemStack clear = new ItemStack(Blocks.WOOL);
             tagIn.appendTag(water.writeToNBT(new NBTTagCompound()));
             tagIn.appendTag(wool.writeToNBT(new NBTTagCompound()));
             tagOut.appendTag(clear.writeToNBT(new NBTTagCompound()));

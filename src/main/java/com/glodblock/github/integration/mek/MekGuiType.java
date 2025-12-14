@@ -18,12 +18,12 @@ public class MekGuiType {
         return new GuiType.PartOrTileGuiFactory<>(IInterfaceHost.class) {
 
             @Override
-            protected Object createServerGui(EntityPlayer player, IInterfaceHost inv) {
+            protected Object createServerGui(final EntityPlayer player, final IInterfaceHost inv) {
                 return new ContainerItemDualInterface(player.inventory, inv);
             }
 
             @Override
-            protected Object createClientGui(EntityPlayer player, IInterfaceHost inv) {
+            protected Object createClientGui(final EntityPlayer player, final IInterfaceHost inv) {
                 return new GuiItemTrioInterface(player.inventory, inv);
             }
         };
@@ -33,12 +33,12 @@ public class MekGuiType {
         return new GuiType.PartOrTileGuiFactory<>(IFluidInterfaceHost.class) {
 
             @Override
-            protected Object createServerGui(EntityPlayer player, IFluidInterfaceHost inv) {
+            protected Object createServerGui(final EntityPlayer player, final IFluidInterfaceHost inv) {
                 return new ContainerFluidDualInterface(player.inventory, inv);
             }
 
             @Override
-            protected Object createClientGui(EntityPlayer player, IFluidInterfaceHost inv) {
+            protected Object createClientGui(final EntityPlayer player, final IFluidInterfaceHost inv) {
                 return new GuiFluidTrioInterface(player.inventory, inv);
             }
         };
@@ -48,12 +48,12 @@ public class MekGuiType {
         return new GuiType.PartOrTileGuiFactory<>(IGasInterfaceHost.class) {
 
             @Override
-            protected Object createServerGui(EntityPlayer player, IGasInterfaceHost inv) {
+            protected Object createServerGui(final EntityPlayer player, final IGasInterfaceHost inv) {
                 return new ContainerGasTrioInterface(player.inventory, inv);
             }
 
             @Override
-            protected Object createClientGui(EntityPlayer player, IGasInterfaceHost inv) {
+            protected Object createClientGui(final EntityPlayer player, final IGasInterfaceHost inv) {
                 return new GuiGasTrioInterface(player.inventory, inv);
             }
         };

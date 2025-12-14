@@ -21,7 +21,7 @@ import thelm.packagedauto.api.IRecipeInfo;
 import thelm.packagedauto.api.IRecipeType;
 import thelm.packagedauto.integration.jei.PackagedAutoJEIPlugin;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.List;
 
 public class RecipeTypeFluidProcessing implements IRecipeType {
@@ -34,7 +34,7 @@ public class RecipeTypeFluidProcessing implements IRecipeType {
     private static final int NUM_SLOTS_CRAFT = 81, NUM_SLOTS_OUT = 9;
 
     static {
-        IntSet slots = new IntOpenHashSet();
+        final IntSet slots = new IntOpenHashSet();
         for (int i = 0; i < 90; i++) {
             slots.add(i);
         }
@@ -95,33 +95,33 @@ public class RecipeTypeFluidProcessing implements IRecipeType {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public Color getSlotColor(int slot) {
+    public Color getSlotColor(final int slot) {
         return SLOT_COLOUR;
     }
 
     @Optional.Method(modid = "jei")
     @Override
-    public Int2ObjectMap<ItemStack> getRecipeTransferMap(IRecipeLayout recipeLayout, String category) {
-        Int2ObjectMap<ItemStack> tfrs = new Int2ObjectOpenHashMap<>();
+    public Int2ObjectMap<ItemStack> getRecipeTransferMap(final IRecipeLayout recipeLayout, final String category) {
+        final Int2ObjectMap<ItemStack> tfrs = new Int2ObjectOpenHashMap<>();
         int ndxCrafting = 0, ndxOutput = 0;
-        for (IGuiIngredient<ItemStack> ing : recipeLayout.getItemStacks().getGuiIngredients().values()) {
+        for (final IGuiIngredient<ItemStack> ing : recipeLayout.getItemStacks().getGuiIngredients().values()) {
             if (ing.isInput()) {
                 if (ndxCrafting < NUM_SLOTS_CRAFT) {
-                    ItemStack stack = ing.getDisplayedIngredient();
+                    final ItemStack stack = ing.getDisplayedIngredient();
                     if (stack != null) {
                         tfrs.put(ndxCrafting++, stack);
                     }
                 }
             } else {
                 if (ndxOutput < NUM_SLOTS_OUT) {
-                    ItemStack stack = ing.getDisplayedIngredient();
+                    final ItemStack stack = ing.getDisplayedIngredient();
                     if (stack != null) {
                         tfrs.put(NUM_SLOTS_CRAFT + ndxOutput++, stack);
                     }
                 }
             }
         }
-        for (IGuiIngredient<FluidStack> ing : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
+        for (final IGuiIngredient<FluidStack> ing : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
             if (ing.isInput()) {
                 if (ndxCrafting < NUM_SLOTS_CRAFT) {
                     tfrs.put(ndxCrafting++, FakeFluids.packFluid2Packet(ing.getDisplayedIngredient()));

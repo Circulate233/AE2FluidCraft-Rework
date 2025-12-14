@@ -132,7 +132,7 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
         }
         try {
             this.getProxy().getGrid().postEvent(new MENetworkCraftingPatternChange(this, this.getProxy().getNode()));
-        } catch (GridAccessException e) {
+        } catch (final GridAccessException e) {
             e.printStackTrace();
         }
 
@@ -156,14 +156,13 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(final Capability<?> capability, final EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
 
-    @SuppressWarnings("unchecked")
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(final Capability<T> capability, @Nullable final EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T)invPatterns;
         }
@@ -211,7 +210,7 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
         this.output.readFromNBT(data, "output");
         this.progress = data.getInteger("progress");
         if (data.hasKey("myPlan")) {
-            ItemStack pattern = new ItemStack(data.getCompoundTag("myPlan"));
+            final ItemStack pattern = new ItemStack(data.getCompoundTag("myPlan"));
             this.myPlan = FluidCraftingPatternDetails.GetFluidPattern(pattern, this.getWorld());
         }
         this.waitingToSend = new ObjectArrayList<>();
@@ -230,29 +229,28 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
 
     @Nonnull
     @Override
-    public AECableType getCableConnectionType(@Nonnull AEPartLocation aePartLocation) {
+    public AECableType getCableConnectionType(@Nonnull final AEPartLocation aePartLocation) {
         return AECableType.SMART;
     }
 
     @Override
-    public void provideCrafting(ICraftingProviderHelper craftingTracker) {
+    public void provideCrafting(final ICraftingProviderHelper craftingTracker) {
         if (this.getProxy().isActive() && this.craftingList != null) {
-            for (ICraftingPatternDetails details : this.craftingList) {
+            for (final ICraftingPatternDetails details : this.craftingList) {
                 craftingTracker.addCraftingOption(this, details);
             }
         }
     }
 
     @Override
-    public boolean pushPattern(ICraftingPatternDetails patternDetails, InventoryCrafting inventoryCrafting) {
+    public boolean pushPattern(final ICraftingPatternDetails patternDetails, final InventoryCrafting inventoryCrafting) {
         if (!this.getProxy().isActive() || this.myPlan != null
-                || !this.craftingList.contains(patternDetails) || !(patternDetails instanceof FluidCraftingPatternDetails)) {
+                || !this.craftingList.contains(patternDetails) || !(patternDetails instanceof final FluidCraftingPatternDetails fluidPattern)) {
             return false;
         }
-        FluidCraftingPatternDetails fluidPattern = (FluidCraftingPatternDetails) patternDetails;
         this.myPlan = patternDetails;
         for (int x = 0; x < 9; x ++) {
-            IAEItemStack item = fluidPattern.getOriginInputs()[x];
+            final IAEItemStack item = fluidPattern.getOriginInputs()[x];
             if (item == null) {
                 this.gridInv.setStackInSlot(x, ItemStack.EMPTY);
             } else {
@@ -273,9 +271,9 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
     }
 
     public int getSpeed() {
-        ItemStack card = this.upgrade.getStackInSlot(0);
+        final ItemStack card = this.upgrade.getStackInSlot(0);
         if (!card.isEmpty() && card.getItem() instanceof IUpgradeModule) {
-            Upgrades type = ((IUpgradeModule) card.getItem()).getType(card);
+            final Upgrades type = ((IUpgradeModule) card.getItem()).getType(card);
             if (type == Upgrades.SPEED) {
                 return card.getCount() + 1;
             }
@@ -284,9 +282,9 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
     }
 
     public int getPatternCap() {
-        ItemStack card = this.upgrade.getStackInSlot(1);
+        final ItemStack card = this.upgrade.getStackInSlot(1);
         if (!card.isEmpty() && card.getItem() instanceof IUpgradeModule) {
-            Upgrades type = ((IUpgradeModule) card.getItem()).getType(card);
+            final Upgrades type = ((IUpgradeModule) card.getItem()).getType(card);
             if (type == Upgrades.PATTERN_EXPANSION) {
                 return card.getCount();
             }
@@ -297,13 +295,13 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
     public void update() {
         if (!this.world.isRemote && this.world.getTotalWorldTime() % 5L == 0L) {
             if (this.waitingToSend.isEmpty()) {
-                int speed = getSpeed();
+                final int speed = getSpeed();
                 if (this.myPlan != null && drainEnergy(powerUsage * speed)) {
                     this.progress += speed;
                     if (this.progress >= TIME) {
                         this.progress = 0;
-                        IAEItemStack[] outputs = this.myPlan.getOutputs();
-                        for (IAEItemStack item : outputs) {
+                        final IAEItemStack[] outputs = this.myPlan.getOutputs();
+                        for (final IAEItemStack item : outputs) {
                             this.waitingToSend.add(item.createItemStack());
                         }
                         for (int x = 0; x < this.gridInv.getSlots(); x ++) {
@@ -317,34 +315,34 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
                 }
             }
             if (!this.waitingToSend.isEmpty() && this.getProxy().isActive()) {
-                ObjectArrayList<ItemStack> rst = new ObjectArrayList<>();
+                final ObjectArrayList<ItemStack> rst = new ObjectArrayList<>();
                 try {
-                    IMEInventory<IAEItemStack> des = this.getProxy().getStorage().getInventory(Util.getItemChannel());
+                    final IMEInventory<IAEItemStack> des = this.getProxy().getStorage().getInventory(Util.getItemChannel());
                     final IEnergySource src = this.getProxy().getEnergy();
-                    for (ItemStack item : this.waitingToSend) {
+                    for (final ItemStack item : this.waitingToSend) {
                         if (item != null && !item.isEmpty()) {
-                            IAEItemStack remaining = Platform.poweredInsert(src, des, Objects.requireNonNull(AEItemStack.fromItemStack(item)), this.mySrc);
+                            final IAEItemStack remaining = Platform.poweredInsert(src, des, Objects.requireNonNull(AEItemStack.fromItemStack(item)), this.mySrc);
                             if (remaining != null) {
                                 rst.add(remaining.createItemStack());
                             }
                         }
                     }
                     this.waitingToSend = rst;
-                } catch (GridAccessException ignore) {
+                } catch (final GridAccessException ignore) {
                 }
             }
         }
     }
 
-    private boolean drainEnergy(double energy) {
+    private boolean drainEnergy(final double energy) {
         double drain = 0;
         try {
-            IGrid grid = this.getProxy().getGrid();
+            final IGrid grid = this.getProxy().getGrid();
             if (grid != null) {
-                IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
+                final IEnergyGrid energyGrid = grid.getCache(IEnergyGrid.class);
                 drain = energyGrid.extractAEPower(energy, Actionable.MODULATE, PowerMultiplier.CONFIG);
             }
-        } catch (GridAccessException ignore) {
+        } catch (final GridAccessException ignore) {
         }
         return drain > 0;
     }
@@ -354,30 +352,30 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
         if (!this.waitingToSend.isEmpty()) {
             drops.addAll(this.waitingToSend);
         }
-        for (ItemStack item : this.invPatterns) {
+        for (final ItemStack item : this.invPatterns) {
             if (item != null && !item.isEmpty())
                 drops.add(item);
         }
-        for (ItemStack item : this.upgrade) {
+        for (final ItemStack item : this.upgrade) {
             if (item != null && !item.isEmpty())
                 drops.add(item);
         }
     }
 
     public void dropExcessPatterns() {
-        ObjectArrayList<ItemStack> dropList = new ObjectArrayList<>();
+        final ObjectArrayList<ItemStack> dropList = new ObjectArrayList<>();
         for (int invSlot = 0; invSlot < this.invPatterns.getSlots(); invSlot++) {
             if (invSlot > 8 + getPatternCap() * 9) {
-                ItemStack is = this.invPatterns.getStackInSlot(invSlot);
+                final ItemStack is = this.invPatterns.getStackInSlot(invSlot);
                 if (is.isEmpty()) {
                     continue;
                 }
                 dropList.add(this.invPatterns.extractItem(invSlot, Integer.MAX_VALUE, false));
             }
         }
-        if (dropList.size() > 0) {
-            World world = this.getLocation().getWorld();
-            BlockPos blockPos = this.getLocation().getPos();
+        if (!dropList.isEmpty()) {
+            final World world = this.getLocation().getWorld();
+            final BlockPos blockPos = this.getLocation().getPos();
             Platform.spawnDrops(world, blockPos, dropList);
         }
     }
@@ -398,15 +396,15 @@ public class TileFluidAssembler extends AENetworkInvTile implements ICraftingPro
     }
 
     @Override
-    protected void writeToStream(ByteBuf data) throws IOException {
+    protected void writeToStream(final ByteBuf data) throws IOException {
         super.writeToStream(data);
         data.writeInt(this.progress);
     }
 
     @Override
-    protected boolean readFromStream(ByteBuf data) throws IOException {
+    protected boolean readFromStream(final ByteBuf data) throws IOException {
         boolean changed = super.readFromStream(data);
-        int newPro = data.readInt();
+        final int newPro = data.readInt();
         if (this.progress != newPro) {
             this.progress = newPro;
             changed = true;

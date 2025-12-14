@@ -19,19 +19,19 @@ public class CPacketUpdateGeneralLevel implements IMessage {
         //NO-OP
     }
 
-    public CPacketUpdateGeneralLevel(int id, int value) {
+    public CPacketUpdateGeneralLevel(final int id, final int value) {
         this.index = id;
         this.size = value;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(final ByteBuf buf) {
         index = buf.readInt();
         size = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(final ByteBuf buf) {
         buf.writeInt(index);
         buf.writeInt(size);
     }
@@ -40,11 +40,11 @@ public class CPacketUpdateGeneralLevel implements IMessage {
 
         @Nullable
         @Override
-        public IMessage onMessage(CPacketUpdateGeneralLevel message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
+        public IMessage onMessage(final CPacketUpdateGeneralLevel message, final MessageContext ctx) {
+            final EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 if (player.openContainer instanceof ContainerGeneralLevelMaintainer) {
-                    TileGeneralLevelMaintainer te = ((ContainerGeneralLevelMaintainer) player.openContainer).getTile();
+                    final TileGeneralLevelMaintainer te = ((ContainerGeneralLevelMaintainer) player.openContainer).getTile();
                     if (message.index >= 10) {
                         te.setRequest(message.index - 10, message.size);
                     }

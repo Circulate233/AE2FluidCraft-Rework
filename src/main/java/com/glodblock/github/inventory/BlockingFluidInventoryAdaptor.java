@@ -41,7 +41,7 @@ public class BlockingFluidInventoryAdaptor extends BlockingInventoryAdaptor {
     @Nullable
     private final DualityInterface dualInterface;
 
-    public BlockingFluidInventoryAdaptor(@Nullable IItemHandler invItems, @Nullable IFluidHandler invFluids, @Nullable Object invGases, @Nullable String domain, @Nullable DualityInterface dualInterface) {
+    public BlockingFluidInventoryAdaptor(@Nullable final IItemHandler invItems, @Nullable final IFluidHandler invFluids, @Nullable final Object invGases, @Nullable final String domain, @Nullable final DualityInterface dualInterface) {
         this.invItems = invItems;
         this.invFluids = invFluids;
         this.invGases = invGases;
@@ -49,13 +49,13 @@ public class BlockingFluidInventoryAdaptor extends BlockingInventoryAdaptor {
         this.dualInterface = dualInterface;
     }
 
-    public static BlockingInventoryAdaptor getAdaptor(TileEntity te, EnumFacing d) {
+    public static BlockingInventoryAdaptor getAdaptor(final TileEntity te, final EnumFacing d) {
         IItemHandler itemHandler = null;
         IFluidHandler fluidHandler = null;
         Object gasHandler = null;
         DualityInterface dualInterface = null;
         if (te != null) {
-            TileEntity inter = te.getWorld().getTileEntity(te.getPos().add(d.getDirectionVec()));
+            final TileEntity inter = te.getWorld().getTileEntity(te.getPos().add(d.getDirectionVec()));
             dualInterface = getInterfaceTE(inter, d) == null ?
                     null : Objects.requireNonNull(getInterfaceTE(inter, d)).getInterfaceDuality();
         }
@@ -94,15 +94,15 @@ public class BlockingFluidInventoryAdaptor extends BlockingInventoryAdaptor {
         }
 
         if (dualInterface != null) {
-            int mode = ((FCDualityInterface) dualInterface).getBlockModeEx();
+            final int mode = ((FCDualityInterface) dualInterface).getBlockModeEx();
             checkFluid = mode != 1;
             checkItem = mode != 2;
         }
 
         if (invItems != null && checkItem) {
-            int slots = this.invItems.getSlots();
+            final int slots = this.invItems.getSlots();
             for(int slot = 0; slot < slots; ++slot) {
-                ItemStack is = this.invItems.getStackInSlot(slot);
+                final ItemStack is = this.invItems.getStackInSlot(slot);
                 if (!is.isEmpty() && this.isBlockableItem(is)) {
                     itemPass = false;
                     break;
@@ -111,7 +111,7 @@ public class BlockingFluidInventoryAdaptor extends BlockingInventoryAdaptor {
         }
 
         if (invFluids != null && checkFluid) {
-            for (IFluidTankProperties tank : invFluids.getTankProperties()) {
+            for (final IFluidTankProperties tank : invFluids.getTankProperties()) {
                 if (tank != null && tank.getContents() != null && (tank.canFill() || tank.canDrain())) {
                     fluidPass = false;
                     break;
@@ -119,8 +119,8 @@ public class BlockingFluidInventoryAdaptor extends BlockingInventoryAdaptor {
             }
         }
         if (invGases != null && checkFluid && fluidPass) {
-            IGasHandler gasHandler = (IGasHandler) invGases;
-            for (GasTankInfo tank : gasHandler.getTankInfo()) {
+            final IGasHandler gasHandler = (IGasHandler) invGases;
+            for (final GasTankInfo tank : gasHandler.getTankInfo()) {
                 if (tank != null && tank.getGas() != null) {
                     fluidPass = false;
                     break;
@@ -138,8 +138,8 @@ public class BlockingFluidInventoryAdaptor extends BlockingInventoryAdaptor {
     }
 
     @SuppressWarnings("rawtypes")
-    boolean isBlockableItem(ItemStack stack) {
-        Object2ObjectOpenHashMap map = NonBlockingItems.INSTANCE.getMap().get(this.domain);
+    boolean isBlockableItem(final ItemStack stack) {
+        final Object2ObjectOpenHashMap map = NonBlockingItems.INSTANCE.getMap().get(this.domain);
         if (map.get(stack.getItem()) != null) {
             return !((IntSet)map.get(stack.getItem())).contains(stack.getItemDamage());
         } else {

@@ -40,7 +40,7 @@ public class GuiWirelessFluidPatternTerminal extends GuiPatternTerm {
     private GuiFCImgButton fluidEnableBtn;
     private GuiFCImgButton fluidDisableBtn;
 
-    public GuiWirelessFluidPatternTerminal(InventoryPlayer inventoryPlayer, WirelessTerminalGuiObject te) {
+    public GuiWirelessFluidPatternTerminal(final InventoryPlayer inventoryPlayer, final WirelessTerminalGuiObject te) {
         super(inventoryPlayer, te, new ContainerWirelessFluidPatternTerminal(inventoryPlayer, te));
         container = (ContainerWirelessFluidPatternTerminal) this.inventorySlots;
     }
@@ -72,14 +72,14 @@ public class GuiWirelessFluidPatternTerminal extends GuiPatternTerm {
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.bindTexture("guis/wirelessupgrades.png");
         Gui.drawModalRectWithCustomSizedTexture(offsetX + 198, offsetY + 127, 0, 0, 32, 32, 32, 32);
         super.drawBG(offsetX, offsetY, mouseX, mouseY);
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         if (!this.container.isCraftingMode() && !ModAndClassUtil.NEE) {
             if (this.container.combine) {
                 this.combineEnableBtn.visible = true;
@@ -119,11 +119,11 @@ public class GuiWirelessFluidPatternTerminal extends GuiPatternTerm {
     }
 
     @Override
-    protected void handleMouseClick(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
+    protected void handleMouseClick(final Slot slot, final int slotIdx, final int mouseButton, final ClickType clickType) {
         if (mouseButton == 2 && !this.container.isCraftingMode()) {
             if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
                 if (slot.getHasStack()) {
-                    IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
+                    final IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
                     ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
                     for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
                         if (this.inventorySlots.inventorySlots.get(i).equals(slot)) {
@@ -136,7 +136,7 @@ public class GuiWirelessFluidPatternTerminal extends GuiPatternTerm {
             }
         }
         if (UtilClient.shouldAutoCraft(slot, mouseButton, clickType)) {
-            IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
+            final IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
             ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
             FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(CPacketInventoryAction.Action.AUTO_CRAFT, 0, 0, stack));
             return;
@@ -145,11 +145,11 @@ public class GuiWirelessFluidPatternTerminal extends GuiPatternTerm {
     }
 
     @Override
-    public List<IGhostIngredientHandler.Target<?>> getPhantomTargets(Object ingredient) {
-        List<IGhostIngredientHandler.Target<?>> targets = new ArrayList<>();
-        for (Slot slot : this.inventorySlots.inventorySlots) {
+    public List<IGhostIngredientHandler.Target<?>> getPhantomTargets(final Object ingredient) {
+        final List<IGhostIngredientHandler.Target<?>> targets = new ArrayList<>();
+        for (final Slot slot : this.inventorySlots.inventorySlots) {
             if (slot instanceof SlotFake) {
-                IGhostIngredientHandler.Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
+                final IGhostIngredientHandler.Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
                 targets.add(target);
                 mapTargetSlot.putIfAbsent(target, slot);
             }
@@ -158,11 +158,11 @@ public class GuiWirelessFluidPatternTerminal extends GuiPatternTerm {
     }
 
     @Override
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        var slot = this.getSlotUnderMouse();
-        if (!this.container.isCraftingMode() && slot instanceof SlotFake s) {
+    protected void renderHoveredToolTip(final int mouseX, final int mouseY) {
+        final var slot = this.getSlotUnderMouse();
+        if (!this.container.isCraftingMode() && slot instanceof final SlotFake s) {
             if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
-            var i = AEItemStack.fromItemStack(s.getStack());
+            final var i = AEItemStack.fromItemStack(s.getStack());
             if (UtilClient.rendererFluid(this, i, mouseX, mouseY, true)) return;
             if (ModAndClassUtil.GAS && UtilClient.rendererGas(this, i, mouseX, mouseY, true)) return;
         }

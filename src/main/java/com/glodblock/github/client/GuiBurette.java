@@ -30,7 +30,7 @@ public class GuiBurette extends AEBaseGui {
     private GuiNumberBox amountField;
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
 
-    public GuiBurette(InventoryPlayer ipl, TileBurette tile) {
+    public GuiBurette(final InventoryPlayer ipl, final TileBurette tile) {
         super(new ContainerBurette(ipl, tile));
         this.cont = (ContainerBurette)inventorySlots;
 
@@ -53,21 +53,21 @@ public class GuiBurette extends AEBaseGui {
         amountField.setText("1000");
     }
 
-    private ButtonMouseHandler createTransposeButton(boolean into) {
+    private ButtonMouseHandler createTransposeButton(final boolean into) {
         return new ButtonMouseHandler(into ? NameConst.TT_TRANSPOSE_IN : NameConst.TT_TRANSPOSE_OUT, () -> {
             try {
-                int amount = Integer.parseInt(amountField.getText());
+                final int amount = Integer.parseInt(amountField.getText());
                 if (cont.canTranferFluid(into)) {
                     FluidCraft.proxy.netHandler.sendToServer(new CPacketTransposeFluid(amount, into));
                 }
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 // NO-OP
             }
         });
     }
 
     @Override
-    protected void mouseClicked(int xCoord, int yCoord, int btn) throws IOException {
+    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) throws IOException {
         if (mouseRegions.onClick(xCoord, yCoord, btn)) {
             amountField.mouseClicked(xCoord, yCoord, btn);
             super.mouseClicked(xCoord, yCoord, btn);
@@ -80,7 +80,7 @@ public class GuiBurette extends AEBaseGui {
             if ((key == 211 || key == 205 || key == 203 || key == 14 || Character.isDigit(character))
                     && amountField.textboxKeyTyped(character, key)) {
                 try {
-                    int amount = Integer.parseInt(amountField.getText());
+                    final int amount = Integer.parseInt(amountField.getText());
                     if (amount < 0) {
                         amountField.setText("1");
                     } else {
@@ -96,7 +96,7 @@ public class GuiBurette extends AEBaseGui {
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         mc.getTextureManager().bindTexture(TEX_BG);
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, ySize);
         amountField.drawTextBox();
@@ -104,12 +104,12 @@ public class GuiBurette extends AEBaseGui {
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         fontRenderer.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_BURETTE)), 8, 6, 0x404040);
         fontRenderer.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        IAEFluidTank fluidInv = cont.getTile().getFluidInventory();
+        final IAEFluidTank fluidInv = cont.getTile().getFluidInventory();
         FluidRenderUtils.renderFluidIntoGuiCleanly(TANK_X, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
                 fluidInv.getFluidInSlot(0), fluidInv.getTankProperties()[0].getCapacity());
 

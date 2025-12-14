@@ -26,24 +26,24 @@ public class ItemPartExtendedFluidPatternTerminal extends Item implements IPartI
 
     @Nullable
     @Override
-    public PartExtendedFluidPatternTerminal createPartFromItemStack(ItemStack is) {
+    public PartExtendedFluidPatternTerminal createPartFromItemStack(final ItemStack is) {
         return new PartExtendedFluidPatternTerminal(is);
     }
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumHand hand, @Nonnull EnumFacing side,
-                                      float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(@Nonnull final EntityPlayer player, @Nonnull final World world, @Nonnull final BlockPos pos, @Nonnull final EnumHand hand, @Nonnull final EnumFacing side,
+                                      final float hitX, final float hitY, final float hitZ) {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(hand), pos, side, player, hand, world);
     }
 
     @Override
-    protected boolean isInCreativeTab(CreativeTabs targetTab) {
+    protected boolean isInCreativeTab(final CreativeTabs targetTab) {
         return false;
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+    public void getSubItems(final CreativeTabs tab, final NonNullList<ItemStack> items) {
 
     }
 }

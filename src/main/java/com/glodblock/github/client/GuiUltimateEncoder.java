@@ -54,7 +54,7 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     private GuiFCImgButton fluidEnableBtn;
     private GuiFCImgButton fluidDisableBtn;
 
-    public GuiUltimateEncoder(InventoryPlayer ipl, TileUltimateEncoder tile) {
+    public GuiUltimateEncoder(final InventoryPlayer ipl, final TileUltimateEncoder tile) {
         super(new ContainerUltimateEncoder(ipl, tile));
         this.container = (ContainerUltimateEncoder) this.inventorySlots;
         this.ySize = 249;
@@ -112,7 +112,7 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     }
 
     @Override
-    protected void actionPerformed(@Nonnull GuiButton btn) {
+    protected void actionPerformed(@Nonnull final GuiButton btn) {
         try {
             if (this.encodeBtn == btn) {
                 if (isShiftKeyDown()) {
@@ -157,17 +157,17 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("UltimateEncoder.Fluid", this.fluidDisableBtn == btn ? "1" : "0"));
             }
             super.actionPerformed(btn);
-        } catch (IOException ignore) {
+        } catch (final IOException ignore) {
             // NO-OP
         }
     }
 
     @Override
-    protected void handleMouseClick(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
+    protected void handleMouseClick(final Slot slot, final int slotIdx, final int mouseButton, final ClickType clickType) {
         if (mouseButton == 2) {
             if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
                 if (slot.getHasStack()) {
-                    IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
+                    final IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack());
                     this.container.setTargetStack(stack);
                     for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
                         if (this.inventorySlots.inventorySlots.get(i).equals(slot)) {
@@ -183,7 +183,7 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     }
 
     @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fontRenderer.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_ULTIMATE_ENCODER)), 8, 6, 0x404040);
         this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         if (this.container.combine) {
@@ -204,17 +204,17 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     }
 
     @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         mc.getTextureManager().bindTexture(TEX_BG);
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, this.ySize);
     }
 
     @Override
-    public List<IGhostIngredientHandler.Target<?>> getPhantomTargets(Object ingredient) {
-        List<IGhostIngredientHandler.Target<?>> targets = new ObjectArrayList<>();
-        for (Slot slot : this.container.inventorySlots) {
+    public List<IGhostIngredientHandler.Target<?>> getPhantomTargets(final Object ingredient) {
+        final List<IGhostIngredientHandler.Target<?>> targets = new ObjectArrayList<>();
+        for (final Slot slot : this.container.inventorySlots) {
             if (slot instanceof SlotFake) {
-                IGhostIngredientHandler.Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
+                final IGhostIngredientHandler.Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
                 targets.add(target);
                 this.mapTargetSlot.putIfAbsent(target, slot);
             }
@@ -228,11 +228,11 @@ public class GuiUltimateEncoder extends AEBaseGui implements IJEIGhostIngredient
     }
 
     @Override
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        var slot = this.getSlotUnderMouse();
-        if (slot instanceof SlotFake s) {
+    protected void renderHoveredToolTip(final int mouseX, final int mouseY) {
+        final var slot = this.getSlotUnderMouse();
+        if (slot instanceof final SlotFake s) {
             if (UtilClient.renderPatternSlotTip(this, mouseX, mouseY)) return;
-            var i = AEItemStack.fromItemStack(s.getStack());
+            final var i = AEItemStack.fromItemStack(s.getStack());
             if (UtilClient.rendererFluid(this, i, mouseX, mouseY, true)) return;
             if (ModAndClassUtil.GAS && UtilClient.rendererGas(this, i, mouseX, mouseY, true)) return;
         }

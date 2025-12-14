@@ -25,8 +25,8 @@ public class WirelessFluidPatternTerminalRecipeTransferHandler implements IRecip
 
     @Nullable
     @Override
-    public IRecipeTransferError transferRecipe(@Nonnull ContainerWirelessFluidPatternTerminal container, @Nonnull IRecipeLayout recipeLayout,
-                                               @Nonnull EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
+    public IRecipeTransferError transferRecipe(@Nonnull final ContainerWirelessFluidPatternTerminal container, @Nonnull final IRecipeLayout recipeLayout,
+                                               @Nonnull final EntityPlayer player, final boolean maxTransfer, final boolean doTransfer) {
         if (doTransfer) {
             boolean craftMode = container.craftingMode;
             try {
@@ -38,9 +38,9 @@ public class WirelessFluidPatternTerminalRecipeTransferHandler implements IRecip
                     NetworkHandler.instance().sendToServer(new PacketValueConfig("PatternTerminal.CraftMode", "1"));
                     craftMode = true;
                 }
-            } catch (IOException ignore) {
+            } catch (final IOException ignore) {
             }
-            RecipeTransferBuilder transfer = new RecipeTransferBuilder(
+            final RecipeTransferBuilder transfer = new RecipeTransferBuilder(
                     recipeLayout)
                     .clearEmptySlot(!craftMode)
                     .putFluidFirst(container.fluidFirst)
