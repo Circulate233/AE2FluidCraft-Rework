@@ -2,6 +2,7 @@ package com.glodblock.github.util;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
 import appeng.client.me.SlotME;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
@@ -27,6 +28,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -146,22 +148,33 @@ public final class UtilClient {
         return ItemStack.EMPTY;
     }
 
+    private static final MutablePair<IAEStack<?>, List<String>> cacheTooltip = new MutablePair<>();
+    private static boolean cacheIsStorage = false;
+
     public static boolean rendererFluid(GuiContainer gui, IAEItemStack item, int mouseX, int mouseY, boolean isStorage) {
         if (item == null) return false;
         if (item.getItem() == FCItems.FLUID_DROP) {
-            IAEFluidStack fluidStack = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
-            if (fluidStack != null) {
-                fluidStack.setStackSize(item.getStackSize());
-                String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(fluidStack.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) fluidStack.getStackSize() / (double) 1000.0F) + " B";
-                String modName = TextFormatting.BLUE.toString() + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get(Platform.getModId(fluidStack)).getName();
-                List<String> list = new ObjectArrayList<>();
-                list.add(fluidStack.getFluidStack().getLocalizedName());
-                list.add(modName);
-                if (isStorage)
-                    list.add(TextFormatting.DARK_GRAY + I18n.format("gui.appliedenergistics2.StoredFluids") + " ： " + formattedAmount);
-                if (item.isCraftable())
-                    list.add(TextFormatting.GRAY + I18n.format("gui.tooltips.appliedenergistics2.ItemsCraftable"));
-                gui.drawHoveringText(list, mouseX, mouseY);
+            if (cacheTooltip.left == null || !cacheTooltip.left.equals(item) || cacheTooltip.left.getStackSize() != item.getStackSize() || cacheIsStorage != isStorage) {
+                IAEFluidStack fluidStack = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
+                if (fluidStack != null) {
+                    fluidStack.setStackSize(item.getStackSize());
+                    String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(fluidStack.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) fluidStack.getStackSize() / (double) 1000.0F) + " B";
+                    String modName = TextFormatting.BLUE.toString() + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get(Platform.getModId(fluidStack)).getName();
+                    List<String> list = new ObjectArrayList<>();
+                    list.add(fluidStack.getFluidStack().getLocalizedName());
+                    list.add(modName);
+                    if (isStorage)
+                        list.add(TextFormatting.DARK_GRAY + I18n.format("gui.appliedenergistics2.StoredFluids") + " ： " + formattedAmount);
+                    if (item.isCraftable())
+                        list.add(TextFormatting.GRAY + I18n.format("gui.tooltips.appliedenergistics2.ItemsCraftable"));
+                    gui.drawHoveringText(list, mouseX, mouseY);
+                    cacheTooltip.setLeft(item);
+                    cacheTooltip.setRight(list);
+                    cacheIsStorage = isStorage;
+                    return true;
+                }
+            } else {
+                gui.drawHoveringText(cacheTooltip.right, mouseX, mouseY);
                 return true;
             }
         }
@@ -172,19 +185,27 @@ public final class UtilClient {
     public static boolean rendererGas(GuiContainer gui, IAEItemStack item, int mouseX, int mouseY, boolean isStorage) {
         if (item == null) return false;
         if (item.getItem() == FCGasItems.GAS_DROP) {
-            IAEGasStack gs = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
-            if (gs != null) {
-                gs.setStackSize(item.getStackSize());
-                String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(gs.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) gs.getStackSize() / (double) 1000.0F) + " B";
-                String modName = "" + TextFormatting.BLUE + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get("mekanism").getName();
-                List<String> list = new ObjectArrayList<>();
-                list.add(gs.getGas().getLocalizedName());
-                list.add(modName);
-                if (isStorage)
-                    list.add(TextFormatting.DARK_GRAY + I18n.format("tooltip.stored") + " ： " + formattedAmount);
-                if (item.isCraftable())
-                    list.add(TextFormatting.GRAY + I18n.format("gui.tooltips.appliedenergistics2.ItemsCraftable"));
-                gui.drawHoveringText(list, mouseX, mouseY);
+            if (cacheTooltip.left == null || !cacheTooltip.left.equals(item) || cacheTooltip.left.getStackSize() != item.getStackSize() || cacheIsStorage != isStorage) {
+                IAEGasStack gs = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
+                if (gs != null) {
+                    gs.setStackSize(item.getStackSize());
+                    String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(gs.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) gs.getStackSize() / (double) 1000.0F) + " B";
+                    String modName = "" + TextFormatting.BLUE + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get("mekanism").getName();
+                    List<String> list = new ObjectArrayList<>();
+                    list.add(gs.getGas().getLocalizedName());
+                    list.add(modName);
+                    if (isStorage)
+                        list.add(TextFormatting.DARK_GRAY + I18n.format("tooltip.stored") + " ： " + formattedAmount);
+                    if (item.isCraftable())
+                        list.add(TextFormatting.GRAY + I18n.format("gui.tooltips.appliedenergistics2.ItemsCraftable"));
+                    gui.drawHoveringText(list, mouseX, mouseY);
+                    cacheTooltip.setLeft(item);
+                    cacheTooltip.setRight(list);
+                    cacheIsStorage = isStorage;
+                    return true;
+                }
+            } else {
+                gui.drawHoveringText(cacheTooltip.right, mouseX, mouseY);
                 return true;
             }
         }
