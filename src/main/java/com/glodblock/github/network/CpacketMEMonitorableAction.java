@@ -84,91 +84,101 @@ public class CpacketMEMonitorableAction implements IMessage {
                 source = new PlayerSource(player, cbt.getPart());
             } else return null;
 
-            boolean drain = false;
             final var h = player.inventory.getItemStack();
             if (!h.isEmpty()) {
                 final ItemStack ch = h.copy();
                 ch.setCount(1);
                 if (message.type == FLUID) {
-                    final IFluidHandlerItem fh = FluidUtil.getFluidHandler(ch);
-                    if (fh == null) return null;
-                    final var allFluid = fh.drain(Integer.MAX_VALUE, false);
-                    FluidStack fluid = null;
-                    if (!message.obj.isEmpty()) {
-                        fluid = FluidStack.loadFluidStackFromNBT(message.obj);
-                        if (fluid != null) {
-                            if (allFluid != null && allFluid.amount > 0) {
-                                if (!allFluid.isFluidEqual(fluid)) drain = true;
-                            }
-                        } else drain = true;
-                    } else drain = true;
-                    final var fluidStorage = grid.getInventory(Util.getFluidChannel());
-                    final AEFluidStack allAEFluid;
-                    if (drain) {
-                        allAEFluid = AEFluidStack.fromFluidStack(allFluid);
-                        if (allAEFluid == null) return null;
-                        final var a = fluidStorage.injectItems(allAEFluid, Actionable.SIMULATE, source);
-                        final var size = allAEFluid.getStackSize() - (a == null ? 0 : a.getStackSize());
-                        fluidStorage.injectItems(allAEFluid.setStackSize(size), Actionable.MODULATE, source);
-                        fh.drain((int) size, true);
-                    } else {
-                        allAEFluid = AEFluidStack.fromFluidStack(fluid);
-                        final var a = fluidStorage.extractItems(allAEFluid, Actionable.SIMULATE, source);
-                        if (a == null) return null;
-                        final var size = fh.fill(a.getFluidStack(), false);
-                        fluidStorage.extractItems(allAEFluid.setStackSize(size), Actionable.MODULATE, source);
-                        fh.fill(a.getFluidStack(), true);
-                    }
-                    if (h.getCount() > 1) {
-                        h.shrink(1);
-                        final var cc = fh.getContainer();
-                        cc.setCount(1);
-                        player.inventory.placeItemBackInInventory(player.world, cc);
-                    } else player.inventory.setItemStack(fh.getContainer());
-                    updateHeld(player);
+                    player.server.addScheduledTask(() -> fluidWork(message, ch, grid, source, h, player));
                 } else if (ModAndClassUtil.GAS && message.type == GAS && h.getItem() instanceof final IGasItem ig) {
-                    mek$Work(message, ig, ch, grid, source, h, player);
+                    player.server.addScheduledTask(() -> gasWork(message, ig, ch, grid, source, h, player));
                 }
-            } else if (message.type == FLUID_OPERATE) {
-                if (bucket == null) {
-                    bucket = AEItemStack.fromItemStack(new ItemStack(Items.BUCKET));
+            } else {
+                if (message.type == FLUID_OPERATE) {
+                    player.server.addScheduledTask(() -> fluidOperateWork(message, grid, source, player));
                 }
-                final FluidStack fluid;
-                if (!message.obj.isEmpty()) {
-                    final var i = new ItemStack(message.obj);
-                    fluid = FakeItemRegister.getStack(i);
-                    if (fluid == null) return null;
-                    fluid.amount = 1000;
-                } else return null;
-                final boolean shift = message.obj.getBoolean("shift");
-                final var itemStorage = grid.getInventory(Util.getItemChannel());
-                final var fluidStorage = grid.getInventory(Util.getFluidChannel());
-                final var b = itemStorage.extractItems(bucket, Actionable.SIMULATE, source);
-                if (b == null) return null;
-                final var aeFluid = fluidStorage.extractItems(AEFluidStack.fromFluidStack(fluid), Actionable.SIMULATE, source);
-                if (aeFluid == null || aeFluid.getStackSize() < 1000) return null;
-                final IFluidHandlerItem fh = FluidUtil.getFluidHandler(b.createItemStack());
-                if (fh == null) return null;
-                final var s = fh.fill(aeFluid.getFluidStack(), true);
-                if (s != 1000) return null;
-                final var out = fh.getContainer();
-                if (shift) {
-                    final var slot = player.inventory.getFirstEmptyStack();
-                    if (slot == -1) return null;
-                    player.inventory.setInventorySlotContents(slot, out);
-                } else {
-                    player.inventory.setItemStack(out);
-                    updateHeld(player);
-                }
-                itemStorage.extractItems(bucket, Actionable.MODULATE, source);
-                fluidStorage.extractItems(aeFluid, Actionable.MODULATE, source);
             }
             return null;
         }
 
+        private static void fluidOperateWork(final CpacketMEMonitorableAction message, final IStorageGrid grid, final IActionSource source, final EntityPlayerMP player) {
+            if (bucket == null) {
+                bucket = AEItemStack.fromItemStack(new ItemStack(Items.BUCKET));
+            }
+            final FluidStack fluid;
+            if (!message.obj.isEmpty()) {
+                final var i = new ItemStack(message.obj);
+                fluid = FakeItemRegister.getStack(i);
+                if (fluid == null) return;
+                fluid.amount = 1000;
+            } else return;
+            final boolean shift = message.obj.getBoolean("shift");
+            final var itemStorage = grid.getInventory(Util.getItemChannel());
+            final var fluidStorage = grid.getInventory(Util.getFluidChannel());
+            final var b = itemStorage.extractItems(bucket, Actionable.SIMULATE, source);
+            if (b == null) return;
+            final var aeFluid = fluidStorage.extractItems(AEFluidStack.fromFluidStack(fluid), Actionable.SIMULATE, source);
+            if (aeFluid == null || aeFluid.getStackSize() < 1000) return;
+            final IFluidHandlerItem fh = FluidUtil.getFluidHandler(b.createItemStack());
+            if (fh == null) return;
+            final var s = fh.fill(aeFluid.getFluidStack(), true);
+            if (s != 1000) return;
+            final var out = fh.getContainer();
+            if (shift) {
+                final var slot = player.inventory.getFirstEmptyStack();
+                if (slot == -1) return;
+                player.inventory.setInventorySlotContents(slot, out);
+            } else {
+                player.inventory.setItemStack(out);
+                updateHeld(player);
+            }
+            itemStorage.extractItems(bucket, Actionable.MODULATE, source);
+            fluidStorage.extractItems(aeFluid, Actionable.MODULATE, source);
+        }
+
+        private static void fluidWork(final CpacketMEMonitorableAction message, final ItemStack ch, final IStorageGrid grid, final IActionSource source, final ItemStack h, final EntityPlayerMP player) {
+            boolean drain = false;
+            final IFluidHandlerItem fh = FluidUtil.getFluidHandler(ch);
+            if (fh == null) return;
+            final var allFluid = fh.drain(Integer.MAX_VALUE, false);
+            FluidStack fluid = null;
+            if (!message.obj.isEmpty()) {
+                fluid = FluidStack.loadFluidStackFromNBT(message.obj);
+                if (fluid != null) {
+                    if (allFluid != null && allFluid.amount > 0) {
+                        if (!allFluid.isFluidEqual(fluid)) drain = true;
+                    }
+                } else drain = true;
+            } else drain = true;
+            final var fluidStorage = grid.getInventory(Util.getFluidChannel());
+            final AEFluidStack allAEFluid;
+            if (drain) {
+                allAEFluid = AEFluidStack.fromFluidStack(allFluid);
+                if (allAEFluid == null) return;
+                final var a = fluidStorage.injectItems(allAEFluid, Actionable.SIMULATE, source);
+                final var size = allAEFluid.getStackSize() - (a == null ? 0 : a.getStackSize());
+                fluidStorage.injectItems(allAEFluid.setStackSize(size), Actionable.MODULATE, source);
+                fh.drain((int) size, true);
+            } else {
+                allAEFluid = AEFluidStack.fromFluidStack(fluid);
+                final var a = fluidStorage.extractItems(allAEFluid, Actionable.SIMULATE, source);
+                if (a == null) return;
+                final var size = fh.fill(a.getFluidStack(), false);
+                fluidStorage.extractItems(allAEFluid.setStackSize(size), Actionable.MODULATE, source);
+                fh.fill(a.getFluidStack(), true);
+            }
+            if (h.getCount() > 1) {
+                h.shrink(1);
+                final var cc = fh.getContainer();
+                cc.setCount(1);
+                player.inventory.placeItemBackInInventory(player.world, cc);
+            } else player.inventory.setItemStack(fh.getContainer());
+            updateHeld(player);
+        }
+
         @Unique
         @Optional.Method(modid = "mekeng")
-        private void mek$Work(final CpacketMEMonitorableAction message, final IGasItem ig, final ItemStack ch, final IStorageGrid grid, final IActionSource source, final ItemStack h, final EntityPlayerMP player) {
+        private static void gasWork(final CpacketMEMonitorableAction message, final IGasItem ig, final ItemStack ch, final IStorageGrid grid, final IActionSource source, final ItemStack h, final EntityPlayerMP player) {
             boolean drain = false;
             final var allGas = ig.getGas(ch);
             final var allAmount = allGas == null ? 0 : allGas.amount;
@@ -208,7 +218,7 @@ public class CpacketMEMonitorableAction implements IMessage {
             updateHeld(player);
         }
 
-        private void updateHeld(final EntityPlayerMP p) {
+        private static void updateHeld(final EntityPlayerMP p) {
             if (Platform.isServer()) {
                 try {
                     NetworkHandler.instance().sendTo(new PacketInventoryAction(InventoryAction.UPDATE_HAND, 0, AEItemStack.fromItemStack(p.inventory.getItemStack())), p);
