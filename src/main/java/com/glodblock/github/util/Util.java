@@ -21,7 +21,6 @@ import com.glodblock.github.common.item.fake.FakeFluids;
 import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.inventory.GuiType;
 import com.glodblock.github.inventory.InventoryHandler;
-import com.mekeng.github.client.render.GasStackSizeRenderer;
 import com.mekeng.github.common.me.data.IAEGasStack;
 import com.mekeng.github.common.me.storage.IGasStorageChannel;
 import io.netty.buffer.ByteBuf;
@@ -36,11 +35,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -54,6 +55,14 @@ import java.util.Objects;
 
 public final class Util {
 
+    public static final String mekModName;
+
+    static {
+        if (ModAndClassUtil.GAS) {
+            mekModName = "" + TextFormatting.BLUE + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get("mekanism").getName();
+        } else mekModName = "";
+    }
+
     public static IStorageChannel<IAEFluidStack> getFluidChannel() {
         return AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class);
     }
@@ -65,11 +74,6 @@ public final class Util {
     @Optional.Method(modid = "mekeng")
     public static IStorageChannel<IAEGasStack> getGasChannel() {
         return AEApi.instance().storage().getStorageChannel(IGasStorageChannel.class);
-    }
-
-    @Optional.Method(modid = "mekeng")
-    public static GasStackSizeRenderer getNewGasStackSizeRenderer() {
-        return new GasStackSizeRenderer();
     }
 
     public static IAEItemStack packAEStackToDrop(final Object s) {

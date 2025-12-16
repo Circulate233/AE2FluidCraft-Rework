@@ -213,6 +213,7 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:p455w0rdslib-255232:2830265"))
     compileOnly(rfg.deobf("curse.maven:ae2wtlib-304024:2830114"))
     compileOnly(rfg.deobf("curse.maven:wireless-crafting-terminal-244559:2830252"))//wct
+    implementation(rfg.deobf("curse.maven:ae2-crafting-tree-legacy-1121489:5814089"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

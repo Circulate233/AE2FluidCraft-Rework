@@ -20,6 +20,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         addMixinCFG("mixins.ae2fc.packagedauto.json", () -> Loader.isModLoaded("packagedauto"));
         addMixinCFG("mixins.ae2fc.jei.json", () -> Loader.isModLoaded("jei"));
         addMixinCFG("mixins.ae2fc.wct.json", () -> Loader.isModLoaded("wct"));
+        addMixinCFG("mixins.ae2fc.ae2ctl.json", () -> Loader.isModLoaded("ae2ctl"));
         addMixinCFG("mixins.ae2fc.mmce.hasGT.json", () -> isClassPresent("hellfirepvp.modularmachinery.common.base.Mods$3"));
         addMixinCFG("mixins.ae2fc.mmce.noGT.json", () -> !isClassPresent("hellfirepvp.modularmachinery.common.base.Mods$3") && isClassPresent("hellfirepvp.modularmachinery.common.crafting.component.ComponentItemFluid"));
         addMixinCFG("mixins.ae2fc.thaumicenergistics.json", () -> isClassPresent("thaumicenergistics.client.gui.part.GuiArcaneTerminal"));

@@ -36,6 +36,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import static com.glodblock.github.util.Util.mekModName;
+
 @SideOnly(Side.CLIENT)
 public final class UtilClient {
 
@@ -153,8 +155,11 @@ public final class UtilClient {
     private static boolean cacheIsStorage = false;
 
     public static boolean rendererFluid(final GuiContainer gui, final IAEItemStack item, final int mouseX, final int mouseY) {
+        return rendererFluid(gui, item, mouseX, mouseY, gui instanceof GuiMEMonitorable);
+    }
+
+    public static boolean rendererFluid(final GuiContainer gui, final IAEItemStack item, final int mouseX, final int mouseY, final boolean isStorage) {
         if (item == null) return false;
-        final boolean isStorage = gui instanceof GuiMEMonitorable;
         if (item.getItem() == FCItems.FLUID_DROP) {
             if (cacheTooltip.left == null || !cacheTooltip.left.equals(item) || cacheTooltip.left.getStackSize() != item.getStackSize() || cacheIsStorage != isStorage) {
                 final IAEFluidStack fluidStack = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
@@ -185,18 +190,21 @@ public final class UtilClient {
 
     @Optional.Method(modid = "mekeng")
     public static boolean rendererGas(final GuiContainer gui, final IAEItemStack item, final int mouseX, final int mouseY) {
+        return rendererGas(gui, item, mouseX, mouseY, gui instanceof GuiMEMonitorable);
+    }
+
+    @Optional.Method(modid = "mekeng")
+    public static boolean rendererGas(final GuiContainer gui, final IAEItemStack item, final int mouseX, final int mouseY, final boolean isStorage) {
         if (item == null) return false;
-        final boolean isStorage = gui instanceof GuiMEMonitorable;
         if (item.getItem() == FCGasItems.GAS_DROP) {
             if (cacheTooltip.left == null || !cacheTooltip.left.equals(item) || cacheTooltip.left.getStackSize() != item.getStackSize() || cacheIsStorage != isStorage) {
                 final IAEGasStack gs = FakeItemRegister.getAEStack(item.copy().setStackSize(1));
                 if (gs != null) {
                     gs.setStackSize(item.getStackSize());
                     final String formattedAmount = GuiScreen.isShiftKeyDown() ? NumberFormat.getNumberInstance(Locale.US).format(gs.getStackSize()) + " mB" : NumberFormat.getNumberInstance(Locale.US).format((double) gs.getStackSize() / (double) 1000.0F) + " B";
-                    final String modName = "" + TextFormatting.BLUE + TextFormatting.ITALIC + Loader.instance().getIndexedModList().get("mekanism").getName();
                     final List<String> list = new ObjectArrayList<>();
                     list.add(gs.getGas().getLocalizedName());
-                    list.add(modName);
+                    list.add(mekModName);
                     if (isStorage)
                         list.add(TextFormatting.DARK_GRAY + I18n.format("tooltip.stored") + " ： " + formattedAmount);
                     if (item.isCraftable())
