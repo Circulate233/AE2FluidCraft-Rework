@@ -13,7 +13,6 @@ import com.glodblock.github.integration.mek.FakeGases;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
 import mekanism.api.gas.GasStack;
-import mekanism.api.gas.IGasItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -72,8 +71,7 @@ public abstract class MixinContainerCellWorkbench extends ContainerUpgradeable {
             }
             return;
         }
-        if (ModAndClassUtil.GAS && slot instanceof SlotFake && !stack.isEmpty()
-            && stack.getItem() instanceof IGasItem && Util.getGasFromItem(stack) != null) {
+        if (ModAndClassUtil.GAS && slot instanceof SlotFake && !stack.isEmpty() && Util.getGasFromItem(stack) != null) {
             mek$doAction(player, action, slotId, id, slot, stack);
             return;
         }
