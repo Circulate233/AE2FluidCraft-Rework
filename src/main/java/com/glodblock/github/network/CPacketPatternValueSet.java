@@ -70,12 +70,22 @@ public class CPacketPatternValueSet implements IMessage {
                                 (GuiType) message.originGui
                             );
                         } else {
-                            Platform.openGUI(
-                                player,
-                                context.getTile(),
-                                context.getSide(),
-                                (GuiBridge) message.originGui
-                            );
+                            var tile = context.getTile();
+                            if (tile != null) {
+                                Platform.openGUI(
+                                    player,
+                                    tile,
+                                    context.getSide(),
+                                    (GuiBridge) message.originGui
+                                );
+                            } else {
+                                Platform.openGUI(
+                                    player,
+                                    Ae2Reflect.getContextX(context),
+                                    (GuiBridge) message.originGui,
+                                    Ae2Reflect.getContextY(context) == 1
+                                );
+                            }
                         }
                         if (player.openContainer instanceof FCFluidPatternContainer) {
                             final Slot slot = player.openContainer.getSlot(message.valueIndex);

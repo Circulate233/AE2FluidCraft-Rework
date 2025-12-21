@@ -52,11 +52,20 @@ public class ContainerExtendedFluidPatternTerminal extends ContainerExpandedProc
 
     @Override
     public void encode() {
+        ItemStack stack = this.patternSlotOUT.getStack();
         if (!checkHasFluidPattern()) {
+            if (!stack.isEmpty()) {
+                if (this.patternSlotIN.getStack().isEmpty()) {
+                    this.patternSlotIN.putStack(AEApi.instance().definitions().materials().blankPattern().maybeStack(1).orElse(ItemStack.EMPTY));
+                    this.patternSlotIN.putStack(ItemStack.EMPTY);
+                } else {
+                    this.patternSlotIN.getStack().grow(1);
+                    this.patternSlotIN.putStack(ItemStack.EMPTY);
+                }
+            }
             super.encode();
             return;
         }
-        ItemStack stack = this.patternSlotOUT.getStack();
         if (stack.isEmpty()) {
             stack = this.patternSlotIN.getStack();
             if (stack.isEmpty() || !isPattern(stack)) {

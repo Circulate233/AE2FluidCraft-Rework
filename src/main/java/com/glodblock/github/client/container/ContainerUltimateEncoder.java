@@ -27,6 +27,7 @@ import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mcp.MethodsReturnNonnullByDefault;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -100,6 +101,7 @@ public class ContainerUltimateEncoder extends AEBaseContainer implements IOption
     }
 
     @Override
+    @MethodsReturnNonnullByDefault
     public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
         if (Platform.isClient()) {
             return ItemStack.EMPTY;

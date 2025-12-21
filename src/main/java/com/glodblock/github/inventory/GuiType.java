@@ -450,7 +450,7 @@ public enum GuiType {
         @Nullable
         @Override
         protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
-            if (pos.getZ() == Integer.MIN_VALUE) {
+            if (pos.getZ() == Integer.MIN_VALUE || (pos.getY() == 0 && pos.getZ() == 0)) {
                 ItemStack terminal = ItemStack.EMPTY;
                 if (pos.getY() == 0) { // main inventory
                     terminal = player.inventory.getStackInSlot(pos.getX());
@@ -487,7 +487,7 @@ public enum GuiType {
         @Nullable
         @Override
         protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
-            if (pos.getZ() == Integer.MIN_VALUE) {
+            if (pos.getZ() == Integer.MIN_VALUE || (pos.getY() == 0 && pos.getZ() == 0)) {
                 ItemStack terminal = ItemStack.EMPTY;
                 if (pos.getY() == 0) { // main inventory
                     terminal = player.inventory.getStackInSlot(pos.getX());
@@ -524,7 +524,7 @@ public enum GuiType {
         @Nullable
         @Override
         protected T getInventory(final TileEntity tile, final EntityPlayer player, final EnumFacing face, final BlockPos pos) {
-            if (pos.getZ() == Integer.MIN_VALUE) {
+            if (pos.getZ() == Integer.MIN_VALUE || (pos.getY() == 0 && pos.getZ() == 0)) {
                 ItemStack terminal = ItemStack.EMPTY;
                 if (pos.getY() == 0) {
                     terminal = player.inventory.getStackInSlot(pos.getX());
