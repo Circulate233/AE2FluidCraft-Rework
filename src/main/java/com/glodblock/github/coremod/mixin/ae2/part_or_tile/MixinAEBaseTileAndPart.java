@@ -5,7 +5,6 @@ import appeng.parts.AEBasePart;
 import appeng.tile.AEBaseTile;
 import appeng.util.SettingsFrom;
 import com.glodblock.github.interfaces.FCDualityInterface;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +28,9 @@ public class MixinAEBaseTileAndPart {
     }
 
     @Inject(method = "downloadSettings", at = @At(value = "RETURN"))
-    public void onDownloadSettings(final SettingsFrom from, final CallbackInfoReturnable<NBTTagCompound> cir, @Local(name = "output") final NBTTagCompound output) {
+    public void onDownloadSettings(final SettingsFrom from, final CallbackInfoReturnable<NBTTagCompound> cir) {
+        var output = cir.getReturnValue();
+        if (output == null) return;
         if (this instanceof IInterfaceHost) {
             final FCDualityInterface dual = (FCDualityInterface) ((IInterfaceHost) this).getInterfaceDuality();
             final NBTTagCompound extra = new NBTTagCompound();
