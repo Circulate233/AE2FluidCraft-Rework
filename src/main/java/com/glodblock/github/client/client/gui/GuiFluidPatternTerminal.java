@@ -13,6 +13,7 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.button.GuiFCImgButton;
 import com.glodblock.github.client.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.integration.jei.FluidPacketTarget;
+import com.glodblock.github.integration.jei.ItemTarget;
 import com.glodblock.github.inventory.GuiType;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
@@ -144,7 +145,9 @@ public class GuiFluidPatternTerminal extends GuiPatternTerm {
         final List<Target<?>> targets = new ObjectArrayList<>();
         for (final Slot slot : this.inventorySlots.inventorySlots) {
             if (slot instanceof SlotFake) {
-                final Target<?> target = new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
+                final Target<?> target = this.container.isCraftingMode()
+                    ? new ItemTarget(getGuiLeft(), getGuiTop(), slot)
+                    : new FluidPacketTarget(getGuiLeft(), getGuiTop(), slot);
                 targets.add(target);
                 mapTargetSlot.putIfAbsent(target, slot);
             }
