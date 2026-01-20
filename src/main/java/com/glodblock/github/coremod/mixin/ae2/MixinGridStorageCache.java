@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 @Mixin(value = GridStorageCache.class, remap = false)
 public abstract class MixinGridStorageCache {
 
@@ -33,12 +34,12 @@ public abstract class MixinGridStorageCache {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(final IGrid g, final CallbackInfo ci) {
-        ((FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel())).init();
+        ((FCNetworkMonitor<?>) this.storageMonitors.get(Util.getItemChannel())).init();
     }
 
     @Inject(method = "buildNetworkStorage", at = @At("RETURN"))
     public void onBuild(final IStorageChannel<?> chan, final CallbackInfoReturnable<NetworkInventoryHandler<?>> cir) {
-        final var m = (FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel());
+        final var m = (FCNetworkMonitor<?>) this.storageMonitors.get(Util.getItemChannel());
         ((FCNetworkInventoryHandler) cir.getReturnValue()).init(m);
     }
 
@@ -52,7 +53,7 @@ public abstract class MixinGridStorageCache {
                 if (drop != null) list.add(drop.setStackSize(size));
                 i.setStackSize(size);
             }
-            ((FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel())).fc$postChange(true, list, src);
+            ((FCNetworkMonitor<IAEItemStack>) this.storageMonitors.get(Util.getItemChannel())).fc$postChange(true, list, src);
         }
     }
 
@@ -66,7 +67,7 @@ public abstract class MixinGridStorageCache {
                 if (drop != null) list.add(drop.setStackSize(size));
                 i.setStackSize(size);
             }
-            ((FCNetworkMonitor) this.storageMonitors.get(Util.getItemChannel())).fc$postChange(upOrDown > 0, list, src);
+            ((FCNetworkMonitor<IAEItemStack>) this.storageMonitors.get(Util.getItemChannel())).fc$postChange(upOrDown > 0, list, src);
         }
     }
 }

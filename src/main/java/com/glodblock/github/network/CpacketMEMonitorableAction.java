@@ -21,6 +21,8 @@ import com.mekeng.github.common.me.data.impl.AEGasStack;
 import io.netty.buffer.ByteBuf;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasItem;
+import mekanism.common.base.ITierItem;
+import mekanism.common.tier.BaseTier;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -184,6 +186,7 @@ public class CpacketMEMonitorableAction implements IMessage {
         private static void gasWork(final CpacketMEMonitorableAction message, final IGasItem ig, final ItemStack ch, final IStorageGrid grid, final IActionSource source, final EntityPlayerMP player) {
             final var h = player.inventory.getItemStack();
             if (!ItemStack.areItemsEqual(ch, h) || !ItemStack.areItemStackTagsEqual(ch, h) || h.isEmpty()) return;
+            final boolean creative = h.getItem() instanceof ITierItem i && i.getBaseTier(h) == BaseTier.CREATIVE;
             boolean drain = false;
             final var allGas = ig.getGas(ch);
             final var allAmount = allGas == null ? 0 : allGas.amount;
@@ -202,18 +205,22 @@ public class CpacketMEMonitorableAction implements IMessage {
                 allAEGas = AEGasStack.of(allGas);
                 if (allAEGas == null) return;
                 final var a = gasStorage.injectItems(allAEGas, Actionable.SIMULATE, source);
-                final var size = allAEGas.getStackSize() - (a == null ? 0 : a.getStackSize());
-                gasStorage.injectItems(allAEGas.setStackSize(size), Actionable.MODULATE, source);
-                allGas.amount -= (int) size;
-                ig.setGas(ch, allGas);
+                if (!creative) {
+                    final var size = allAEGas.getStackSize() - (a == null ? 0 : a.getStackSize());
+                    gasStorage.injectItems(allAEGas.setStackSize(size), Actionable.MODULATE, source);
+                    allGas.amount -= (int) size;
+                    ig.setGas(ch, allGas);
+                }
             } else {
                 allAEGas = AEGasStack.of(gas);
                 if (allAEGas == null) return;
                 final var a = gasStorage.extractItems(allAEGas, Actionable.SIMULATE, source);
                 if (a == null) return;
-                final var size = Math.min(ig.getMaxGas(ch) - allAmount, (int) a.getStackSize());
-                gasStorage.extractItems(allAEGas.setStackSize(size), Actionable.MODULATE, source);
-                gas.amount = size + allAmount;
+                if (!creative) {
+                    final var size = Math.min(ig.getMaxGas(ch) - allAmount, (int) a.getStackSize());
+                    gasStorage.extractItems(allAEGas.setStackSize(size), Actionable.MODULATE, source);
+                    gas.amount = size + allAmount;
+                } else gas.amount = Integer.MAX_VALUE;
                 ig.setGas(ch, gas);
             }
             if (h.getCount() > 1) {

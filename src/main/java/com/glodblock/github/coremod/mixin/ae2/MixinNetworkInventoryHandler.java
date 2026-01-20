@@ -3,6 +3,7 @@ package com.glodblock.github.coremod.mixin.ae2;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
@@ -20,6 +21,7 @@ import com.glodblock.github.util.Util;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,8 +30,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@SuppressWarnings("DataFlowIssue")
-@Mixin(value = NetworkInventoryHandler.class, remap = false)
+import java.util.Deque;
+import java.util.List;
+import java.util.NavigableMap;
+
+@SuppressWarnings({"DataFlowIssue", "unchecked"})
+@Mixin(value = NetworkInventoryHandler.class, remap = false, priority = 1001)
 public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implements FCNetworkInventoryHandler {
 
     @Unique
@@ -47,6 +53,13 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
     @Shadow
     protected abstract boolean diveList(NetworkInventoryHandler<T> networkInventoryHandler, Actionable type);
 
+    @Shadow
+    @Final
+    private NavigableMap<Integer, List<IMEInventoryHandler<T>>> priorityInventory;
+
+    @Shadow
+    protected abstract Deque<?> getDepth(Actionable type);
+
     @Inject(method = "<init>", at = @At("TAIL"))
     public void onInit(final IStorageChannel<?> chan, final SecurityCache security, final CallbackInfo ci) {
         monitor = security.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getInventory(Util.getItemChannel());
@@ -58,10 +71,29 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
         if (src instanceof FakeMonitor.FakeMonitorSource || mode == Actionable.SIMULATE) return;
         final var drop = Util.packAEStackToDrop(input);
         if (drop != null) {
-            this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
+            if (!this.getDepth(mode).isEmpty()) this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
             cir.setReturnValue(FakeItemRegister.getAEStack(monitor.injectItems(drop, mode, src)));
             this.diveList((NetworkInventoryHandler<T>) (Object) this, mode);
         } else return;
+        this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
+    }
+
+    @Inject(method = "injectItems", at = @At(value = "FIELD", target = "Lappeng/me/storage/NetworkInventoryHandler;priorityInventory:Ljava/util/NavigableMap;", opcode = Opcodes.GETFIELD), cancellable = true)
+    private void injectItemsN(final T input, final Actionable mode, final IActionSource src, final CallbackInfoReturnable<T> cir, @Share("fc$fakeInput") final LocalBooleanRef fakeInput) {
+        if (input == null || fakeInput.get() || !this.priorityInventory.isEmpty()) return;
+        if (input instanceof final IAEItemStack i) {
+            if (i.getItem() == FCItems.FLUID_DROP) {
+                cir.setReturnValue((T) fluidMonitor.injectItems(i, mode, src));
+            } else if (ModAndClassUtil.GAS && i.getItem() == FCGasItems.GAS_DROP) {
+                cir.setReturnValue((T) gasMonitor.injectItems(i, mode, src));
+            } else {
+                fakeInput.set(true);
+                return;
+            }
+        } else {
+            fakeInput.set(true);
+            return;
+        }
         this.surface((NetworkInventoryHandler<T>) (Object) this, mode);
     }
 
@@ -110,7 +142,7 @@ public abstract class MixinNetworkInventoryHandler<T extends IAEStack<T>> implem
     }
 
     @Override
-    public void init(final FCNetworkMonitor monitor) {
+    public void init(final FCNetworkMonitor<?> monitor) {
         fluidMonitor = monitor.getFluidMonitor();
         gasMonitor = monitor.getGasMonitor();
     }

@@ -203,13 +203,13 @@ dependencies {
     compileOnly(rfg.deobf('curse.maven:packagedauto-308380:2977147')) // 1.0.3.14
     compileOnly(rfg.deobf('curse.maven:codechicken-lib-1-8-242818:2779848')) //ccl
     compileOnly(rfg.deobf('curse.maven:gregtech-ce-unofficial-557242:5121638')) // gt
-    implementation(rfg.deobf('curse.maven:ae2-extended-life-570458:5378163')) //pae2
+    implementation(rfg.deobf("curse.maven:ae2-extended-life-570458:6302098"))
     compileOnly(rfg.deobf('curse.maven:dynamistics-383632:3056455')) // dy
     implementation(rfg.deobf('curse.maven:baubles-227083:2518667')) //baubles
     compileOnly(rfg.deobf("curse.maven:thaumic-223628:2629023"))
     compileOnly(rfg.deobf("curse.maven:thaumic-energistics-extended-life-849094:6321322"))
-    compileOnly(rfg.deobf("curse.maven:mekanism-ce-399904:4804509")) //mek-ce
-    compileOnly(rfg.deobf("curse.maven:mekanism-energistics-1027681:5389347")) //mekeng
+    implementation(rfg.deobf("curse.maven:mekanism-ce-399904:4804509")) //mek-ce
+    implementation(rfg.deobf("curse.maven:mekanism-energistics-1027681:5389347")) //mekeng
     compileOnly(rfg.deobf('curse.maven:opencomputers-223008:4630537')) //oc
     compileOnly(rfg.deobf("curse.maven:p455w0rdslib-255232:2830265"))
     compileOnly(rfg.deobf("curse.maven:ae2wtlib-304024:2830114"))

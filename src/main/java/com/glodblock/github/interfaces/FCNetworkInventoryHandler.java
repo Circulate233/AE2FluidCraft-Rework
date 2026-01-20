@@ -2,5 +2,5 @@ package com.glodblock.github.interfaces;
 
 public interface FCNetworkInventoryHandler {
 
-    void init(FCNetworkMonitor monitor);
+    void init(FCNetworkMonitor<?> monitor);
 }

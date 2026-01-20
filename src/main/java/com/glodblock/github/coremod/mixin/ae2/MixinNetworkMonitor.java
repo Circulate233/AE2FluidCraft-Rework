@@ -28,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("unchecked")
 @Mixin(value = NetworkMonitor.class, remap = false)
 public abstract class MixinNetworkMonitor<T extends IAEStack<T>> implements FCNetworkMonitor<T> {
 
