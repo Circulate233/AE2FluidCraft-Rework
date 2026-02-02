@@ -5,28 +5,14 @@ import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(AEBaseGui.class)
 public class MixinAEBaseGui {
 
-    @WrapOperation(method = "handleMouseClick", at = @At(value = "NEW", target = "(Lappeng/helpers/InventoryAction;IJ)Lappeng/core/sync/packets/PacketInventoryAction;", ordinal = 0, remap = false))
-    protected PacketInventoryAction handleMouseClick(final InventoryAction action, final int slot, final long id, final Operation<PacketInventoryAction> original) {
-        long newid = Mouse.getEventButton();
-        if (newid == -1) {
-            newid = Mouse.isButtonDown(0) ? 0 : 1;
-        }
-        return original.call(action, slot, newid);
-    }
-
-    @WrapOperation(method = "mouseClickMove", at = @At(value = "NEW", target = "(Lappeng/helpers/InventoryAction;IJ)Lappeng/core/sync/packets/PacketInventoryAction;", ordinal = 0, remap = false))
-    protected PacketInventoryAction mouseClickMove(final InventoryAction action, final int slot, final long id, final Operation<PacketInventoryAction> original) {
-        long newid = Mouse.getEventButton();
-        if (newid == -1) {
-            newid = Mouse.isButtonDown(0) ? 0 : 1;
-        }
-        return original.call(action, slot, newid);
+    @WrapOperation(method = {"mouseClickMove", "handleMouseClick"}, at = @At(value = "NEW", target = "(Lappeng/helpers/InventoryAction;IJ)Lappeng/core/sync/packets/PacketInventoryAction;",ordinal = 0, remap = false))
+    protected PacketInventoryAction writeMouseButton(final InventoryAction action, final int slot, final long id, final Operation<PacketInventoryAction> original) {
+        return original.call(action, slot, action == InventoryAction.PICKUP_OR_SET_DOWN ? 0L : 1L);
     }
 }
