@@ -9,6 +9,7 @@
     "AccessorGhostIngredientDragManager",
     "AccessorIngredientListOverlay",
     "AccessorInputHandler",
+    "MixinGuiCellWorkbench",
     "MixinGuiContainerWrapper",
     "MixinGuiScreenHelper"
   ]

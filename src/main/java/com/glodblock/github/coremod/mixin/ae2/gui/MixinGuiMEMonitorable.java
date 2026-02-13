@@ -78,10 +78,8 @@ public abstract class MixinGuiMEMonitorable extends AEBaseMEGui {
             if (s.getAEStack() != null) {
                 if (s.getAEStack().getItem() == FCItems.FLUID_DROP
                     || (ModAndClassUtil.GAS && s.getAEStack().getItem() == FCGasItems.GAS_DROP)) {
-                    if (mouseButton != 2
-                        && !(mouseButton == 0
-                        && (s.getAEStack().getStackSize() == 0 || isAltKeyDown()))
-                    ) {
+                    if (mouseButton != 2 && (!s.getAEStack().isCraftable()
+                        || !(mouseButton == 0 && (s.getAEStack().getStackSize() == 0 || isAltKeyDown())))) {
                         if (s.getAEStack().getItem() == FCItems.FLUID_DROP) {
                             final var shift = s.getAEStack().getDefinition().writeToNBT(new NBTTagCompound());
                             shift.setBoolean("shift", isShiftKeyDown());

@@ -76,6 +76,7 @@ public class CoreModHooks {
     }
 
     public static InventoryCrafting wrapCraftingBuffer(final Container container, final int width, final int height) {
+        final int s = width > 3 ? 10 : 3;
         return new FluidConvertingInventoryCrafting(container, width, height);
     }
 
